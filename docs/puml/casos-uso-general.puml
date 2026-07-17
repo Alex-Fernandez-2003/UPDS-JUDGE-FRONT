@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+actor Usuario
+actor "Administrador de Concursos" as AC
+actor "Administrador de Roles" as AR
+rectangle "UPDS JUDGE" {
+  usecase "Registrarse" as UC1
+  usecase "Iniciar sesión" as UC2
+  usecase "Consultar concursos" as UC3
+  usecase "Ingresar a concurso privado" as UC4
+  usecase "Consultar problemas y PDF" as UC5
+  usecase "Enviar solución" as UC6
+  usecase "Recibir veredicto" as UC7
+  usecase "Consultar ranking" as UC8
+  usecase "Consultar historial" as UC9
+  usecase "Gestionar concursos" as UC10
+  usecase "Importar ZIP y casos" as UC11
+  usecase "Configurar problemas" as UC12
+  usecase "Congelar ranking" as UC13
+  usecase "Gestionar roles" as UC14
+}
+Usuario --> UC1
+Usuario --> UC2
+Usuario --> UC3
+Usuario --> UC4
+Usuario --> UC5
+Usuario --> UC6
+Usuario --> UC7
+Usuario --> UC8
+Usuario --> UC9
+AC --> UC2
+AC --> UC10
+AC --> UC11
+AC --> UC12
+AC --> UC13
+AR --> UC2
+AR --> UC14
+UC6 .> UC2 : <<include>>
+UC7 .> UC6 : <<extend>>
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+actor Participante
+participant "Frontend React" as Front
+participant "SubmissionsController" as Controller
+participant "SubmissionService" as Service
+database "PostgreSQL" as DB
+participant "Judge0Client" as Judge
+participant "SignalR Hub" as Hub
+Participante -> Front : selecciona problema, lenguaje y archivo
+Front -> Controller : POST /api/submissions + JWT
+Controller -> Service : crearEnvio(datos, usuario)
+Service -> DB : validar participación, concurso y lenguaje
+DB --> Service : validación correcta
+Service -> DB : insertar envío (EN_COLA)
+DB --> Service : submissionId
+Service -> Judge : enviar código y casos de prueba
+Judge --> Service : token(s) de evaluación
+Service -> DB : guardar tokens y estado
+Service --> Controller : 202 Accepted + submissionId
+Controller --> Front : envío recibido
+loop hasta veredicto final
+  Service -> Judge : consultar resultado
+  Judge --> Service : estado/veredicto/tiempo/memoria
+  Service -> DB : actualizar envío
+  Service -> Hub : publicar SubmissionUpdated
+  Hub --> Front : actualización en tiempo real
+end
+Front --> Participante : mostrar veredicto final
+@enduml

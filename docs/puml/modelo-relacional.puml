@@ -1,0 +1,100 @@
+@startuml
+hide circle
+entity "AspNetUsers" as users {
+ * Id : text <<PK>>
+ --
+ UserName : text
+ Email : text
+ PasswordHash : text
+}
+entity "AspNetRoles" as roles {
+ * Id : text <<PK>>
+ --
+ Name : text
+}
+entity "AspNetUserRoles" as userroles {
+ * UserId : text <<PK,FK>>
+ * RoleId : text <<PK,FK>>
+}
+entity Concursos {
+ * Id : bigint <<PK>>
+ --
+ Nombre : varchar
+ FechaInicio : timestamptz
+ DuracionMinutos : int
+ MinutosCongelamiento : int
+ UsuarioCreadorId : text <<FK>>
+}
+entity ParticipantesConcursos {
+ * Id : bigint <<PK>>
+ --
+ UsuarioId : text <<FK>>
+ ConcursoId : bigint <<FK>>
+ FechaIngreso : timestamptz
+}
+entity Problemas {
+ * Id : bigint <<PK>>
+ --
+ ConcursoId : bigint <<FK>>
+ Inciso : varchar(4)
+ Titulo : varchar
+ TiempoLimiteMs : int
+ MemoriaLimiteKb : int
+}
+entity CasosPrueba {
+ * Id : bigint <<PK>>
+ --
+ ProblemaId : bigint <<FK>>
+ EntradaPath : text
+ SalidaEsperadaPath : text
+ Orden : int
+}
+entity Lenguajes {
+ * Id : bigint <<PK>>
+ --
+ Judge0LanguageId : int
+ Nombre : varchar
+ Extension : varchar
+}
+entity Envios {
+ * Id : bigint <<PK>>
+ --
+ UsuarioId : text <<FK>>
+ ProblemaId : bigint <<FK>>
+ LenguajeId : bigint <<FK>>
+ Estado : varchar
+ Veredicto : varchar
+ EsUpsolving : boolean
+ FechaEnvio : timestamptz
+}
+entity ResultadosCasos {
+ * Id : bigint <<PK>>
+ --
+ EnvioId : bigint <<FK>>
+ CasoPruebaId : bigint <<FK>>
+ Veredicto : varchar
+}
+entity AuditoriaRoles {
+ * Id : bigint <<PK>>
+ --
+ ActorUsuarioId : text <<FK>>
+ UsuarioAfectadoId : text <<FK>>
+ Rol : varchar(120)
+ Accion : varchar(16)
+ Fecha : timestamptz
+}
+users ||--o{ userroles
+roles ||--o{ userroles
+users ||--o{ Concursos
+users ||--o{ ParticipantesConcursos
+Concursos ||--o{ ParticipantesConcursos
+Concursos ||--|{ Problemas
+Problemas ||--|{ CasosPrueba
+users ||--o{ Envios
+users ||--o{ AuditoriaRoles : actor
+users ||--o{ AuditoriaRoles : afectado
+Problemas ||--o{ Envios
+Lenguajes ||--o{ Envios
+Envios ||--o{ ResultadosCasos
+CasosPrueba ||--o{ ResultadosCasos
+@enduml
