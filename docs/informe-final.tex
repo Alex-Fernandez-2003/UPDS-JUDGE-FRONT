@@ -1,0 +1,262 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage{geometry}
+\geometry{top=2.2cm,bottom=2.2cm,left=2.4cm,right=2.4cm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{microtype}
+\definecolor{updsblue}{HTML}{0F2742}
+\definecolor{accent}{HTML}{2563EB}
+\definecolor{lightblue}{HTML}{EAF2FF}
+\definecolor{softgray}{HTML}{F6F8FB}
+\definecolor{success}{HTML}{16A34A}
+\hypersetup{colorlinks=true,linkcolor=updsblue,urlcolor=accent,citecolor=updsblue,pdftitle={UPDS JUDGE - Informe final}}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{UPDS JUDGE}
+\rhead{Informe final}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+\titleformat{\section}{\Large\bfseries\color{updsblue}}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\large\bfseries\color{accent}}{\thesubsection.}{0.5em}{}
+\setlist[itemize]{topsep=3pt,itemsep=2pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt}
+\lstset{basicstyle=\ttfamily\small,backgroundcolor=\color{softgray},frame=single,breaklines=true,columns=fullflexible}
+\newtcolorbox{notebox}[1][]{colback=lightblue,colframe=accent,boxrule=0.7pt,arc=2mm,#1}
+\newcommand{\img}[3][0.95]{\begin{figure}[htbp]\centering\includegraphics[width=#1\textwidth]{#2}\caption{#3}\end{figure}}
+\begin{document}
+\begin{titlepage}
+\pagecolor{softgray}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries\color{updsblue} UPDS JUDGE\par}
+\vspace{0.4cm}
+{\Large Informe final de análisis, diseño y preparación para desarrollo\par}
+\vspace{1.2cm}
+\begin{tcolorbox}[width=0.88\textwidth,colback=white,colframe=updsblue,arc=3mm]
+\textbf{Proyecto:} Plataforma web para concursos de programación competitiva.\\[0.2cm]
+\textbf{Repositorio frontend:} \url{https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git}\\[0.2cm]
+\textbf{Repositorio backend:} independiente; URL pendiente de definición.\\[0.2cm]
+\textbf{Backend:} ASP.NET Core MVC / Web API.\\[0.2cm]
+\textbf{Frontend documentado:} React, Vite y TypeScript; su código no está presente en este checkout.\\
+\end{tcolorbox}
+\vspace{0.8cm}
+{\large\bfseries Integrantes\par}
+\vspace{0.3cm}
+Wilson Yucra Rengifo\\
+Cristhian Joel Amador Gallardo\\
+Arnold Daniel Torrez Zarate\\
+Daniel Javier Aramayo Mancilla\\
+Enny Anaí Lopez Saldaña Beymar\\
+Angelo Vasquez Acha\\
+Alex Saul Fernandez Valdez
+\vfill
+{\large Julio de 2026\par}
+\end{titlepage}
+\nopagecolor
+\tableofcontents
+\newpage
+
+\section{Introducción}
+UPDS JUDGE es una propuesta de plataforma universitaria para gestionar concursos de programación competitiva. El sistema cubre registro, autenticación, roles, concursos, problemas, casos de prueba, envíos, evaluación automática, veredictos, ranking, congelamiento e historial.
+
+La documentación se elaboró a partir de los recursos versionados: diagramas renderizados y sus fuentes PlantUML, capturas, el script SQL inicial y los documentos Markdown. Se distingue entre evidencia disponible y decisiones propuestas para no presentar como implementadas funciones que todavía están en planificación. En el árbol inspeccionado no existe la carpeta \texttt{frontend/}; por ello no se afirman dependencias, scripts, variables de entorno ni una ejecución local del cliente.
+
+\section{Contexto estratégico y diagnóstico}
+Cuando la organización de un concurso depende de herramientas separadas, los responsables deben registrar participantes, distribuir problemas, ejecutar soluciones y recalcular resultados de forma manual o fragmentada. Esto aumenta la carga operativa y reduce la trazabilidad.
+
+\subsection{Problema central}
+La comunidad académica no cuenta todavía con una plataforma integrada y trazable que permita organizar concursos de programación, evaluar automáticamente las soluciones y publicar resultados oportunos, lo que incrementa la carga operativa, el riesgo de inconsistencias y la dificultad para conservar historial y ranking confiables.
+
+\subsection{Causas y efectos}
+\img{images/arbol-problemas.png}{Árbol de problemas de UPDS JUDGE.}
+
+\section{Solución y propuesta de valor}
+La solución propuesta es una aplicación web que unifica el ciclo completo de competencia. El frontend ofrecerá la experiencia de usuario; el backend aplicará seguridad y reglas; Judge0 se contempla para la ejecución aislada; PostgreSQL para la trazabilidad; y SignalR para la actualización de estados. Estas integraciones forman parte del alcance documentado y no se presentan como implementadas.
+
+\img{images/arbol-soluciones.png}{Árbol de soluciones propuesto.}
+
+\subsection{Visión}
+Para estudiantes y organizadores de concursos de programación, UPDS JUDGE es una plataforma que permite preparar competencias, evaluar soluciones automáticamente y consultar resultados trazables. A diferencia de un proceso manual, centraliza permisos, veredictos, ranking e historial.
+
+\subsection{Objetivo general}
+Diseñar e implementar un MVP de UPDS JUDGE que permita administrar concursos, recibir y evaluar soluciones de forma automatizada, comunicar veredictos en tiempo real y calcular rankings trazables, mediante un frontend independiente y un backend ASP.NET Core MVC/Web API separado.
+
+\section{Definición del MVP}
+El MVP incluye:
+\begin{itemize}
+\item Registro, inicio de sesión y autorización por roles.
+\item Creación de concursos, privacidad, duración, PDF y congelamiento.
+\item Importación de problemas y casos desde ZIP.
+\item Participación y consulta de problemas.
+\item Envío de C++, Python y C\# a un motor de evaluación.
+\item Veredictos en tiempo real y recuperación por HTTP.
+\item Upsolving separado del ranking oficial.
+\item Ranking por resueltos y penalización.
+\item Historial personal filtrable.
+\end{itemize}
+
+\begin{notebox}
+El MVP no incluye detector de plagio, editor colaborativo, gestión universitaria general ni ejecución de código directamente dentro del proceso ASP.NET.
+\end{notebox}
+
+\section{Product Backlog}
+La captura contiene 15 historias. La numeración salta de UJ-16 a UJ-18; no se inventó una UJ-17.
+
+\small
+\begin{longtable}{|p{0.9cm}|p{0.65cm}|p{9.2cm}|p{1.25cm}|p{1.0cm}|}
+\hline
+\textbf{ID} & \textbf{Ép.} & \textbf{Historia} & \textbf{Prio.} & \textbf{Est.} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Ép.} & \textbf{Historia} & \textbf{Prio.} & \textbf{Est.} \\
+\hline
+\endhead
+UJ-05 & E01 & Como usuario nuevo, quiero registrarme con nombre, correo y contraseña, para tener acceso a la plataforma. & Alta & 3 h \\ 
+\hline
+UJ-06 & E01 & Como usuario registrado, quiero iniciar sesión para obtener un token que identifique mis roles. & Alta & 5 h \\ 
+\hline
+UJ-07 & E01 & Como Administrador de Roles, quiero asignar o revocar los roles “Admin Concursos” o “Admin Roles” a otros usuarios, para delegar la organización y administración de la plataforma. & Alta & 3 h \\ 
+\hline
+UJ-08 & E02 & Como Administrador de Concursos, quiero crear un concurso con nombre, descripción, fecha de inicio, duración, enlace al PDF y minutos de congelamiento, para publicar una competencia configurada. & Alta & 5 h \\ 
+\hline
+UJ-09 & E02 & Como Administrador de Concursos, quiero subir un archivo ZIP con la estructura de carpetas A, B, C… para que los casos de prueba se carguen automáticamente. & Crítica & 1 d 5 h \\ 
+\hline
+UJ-10 & E02 & Como Administrador de Concursos, quiero asignar título, inciso (A, B…), límite de tiempo en segundos y memoria en MB a cada problema extraído del ZIP. & Alta & 3 h \\ 
+\hline
+UJ-11 & E03 & Como usuario, quiero ver una lista de concursos filtrados por “En curso”, “Próximo” y “Finalizado”. & Alta & 3 h \\ 
+\hline
+UJ-12 & E03 & Como usuario, quiero ingresar la contraseña de un concurso privado para poder participar oficialmente. & Alta & 5 h \\ 
+\hline
+UJ-13 & E03 & Como usuario dentro de un concurso, quiero ver la lista de incisos (A, B, C…) y un botón para abrir el PDF del set de problemas alojado en Google Drive. & Alta & 2 h \\ 
+\hline
+UJ-14 & E04 & Como usuario, quiero seleccionar un lenguaje (C++, Python o C\#) y subir mi código para que sea evaluado. & Crítica & 5 h \\ 
+\hline
+UJ-15 & E04 & Como usuario, quiero recibir el veredicto (Accepted, WA, TLE, MLE o CE) en tiempo real. & Crítica & 1 d 5 h \\ 
+\hline
+UJ-16 & E04 & Como usuario, quiero enviar soluciones a concursos finalizados para practicar sin afectar el ranking original. & Media & 2 h \\ 
+\hline
+UJ-18 & E05 & Como usuario, quiero ver el ranking calculado por problemas resueltos y penalización (minutos más 20 minutos por intento fallido). & Crítica & 1 d \\ 
+\hline
+UJ-19 & E05 & Como Administrador de Concursos, quiero que el ranking deje de actualizarse públicamente cuando falten “X” minutos para el final. & Alta & 3 h \\ 
+\hline
+UJ-20 & E05 & Como usuario, quiero ver todos mis envíos con filtros por concurso y resultado obtenido. & Alta & 5 h \\ 
+\hline
+\end{longtable}
+\normalsize
+
+\subsection{Historias críticas}
+Se seleccionan UJ-09, UJ-14, UJ-15, UJ-18 y UJ-19 por concentrar carga de archivos no confiables, evaluación asíncrona, tiempo real y reglas de ranking.
+
+\section{Definition of Ready}
+Una historia está lista cuando tiene rol, valor, criterios verificables, prioridad, estimación, diseño o referencia visual, contrato de API, reglas de autorización, datos persistentes, estados de error y dependencias identificadas.
+
+Para las historias de evaluación se exige además un entorno Judge0 disponible, formato ZIP acordado y almacenamiento privado definido.
+
+\section{Modelado UML}
+\subsection{Modelo de contexto}
+\img{images/modelo-contexto.png}{Contexto técnico y actores.}
+
+\subsection{Casos de uso}
+\img{images/diagrama-casos-uso.png}{Casos de uso generales.}
+
+\subsection{Clases de persistencia}
+\img{images/diagrama-clases-persistencia.png}{Clases de dominio y relaciones principales.}
+
+\subsection{Secuencia de envío}
+\img[0.96]{images/secuencia-envio-solucion.png}{Flujo propuesto de envío y veredicto.}
+
+\section{Arquitectura de software}
+\img{images/arquitectura-componentes.png}{Arquitectura de componentes y separación de repositorios.}
+
+\subsection{Repositorio frontend}
+El frontend se referencia en \url{https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git}. La decisión documentada es React con Vite y TypeScript en un repositorio independiente. Aunque los documentos de planificación sitúan el proyecto en \texttt{frontend/}, esa carpeta no existe en el árbol de este checkout; por ello no es posible verificar aquí sus dependencias, scripts, Tailwind CSS ni variables de entorno.
+
+\subsection{Estructura disponible en este checkout}
+El árbol inspeccionado contiene \texttt{database/script-inicial.sql}, \texttt{docs/} con documentos Markdown, fuentes PlantUML, imágenes, capturas, \texttt{informe-final.tex} y \texttt{informe-final.pdf}, además de los archivos raíz \texttt{README.md} y \texttt{.gitignore}. La carpeta \texttt{frontend/} no está presente. Por esa razón, la estructura documentada para el cliente debe entenderse como planificada y no como evidencia de una aplicación incluida en este checkout.
+
+\subsection{Repositorio backend}
+El backend se contempla en un repositorio independiente con ASP.NET Core MVC/Web API y URL pendiente de definición. Como la interfaz principal corresponde al frontend React independiente, el backend se orientará a exponer HTTP/JSON. Controllers, Models/DTO, Services, EF Core, SignalR e integración Judge0 son decisiones documentadas para su desarrollo; no existe evidencia local de su implementación ni de un contrato OpenAPI finalizado.
+
+\section{Arquitectura de datos}
+El modelo es preliminar y se conserva como referencia conceptual. La documentación propone delegar las credenciales de usuario a ASP.NET Core Identity y proteger los casos de prueba mediante almacenamiento privado; no hay migraciones ni implementación de backend disponibles en este repositorio para verificarlo.
+
+\img{images/modelo-relacional.png}{Modelo relacional propuesto.}
+
+\subsection{Entidades}
+\begin{description}
+\item[Concursos:] configuración, fechas, privacidad, PDF y congelamiento.
+\item[ParticipantesConcursos:] inscripción única del usuario.
+\item[Problemas:] inciso, título y límites.
+\item[CasosPrueba:] referencias privadas a entradas y salidas esperadas.
+\item[Lenguajes:] mapeo con identificadores Judge0.
+\item[Envios:] trazabilidad, estado, veredicto, tiempo, memoria y upsolving.
+\item[ResultadosCasos:] diagnóstico interno por caso.
+\end{description}
+
+\section{Reglas de ranking}
+\begin{enumerate}
+\item Ordenar por cantidad de problemas aceptados, descendente.
+\item Para cada problema aceptado, sumar el minuto del primer Accepted y 20 minutos por intento fallido oficial anterior.
+\item No penalizar problemas nunca aceptados.
+\item Excluir todos los envíos de upsolving.
+\item Durante el congelamiento, conservar un ranking público y otro real administrativo.
+\end{enumerate}
+
+\section{Seguridad propuesta}
+\begin{itemize}
+\item Se propone Identity y JWT para autenticación, con políticas para roles.
+\item Se documenta que contraseñas y secretos no deben almacenarse en texto plano.
+\item Se contempla almacenamiento privado para casos de prueba y código.
+\item Se contempla proteger la extracción ZIP contra rutas maliciosas y archivos excesivos.
+\item Judge0 debe ser consumido únicamente por el backend.
+\item Se propone persistencia antes de SignalR y recuperación por HTTP.
+\item CORS restringido y HTTPS forman parte de la configuración pendiente de los entornos desplegados.
+\end{itemize}
+
+\section{Sprint 0 y fábrica de software}
+El Sprint 0 está documentado como plan para inicializar repositorios y ramas, React con Vite y TypeScript, ASP.NET Core MVC/Web API, PostgreSQL, Identity, OpenAPI, CORS y los spikes de Judge0 y SignalR. No hay evidencia en este checkout de que estas tareas, un pipeline o una prueba de integración estén configurados o ejecutados.
+
+\section{Ready to Sprint}
+El estado documentado es \textbf{Ready to Sprint condicionado}. Se propone iniciar la infraestructura, el diseño y las historias de identidad una vez que el frontend y el backend estén disponibles en sus repositorios. Antes de implementar la evaluación completa deben cerrarse:
+\begin{itemize}
+\item URL y estructura del repositorio backend.
+\item Presencia y configuración verificable del frontend React/Vite en su repositorio o en este checkout.
+\item Contrato OpenAPI inicial.
+\item Variante y disponibilidad de Judge0.
+\item Formato exacto del paquete ZIP.
+\item Almacenamiento privado de código y casos.
+\item Regla final de desempate del ranking.
+\end{itemize}
+
+\section{Conclusiones}
+UPDS JUDGE posee un alcance documentado coherente para una plataforma competitiva académica, pero su complejidad principal estará en la ejecución segura, la consistencia de estados y las reglas de ranking. La separación propuesta de repositorios y ASP.NET Core MVC/Web API delimita responsabilidades. La documentación disponible define problema, MVP, backlog, criterios, UML, persistencia preliminar, seguridad propuesta y plan de fábrica, sin evidencia suficiente para afirmar funcionalidades implementadas. El enlace del backend continúa pendiente y el código del frontend React/Vite no está presente en este checkout.
+
+\appendix
+\section{Fuentes internas disponibles}
+\begin{itemize}
+\item Wireframes exportados desde Figma.
+\item Modelo de datos preliminar.
+\item Archivo Draw.io con casos de uso.
+\item Captura del backlog.
+\item Checklist maestra de actividades académicas.
+\end{itemize}
+
+\section{Archivos complementarios}
+El repositorio incorpora fuentes PlantUML, un script SQL inicial, imágenes y capturas existentes, y los documentos Markdown detallados. Las imágenes incluidas en este informe se refieren a archivos presentes en \texttt{docs/images/}; no se incorpora evidencia pendiente como si estuviera disponible.
+
+\end{document}

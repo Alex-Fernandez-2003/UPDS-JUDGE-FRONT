@@ -1,0 +1,22 @@
+@startuml
+actor "Admin Concursos" as Admin
+participant "Frontend React" as Front
+participant "ContestsController" as Controller
+participant "ProblemPackageService" as Service
+database "Almacenamiento privado" as Store
+database "PostgreSQL" as DB
+Admin -> Front : selecciona ZIP
+Front -> Controller : POST /contests/{id}/package
+Controller -> Service : importar(concurso, archivo)
+Service -> Service : validar tamaño, extensión y estructura
+alt paquete inválido
+ Service --> Controller : reporte de errores
+ Controller --> Front : 422 Unprocessable Entity
+else paquete válido
+ Service -> Store : guardar casos de prueba
+ Service -> DB : transacción: problemas + casos + auditoría
+ DB --> Service : confirmación
+ Service --> Controller : resumen de importación
+ Controller --> Front : problemas creados
+end
+@enduml
