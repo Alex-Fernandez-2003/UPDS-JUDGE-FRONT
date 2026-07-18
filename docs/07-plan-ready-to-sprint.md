@@ -38,7 +38,7 @@ Judge0 se encapsula detrás del backend. El navegador nunca lo consume directame
 | Backlog priorizado         | Listo                   | Documento 03.                                          |
 | Criterios de aceptación    | Listo para refinamiento | Documento 03.                                          |
 | DoR y DoD                  | Listo                   | Documento 04.                                          |
-| Formato ZIP propuesto       | Pendiente de validación  | Documento 04; validación final pendiente.             |
+| Formato ZIP propuesto      | Listo                   | Documento 04                                           |
 | UML                        | Listo como propuesta    | Documento 05 y fuentes PUML.                           |
 | Modelo de datos            | Listo como propuesta    | Documento 06 y SQL.                                    |
 | Contrato API definitivo    | Pendiente               | Crear OpenAPI en backend.                              |
