@@ -1,0 +1,98 @@
+{
+  "runId": "92a769c7",
+  "agent": "sdd-status",
+  "task": "Return only the native structured status in your final response for existing change `sprint-1-frontend-core-api-ui-foundation`; do NOT create/write artifacts or use heredocs. Inspect OpenSpec configuration and artifact/task state. The session preflight is complete: auto, OpenSpec+Engram, single PR/no publication, review budget <=400 LOC per component (dev catalog/docs exception). User explicitly forbids creating/re-writing change artifacts except truthful tasks.md status updates during apply. Need: resolved change, artifact store, exact allowed edit roots, task progress including any checkbox lines (or state no checkbox syntax), dependencies apply/verify/sync/archive, warnings, and next recommendation.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\92a769c7\\sdd-status-2.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 1,
+  "usage": {
+    "input": 85357,
+    "output": 26067,
+    "cacheRead": 971776,
+    "cacheWrite": 0,
+    "cost": 0,
+    "turns": 36
+  },
+  "model": "opencode/deepseek-v4-flash-free",
+  "attemptedModels": [
+    "opencode/deepseek-v4-flash-free"
+  ],
+  "modelAttempts": [
+    {
+      "model": "opencode/deepseek-v4-flash-free",
+      "success": false,
+      "exitCode": 1,
+      "error": "Subagent timed out after 240000ms.",
+      "usage": {
+        "input": 85357,
+        "output": 26067,
+        "cacheRead": 971776,
+        "cacheWrite": 0,
+        "cost": 0,
+        "turns": 36
+      }
+    }
+  ],
+  "durationMs": 240049,
+  "toolCount": 62,
+  "error": "Subagent timed out after 240000ms.",
+  "acceptance": {
+    "status": "rejected",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "checked",
+      "explicit": false,
+      "inferredReason": [
+        "write-capable worker/task"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Implement the requested change without widening scope",
+          "evidence": [
+            "changed-files",
+            "tests-added",
+            "commands-run",
+            "residual-risks",
+            "no-staged-files"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "changed-files",
+        "tests-added",
+        "commands-run",
+        "residual-risks",
+        "no-staged-files"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "write-capable worker/task"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Implement the requested change without widening scope",
+        "evidence": [
+          "changed-files",
+          "tests-added",
+          "commands-run",
+          "residual-risks",
+          "no-staged-files"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [
+      {
+        "id": "timeout",
+        "status": "failed",
+        "message": "Acceptance was not evaluated because the subagent timed out."
+      }
+    ],
+    "verifyRuns": []
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\92a769c7_sdd-status_0_transcript.jsonl",
+  "timestamp": 1784413177626
+}

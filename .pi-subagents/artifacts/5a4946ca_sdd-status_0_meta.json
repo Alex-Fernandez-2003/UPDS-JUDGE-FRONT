@@ -1,0 +1,89 @@
+{
+  "runId": "5a4946ca",
+  "agent": "sdd-status",
+  "task": "Resolve structured native SDD status for the existing change `sprint-1-frontend-core-api-ui-foundation`. Do not edit any files. The user authorizes auto execution, OpenSpec+memory traceability, a single PR (but no commit/PR/push), and a review budget of <=400 LOC per component except dev catalog/docs. Confirm whether apply is ready and return the exact unchecked implementation task lines plus allowed edit roots. Do not create or rewrite artifacts.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\5a4946ca\\sdd-status.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 1,
+  "usage": {
+    "input": 93610,
+    "output": 10051,
+    "cacheRead": 564352,
+    "cacheWrite": 0,
+    "cost": 0,
+    "turns": 19
+  },
+  "model": "opencode/deepseek-v4-flash-free",
+  "attemptedModels": [
+    "opencode/deepseek-v4-flash-free"
+  ],
+  "modelAttempts": [
+    {
+      "model": "opencode/deepseek-v4-flash-free",
+      "success": false,
+      "exitCode": 1,
+      "error": "Subagent timed out after 120000ms.",
+      "usage": {
+        "input": 93610,
+        "output": 10051,
+        "cacheRead": 564352,
+        "cacheWrite": 0,
+        "cost": 0,
+        "turns": 19
+      }
+    }
+  ],
+  "durationMs": 120035,
+  "toolCount": 40,
+  "error": "Subagent timed out after 120000ms.",
+  "acceptance": {
+    "status": "rejected",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [
+      {
+        "id": "timeout",
+        "status": "failed",
+        "message": "Acceptance was not evaluated because the subagent timed out."
+      }
+    ],
+    "verifyRuns": []
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\5a4946ca_sdd-status_0_transcript.jsonl",
+  "timestamp": 1784412806987
+}

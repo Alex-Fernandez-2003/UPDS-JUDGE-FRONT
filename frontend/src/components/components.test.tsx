@@ -1,0 +1,99 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
+import { Alert, Badge, BrandMark, Button } from './common'
+import { FileDropzone, FormField, Input, PasswordInput } from './forms'
+import { StatCard, Stepper } from './navigation'
+import { DataTable } from './tables'
+
+describe('foundation components', () => {
+  it('renders accessible actions and feedback', async () => {
+    const user = userEvent.setup()
+    const click = vi.fn()
+    render(
+      <>
+        <Button loading onClick={click}>
+          Save
+        </Button>
+        <Alert tone="danger">Problem</Alert>
+        <BrandMark alt="Technical mark" />
+      </>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(click).not.toHaveBeenCalled()
+    expect(screen.getByRole('alert')).toHaveTextContent('Problem')
+    expect(screen.getByAltText('Technical mark')).toBeInTheDocument()
+  })
+
+  it('renders Badge content with its selected tone', () => {
+    render(<Badge tone="success">Published</Badge>)
+
+    expect(screen.getByText('Published')).toHaveClass('bg-green-100')
+  })
+
+  it('associates a field and toggles password visibility', async () => {
+    const user = userEvent.setup()
+    render(
+      <>
+        <FormField label="Name" hint="Help" error="Required">
+          <Input />
+        </FormField>
+        <PasswordInput aria-label="Password" />
+      </>,
+    )
+
+    expect(screen.getByLabelText('Name')).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
+    await user.click(screen.getByRole('button', { name: 'Show password' }))
+    expect(screen.getByLabelText('Password')).toHaveAttribute('type', 'text')
+  })
+
+  it('validates, selects, and removes dropped files', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    render(<FileDropzone accept=".zip" maxSizeBytes={10} onChange={onChange} />)
+    const dropzone = screen.getByRole('button', {
+      name: 'Drop a file here or select one',
+    })
+
+    fireEvent.drop(dropzone, {
+      dataTransfer: { files: [new File(['zip'], 'submission.zip')] },
+    })
+    expect(screen.getByText('submission.zip')).toBeInTheDocument()
+    expect(onChange).toHaveBeenLastCalledWith(expect.any(File))
+
+    await user.click(screen.getByRole('button', { name: 'Remove file' }))
+    expect(onChange).toHaveBeenLastCalledWith(undefined)
+
+    fireEvent.drop(dropzone, {
+      dataTransfer: { files: [new File(['text'], 'notes.txt')] },
+    })
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'File type is not accepted.',
+    )
+  })
+
+  it('identifies active steps, shows stats, and renders table states', () => {
+    render(
+      <>
+        <Stepper steps={['One', 'Two']} activeIndex={1} />
+        <StatCard label="Open" value="12" />
+        <DataTable
+          columns={[{ key: 'name', header: 'Name' }]}
+          rows={[{ name: 'Sample row' }]}
+        />
+      </>,
+    )
+
+    expect(screen.getByText('2. Two')).toHaveAttribute('aria-current', 'step')
+    expect(screen.getByText('Open')).toBeInTheDocument()
+    expect(
+      screen.getByRole('columnheader', { name: 'Name' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('cell', { name: 'Sample row' })).toBeInTheDocument()
+  })
+})

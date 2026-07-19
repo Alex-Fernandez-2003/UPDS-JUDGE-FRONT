@@ -1,0 +1,159 @@
+{
+  "runId": "9ffb23c5",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only final verification of the current pending-contract implementation for `sprint-1-frontend-core-api-ui-foundation`. Do not edit. Confirm from live `http://localhost:5185/swagger/v1/swagger.json` that generated `frontend/src/types/api.generated.ts`, exact endpoints, JWT Bearer transport behavior, typed MSW 200-only handlers, and error resilience match the contract/no-invention limits. Run from `frontend/`: api:types, format:check, lint, typecheck, test:run, build. Verify generated file header, no token persistence/localStorage, no functional auth pages/forms, and only allowed modified roots. Start own Vite server if port free; otherwise identify any existing process and do not kill unrelated work. Smoke proxy safely without credentials. Attempt OpenSpec command if available. Return evidence, results, remaining blocks, and exact status. ## Skills to load before work\n- C:\\Users\\af156\\.copilot\\skills\\work-unit-commits\\SKILL.md\nSave material discoveries to Engram `upds-judge-front` before return.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\9ffb23c5\\openapi-final-verify.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 64275,
+    "output": 4577,
+    "cacheRead": 216576,
+    "cacheWrite": 0,
+    "cost": 0.28348650000000003,
+    "turns": 16
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 64275,
+        "output": 4577,
+        "cacheRead": 216576,
+        "cacheWrite": 0,
+        "cost": 0.28348650000000003,
+        "turns": 16
+      }
+    }
+  ],
+  "durationMs": 143190,
+  "toolCount": 45,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete findings and severities supplied above with paths."
+        }
+      ],
+      "changedFiles": [
+        "docs/07-plan-ready-to-sprint.md",
+        "frontend/**",
+        "docs/openspec/changes/sprint-1-frontend-core-api-ui-foundation/**",
+        "package-lock.json"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "cd frontend && npm run api:types",
+          "result": "passed",
+          "summary": "Generated src/types/api.generated.ts from live Swagger."
+        },
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "passed",
+          "summary": "Prettier reports all matched files formatted."
+        },
+        {
+          "command": "cd frontend && npm run lint",
+          "result": "passed",
+          "summary": "oxlint completed without findings."
+        },
+        {
+          "command": "cd frontend && npm run typecheck",
+          "result": "passed",
+          "summary": "tsc -b completed."
+        },
+        {
+          "command": "cd frontend && npm run test:run",
+          "result": "passed",
+          "summary": "6 files and 29 tests passed."
+        },
+        {
+          "command": "cd frontend && npm run build",
+          "result": "passed",
+          "summary": "Production Vite build completed."
+        },
+        {
+          "command": "curl -i --max-time 10 http://127.0.0.1:8085/api/Auth/login",
+          "result": "passed",
+          "summary": "Proxy reached backend; unauthenticated GET returned 405 Allow: POST."
+        },
+        {
+          "command": "openspec --help",
+          "result": "not-run",
+          "summary": "openspec command not found."
+        }
+      ],
+      "validationOutput": [
+        "Live Swagger returned HTTP 200.",
+        "Generated types include all live documented paths.",
+        "Bearer transport is optional and non-persistent.",
+        "MSW handlers are typed and only return HTTP 200.",
+        "No direct fetch outside frontend/src/lib/api/http-client.ts."
+      ],
+      "residualRisks": [
+        "BLOCKER: docs/07-plan-ready-to-sprint.md is modified despite explicit OpenSpec prohibition.",
+        "Untracked root package-lock.json is outside expected frontend/OpenSpec roots.",
+        "Process identity for existing backend PID 35604 could not be resolved because tasklist invocation failed under Git Bash."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Frontend foundation and OpenSpec artifacts are pending; tracked diff also modifies prohibited docs/07-plan-ready-to-sprint.md.",
+      "reviewFindings": [
+        "blocker: docs/07-plan-ready-to-sprint.md:10-12 - existing academic document modified, violating Change Scope Requirements.",
+        "warning: package-lock.json - untracked root-level lockfile is outside permitted implementation roots.",
+        "no functional auth pages/forms, token persistence, invented API endpoints, or non-200 MSW handlers found."
+      ],
+      "manualNotes": "Technical validation passes, but attestation is blocked by the documented scope violation. Engram save was not possible because no Engram tool was available."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\9ffb23c5_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784436815345
+}

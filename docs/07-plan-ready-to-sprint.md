@@ -7,9 +7,7 @@
 ## 1.1 Separación de repositorios
 
 - Frontend: <https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git>
-- Backend: repositorio independiente, todavía sin URL proporcionada.
-
-Esta separación permite ciclos, despliegues y responsables distintos. El contrato OpenAPI será la frontera formal.
+- Backend: https://github.com/wilsonyucra413-sys/UPDSjudge
 
 ## 1.2 Backend
 
