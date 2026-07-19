@@ -310,6 +310,212 @@ Ejecutá estos comandos desde `frontend/`.
 - No conviertas `/dev/ui` en una pantalla de producto.
 - No agregues persistencia de sesión, cookies ni credenciales a la abstracción neutral actual.
 
+## Tutorial práctico: cómo agregar un componente
+
+Este recorrido separa tres cosas que suelen confundirse: un componente reutilizable que **ya existe** (`StatCard`), una composición que todavía es solo una idea didáctica (`SectionHeader`) y una feature de producto, que requiere aprobación propia. Empezá siempre por reutilizar antes de extraer una API nueva.
+
+### Caso real: usar `StatCard`
+
+`StatCard` es una exportación real de `@/components/navigation`. Su catálogo de desarrollo también es real: en `/dev/ui` se renderiza con la fixture local `uiFixture.statistic` y `tone="info"`. El catálogo es visual y de desarrollo; no obtiene datos por HTTP ni demuestra una feature de producto.
+
+| Propiedad        | Tipo o valor                           | Qué verificar                                                                                                                             |
+| ---------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `label`          | `string`                               | Texto que describe la métrica.                                                                                                            |
+| `value`          | `string \| number`                     | Valor mostrado; el componente no documenta formato numérico especial.                                                                     |
+| `tone`           | `'neutral' \| 'info' \| 'success'`     | Es opcional y por defecto es `'neutral'`. Actualmente solo `success` cambia el borde a verde; `neutral` e `info` comparten el borde base. |
+| Fixture de DevUi | `{ label: 'Open items', value: '12' }` | Es el dato local consumido por el ejemplo actual junto con `tone="info"`.                                                                 |
+
+```tsx
+import { StatCard } from '@/components/navigation'
+
+export function Summary() {
+  return <StatCard label="Open items" value="12" tone="info" />
+}
+```
+
+Antes de crear una variante, comprobá el caso real: `StatCard` ya recibe exactamente `label`, `value` y `tone`. La prueba actual de componentes verifica que el `label` se renderiza; no afirma cobertura dedicada para formato numérico ni para el estilo de cada `tone`.
+
+### Decidir quién es dueño del componente
+
+| Situación                                                  | Dueño recomendado           | Señal para actuar                                             |
+| ---------------------------------------------------------- | --------------------------- | ------------------------------------------------------------- |
+| Una tarjeta o control ya resuelve la necesidad             | Módulo compartido existente | Reutilizalo sin agregar otra abstracción.                     |
+| Patrón visual repetido dentro de una sola feature aprobada | La feature                  | Mantenelo cerca de sus datos y reglas.                        |
+| Patrón estable usado por varias features                   | Área compartida acordada    | Acordá contrato, accesibilidad y pruebas antes de exportarlo. |
+| Pantalla para inspección visual                            | `DevUi` y fixtures locales  | No la conviertas en flujo de producto ni le agregues HTTP.    |
+
+Una extracción vale la pena cuando el título, la descripción y una acción aparecen con la misma semántica en más de un contexto. No alcanza con que dos bloques “se parezcan”: primero definí qué problema común tienen, quién mantendrá la API y qué comportamiento accesible debe conservarse.
+
+### Estructura didáctica no implementada: `SectionHeader`
+
+**Ejemplo didáctico: no representa un archivo implementado actualmente.** `SectionHeader` no existe, no se exporta desde ningún módulo y no debe importarse como si fuera una API disponible. Este ejemplo muestra una posible conversación de diseño; una implementación aprobada podría ubicarse en un área compartida acordada y componer `Button` o `Card` solo si el caso lo justifica.
+
+```tsx
+import type { ReactNode } from 'react'
+
+type SectionHeaderProps = {
+  title: string
+  description?: string
+  action?: ReactNode
+}
+
+function SectionHeader({ title, description, action }: SectionHeaderProps) {
+  return (
+    <header>
+      <div>
+        <h2>{title}</h2>
+        {description ? <p>{description}</p> : null}
+      </div>
+      {action ? <div>{action}</div> : null}
+    </header>
+  )
+}
+```
+
+**Ejemplo didáctico: no representa un archivo implementado actualmente.** Un uso futuro, después de aprobar el contrato, podría expresar la acción como contenido en vez de obligar al encabezado a conocer una feature concreta:
+
+```tsx
+<SectionHeader
+  title="Problems"
+  description="Manage the problem bank."
+  action={<button type="button">Create problem</button>}
+/>
+```
+
+Si se aprobara, la prueba debe comprobar el encabezado semántico, título, descripción opcional y presencia/ausencia de la acción; si la acción es un `Button` existente, también su nombre accesible y estado `loading` cuando corresponda. En `DevUi`, agregá una fixture local y una muestra visual solo después de que exista la exportación real; no uses el catálogo para simular reglas de producto.
+
+**Checklist para incorporar un componente**
+
+- [ ] Confirmé que no existe una primitiva con el contrato necesario.
+- [ ] Elegí el dueño según uso compartido, no por conveniencia de importación.
+- [ ] Documenté props, valores por defecto y semántica accesible.
+- [ ] Agregué prueba de comportamiento y accesibilidad proporcionada al contrato.
+- [ ] Si corresponde, agregué fixture y muestra de DevUi sin HTTP ni datos de producto.
+- [ ] No presenté una muestra conceptual como exportación disponible.
+
+## Tutorial práctico: cómo consumir un endpoint
+
+Este tutorial explica el camino contractual de `POST /api/Auth/login` **sin implementar login**. La ruta `/login` actual está reservada y muestra un placeholder; no hay servicio, hook, mutación, formulario, página de login, persistencia de sesión ni autenticación funcional en el frontend.
+
+### 1. Partí del contrato generado
+
+`src/types/api.generated.ts` es de solo lectura para el consumo manual: OpenAPI define `POST /api/Auth/login`, con cuerpo JSON y respuesta `200`. Los tipos exactos son:
+
+```ts
+type LoginRequest = {
+  correo?: string | null
+  contrasena?: string | null
+}
+
+type LoginResponse = {
+  token?: string | null
+  expiraEn?: string
+}
+```
+
+Los campos son opcionales (y los del request además pueden ser `null`); no los conviertas en obligatorios por intuición. El contrato admite `application/json`, `text/json` y `application/*+json`; el cliente usa JSON para un objeto plano. No edites el archivo generado a mano.
+
+### 2. Entendé endpoint, URL relativa y servicio futuro
+
+El endpoint existente es `endpoints.auth.login === 'Auth/login'`, reexportado por `@/lib/api`. `HttpClient` une una base sin barra final con una ruta sin barra inicial. Por eso, con la base pública `/api`, `httpClient.post(..., endpoints.auth.login, ...)` termina en `POST /api/Auth/login`.
+
+La URL relativa importa: el navegador solo conoce `/api`; en desarrollo Vite puede reenviarla al destino configurado mediante `API_PROXY_TARGET`, que no se expone al cliente. Así evitás fijar un host de API en un componente y mantenés el mismo borde de transporte para mocks y proxy.
+
+**Ejemplo didáctico: no representa un archivo implementado actualmente.** Este sería un servicio futuro dentro de una feature aprobada; no copies sus imports como rutas existentes de una feature:
+
+```ts
+import { endpoints, httpClient } from '@/lib/api'
+import type { components } from '@/types/api.generated'
+
+type LoginRequest = components['schemas']['LoginRequest']
+type LoginResponse = components['schemas']['LoginResponse']
+
+export function login(payload: LoginRequest) {
+  return httpClient.post<LoginResponse>(endpoints.auth.login, payload)
+}
+```
+
+El tipo de retorno de `HttpClient.post<T>` es `Promise<T | undefined>`, porque una respuesta 204 puede no tener cuerpo. Para este contrato educativo se espera 200, pero el consumidor futuro debe manejar el resultado según su contrato aprobado.
+
+### 3. Elegí mutación, no query, para una acción POST
+
+Una query representa lectura cacheable; una mutación representa una acción iniciada por la persona usuaria que puede cambiar estado remoto. `QueryProvider` ya envuelve la aplicación y `@tanstack/react-query` está instalado, pero hoy no existe un helper de mutaciones del proyecto. Los defaults actuales se aplican a queries: reintentan mientras `count < 2` salvo HTTP menor a 500, usan `staleTime: 30000` y `gcTime: 300000`.
+
+**Ejemplo didáctico: no representa un archivo implementado actualmente.** Un hook futuro podría coordinar el servicio con `useMutation`; no existe `useLogin` hoy:
+
+```ts
+import { useMutation } from '@tanstack/react-query'
+import type { components } from '@/types/api.generated'
+
+type LoginRequest = components['schemas']['LoginRequest']
+
+export function useLogin() {
+  return useMutation({
+    mutationFn: (payload: LoginRequest) => login(payload),
+  })
+}
+```
+
+**Ejemplo didáctico: no representa un archivo implementado actualmente.** Una pantalla o componente futuro compondría los controles existentes, recibiría eventos y mostraría sus propios estados; no llamaría a `fetch` directamente:
+
+```tsx
+<form onSubmit={handleSubmit}>
+  <FormField label="Correo" error={correoError}>
+    <Input name="correo" type="email" autoComplete="email" />
+  </FormField>
+  <FormField label="Contraseña" error={contrasenaError}>
+    <PasswordInput name="contrasena" autoComplete="current-password" />
+  </FormField>
+  {errorMessage ? <Alert tone="danger">{errorMessage}</Alert> : null}
+  <Button type="submit" loading={isPending}>
+    Ingresar
+  </Button>
+</form>
+```
+
+`FormField` conecta etiqueta, ayuda/error e identificadores a un único hijo; `Input` acepta props nativas más `error`, `PasswordInput` ofrece su control de visibilidad, `Alert` tiene `role="alert"` y `Button` con `loading` queda deshabilitado. El fragmento no declara imports ni estado porque no es un archivo implementable: su objetivo es mostrar la composición, no inventar una página.
+
+### 4. Conocé lo que hace el transporte real
+
+`HttpClient.post<T>(path, body?, options?)` delega en `request<T>('POST', path, { ...options, body })`. Para objetos planos serializa JSON, envía `accept: application/json` y añade `content-type: application/json`, salvo que el cuerpo sea `FormData` o ya se indique un content type. Con `FormData` no debe fijar ese encabezado: el navegador agrega el límite multipart correcto.
+
+También acepta `AbortSignal` y `timeoutMs` (por defecto, `env.requestTimeoutMs`). Devuelve `undefined` ante 204, JSON cuando puede parsearlo y texto en otro caso. Los fallos se normalizan como `ApiError`: `kind` puede ser `'http'`, `'network'`, `'timeout'` o `'aborted'`; puede incluir `status`, `code`, `fieldErrors` y `requestId`. De Problem Details solo se conservan errores de campo cuyo valor sea `string[]`; la interfaz debe mostrar un error general o asociar errores de campo sin suponer otra forma.
+
+La instancia por defecto usa `neutralAuthTransport`: no agrega header ni persiste nada. Existe `createBearerAuthTransport(() => string | undefined)` para añadir `Bearer <token>`, pero esta fundación no implementa adquisición de credenciales, sesión ni persistencia. Por tanto, este tutorial no promete token real ni autenticación activa.
+
+### 5. Seguí la solicitud en desarrollo y con MSW
+
+La secuencia futura aprobada sería:
+
+```text
+LoginRequest generado
+  -> servicio futuro con httpClient.post<LoginResponse>(endpoints.auth.login, payload)
+  -> useMutation futuro
+  -> componente/formulario futuro
+  -> POST relativo /api/Auth/login
+  -> proxy de Vite hacia API_PROXY_TARGET, o handler MSW cuando los mocks están habilitados
+```
+
+MSW solo arranca antes de renderizar React cuando se cumplen **ambas** condiciones: entorno de desarrollo y `VITE_ENABLE_MOCKS=true`. Si no intercepta una solicitud, el worker deja pasar solicitudes no manejadas. El handler actual para `POST /api/Auth/login` siempre responde 200 con exactamente `{ expiraEn: '2030-01-01T00:00:00Z' }`; no inspecciona el payload y no devuelve `token`. Es una comprobación de ruta y forma de respuesta, no un comportamiento de autenticación.
+
+### 6. Probá el flujo solo cuando la feature sea aprobada
+
+No hay pruebas de feature de login hoy. Para una implementación futura, separá las responsabilidades:
+
+1. Para `HttpClient`, seguí los tests que sustituyen `fetch` con `vi.stubGlobal`, y cubrí JSON, encabezados, `FormData`, 204, timeout y cancelación sin hacer red real.
+2. Para el handler contractual, usá el servidor MSW existente: `setupServer(...handlers)`, `server.listen({ onUnhandledRequest: 'error' })`, `resetHandlers` después de cada prueba y `close` al finalizar. La prueba actual llama `new HttpClient().post<LoginResponse>(endpoints.auth.login)` y espera exactamente la respuesta sin token indicada arriba.
+3. Para el formulario, usá React Testing Library con `render`, `screen` y `userEvent.setup()` para comprobar nombres accesibles, validación, envío, estado pendiente, éxito y cada rama de `ApiError` (HTTP, red, timeout, abortado y errores de campo cuando existan).
+
+**Checklist antes de aprobar un consumo nuevo**
+
+- [ ] El tipo y el path provienen de OpenAPI generado y `endpoints`, sin editar el archivo generado.
+- [ ] El servicio usa `httpClient`; no hay `fetch` directo en hook o componente.
+- [ ] La acción POST usa mutación; no se modeló como query de lectura.
+- [ ] La UI maneja `ApiError`, estado pendiente, abortos y respuesta vacía cuando aplique.
+- [ ] Las pruebas cubren transporte, handler y comportamiento accesible del formulario.
+- [ ] Los mocks se describen como opt-in de desarrollo, no como autenticación ni persistencia real.
+- [ ] No se reemplazó la ruta reservada ni se agregaron cookies, credenciales o sesión sin aprobación.
+
 ## Checklist para un PR de frontend
 
 - [ ] El alcance corresponde a una feature aprobada y no llena rutas reservadas por anticipado.

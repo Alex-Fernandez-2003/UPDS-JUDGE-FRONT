@@ -1,0 +1,117 @@
+{
+  "runId": "71a87293",
+  "agent": "scout",
+  "task": "Read-only fact mapping for expanding ONLY `frontend/docs/guia-arquitectura-y-desarrollo.md` with two Spanish beginner tutorials. Inspect mandatory actual sources: all frontend component modules (common/forms/navigation/tables), DevUi, api/auth/query/MSW/routes/types/env/Vite/package config, existing guide, generated OpenAPI path types, and all tests. Extract exact signatures, props, variants, exports/import paths, route/config behavior, test setup patterns, and Markdown insertion point before `## Checklist para un PR de frontend`. Build a precise content outline for: (1) StatCard case study and conceptual SectionHeader; (2) educational POST login contract path from OpenAPI types through future feature service/mutation/component to HttpClient/proxy/MSW. Mark conceptual samples as not currently implemented. No edits, no OpenSpec CLI, no api:type regeneration. ## Skills to load before work\n- C:\\Users\\af156\\.copilot\\skills\\cognitive-doc-design\\SKILL.md\nSave discoveries to Engram project `upds-judge-front` before returning.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\71a87293\\tutorials-scout.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 76367,
+    "output": 5951,
+    "cacheRead": 182784,
+    "cacheWrite": 0,
+    "cost": 0.3258785,
+    "turns": 11
+  },
+  "model": "openai-codex/gpt-5.6-terra:low",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra:low"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra:low",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 76367,
+        "output": 5951,
+        "cacheRead": 182784,
+        "cacheWrite": 0,
+        "cost": 0.3258785,
+        "turns": 11
+      }
+    }
+  ],
+  "durationMs": 141978,
+  "toolCount": 48,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only/reviewer-style agent"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only/reviewer-style agent"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete source mapping, exact paths/line ranges, signatures, imports, behavior, insertion anchor, outline, and severity-tagged review findings are provided."
+        }
+      ],
+      "changedFiles": [
+        ".pi-subagents/artifacts/outputs/71a87293/tutorials-scout.md"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "cd frontend && nl -ba ... (source line-range inspection)",
+          "result": "passed",
+          "summary": "Confirmed line ranges, generated login contract, and Markdown anchor; no tests or generators were run."
+        }
+      ],
+      "validationOutput": [
+        "Read-only mapping completed; no frontend source/documentation files were edited.",
+        "No OpenSpec CLI or api:type generation was run."
+      ],
+      "residualRisks": [
+        "Conceptual tutorial samples could be mistaken for existing exports unless every sample is visibly labeled non-implemented.",
+        "The existing mock's optional token omission must remain accurately documented."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Only the required scouting artifact was written; repository frontend files remain untouched.",
+      "reviewFindings": [
+        "blocker: frontend/docs/guia-arquitectura-y-desarrollo.md:249-259 and frontend/src/routes/router.tsx:10-29 - login remains a reserved future feature; tutorials must not imply implementation.",
+        "high: frontend/src/types/api.generated.ts:455-462 - login request/response properties are optional (and request properties nullable).",
+        "medium: frontend/src/mocks/handlers/index.ts:9-13 - MSW login mock always returns 200 and no token."
+      ],
+      "manualNotes": "Engram tools were unavailable in this runtime; requested project save could not be performed."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\71a87293_scout_0_transcript.jsonl",
+  "timestamp": 1784443308671
+}

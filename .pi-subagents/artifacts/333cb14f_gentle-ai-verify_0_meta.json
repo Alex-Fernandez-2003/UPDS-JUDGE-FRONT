@@ -1,0 +1,137 @@
+{
+  "runId": "333cb14f",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only final check after generated-type tutorial fix. Do not edit, no api:types/OpenSpec. Confirm both tutorial code snippets import `components` type and derive LoginRequest/LoginResponse from `components['schemas']`; verify required headings/order, conceptual labels, absence of functional claims/backend defect content, and tracked diff scope. From frontend run format:check, lint, typecheck, test:run, build. Return exact outcomes.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\333cb14f\\tutorials-final-verify-2.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 22857,
+    "output": 1479,
+    "cacheRead": 89600,
+    "cacheWrite": 0,
+    "cost": 0.1017275,
+    "turns": 8
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 22857,
+        "output": 1479,
+        "cacheRead": 89600,
+        "cacheWrite": 0,
+        "cost": 0.1017275,
+        "turns": 8
+      }
+    }
+  ],
+  "durationMs": 71639,
+  "toolCount": 11,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Manual review of frontend/docs/guia-arquitectura-y-desarrollo.md and Git diff found no blockers; the only tracked modified file is the tutorial document."
+        }
+      ],
+      "changedFiles": [
+        "frontend/docs/guia-arquitectura-y-desarrollo.md"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "passed",
+          "summary": "Prettier reported all matched files use the configured code style."
+        },
+        {
+          "command": "cd frontend && npm run lint",
+          "result": "passed",
+          "summary": "oxlint completed successfully."
+        },
+        {
+          "command": "cd frontend && npm run typecheck",
+          "result": "passed",
+          "summary": "tsc -b completed successfully."
+        },
+        {
+          "command": "cd frontend && npm run test:run",
+          "result": "passed",
+          "summary": "6 test files and 29 tests passed."
+        },
+        {
+          "command": "cd frontend && npm run build",
+          "result": "passed",
+          "summary": "tsc -b and Vite production build completed successfully."
+        }
+      ],
+      "validationOutput": [
+        "Both login tutorial snippets import the generated components type.",
+        "The service example aliases LoginRequest and LoginResponse from components['schemas']; the hook example aliases its used LoginRequest from components['schemas'].",
+        "Tutorial headings are ordered before the frontend PR checklist.",
+        "Conceptual samples are labeled as non-implemented didactic examples.",
+        "git diff --check completed without whitespace errors; git status showed no staged files."
+      ],
+      "residualRisks": [
+        "Untracked .pi-subagents artifacts were present in the working tree and are outside the tracked tutorial diff."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "One tracked documentation file adds the component and endpoint tutorials, including the generated-schema alias correction.",
+      "reviewFindings": [
+        "no blockers"
+      ],
+      "manualNotes": "No api:types or OpenSpec command was run."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\333cb14f_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784443797258
+}
