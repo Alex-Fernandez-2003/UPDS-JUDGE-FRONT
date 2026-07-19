@@ -2,6 +2,10 @@
 
 This Vite application provides the shared frontend foundation for later approved features. It intentionally contains no functional login, registration, contest, or ZIP-import flow.
 
+## Manual para el equipo
+
+Leé la [Guía de arquitectura y desarrollo del frontend](./docs/guia-arquitectura-y-desarrollo.md) para instalación, arquitectura, componentes, convenciones y validación.
+
 ## Quick start
 
 ```bash

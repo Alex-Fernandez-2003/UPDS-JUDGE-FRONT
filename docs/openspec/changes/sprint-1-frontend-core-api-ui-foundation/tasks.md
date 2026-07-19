@@ -653,31 +653,17 @@
   - PR 5: layouts, router, `/dev/ui`, documentación y validación final.
   - Cada PR debe referenciar el mismo change `sprint-1-frontend-core-api-ui-foundation` y no implementar historias.
 
-## Execution status (2026-07-18)
+## Execution status (2026-07-19)
 
-### Completed non-contractual foundation
+### Technical foundation complete
 
 - Tooling, Vite strict port 8085, Node-only configurable `/api` proxy, `@/` alias, formatting, testing, Tailwind integration, and npm scripts are implemented.
-- Public environment validation, generic fetch-only HTTP client, Problem Details normalization, empty endpoint registry, neutral auth abstractions, TanStack Query, and direct-fetch lint restriction are implemented.
-- MSW conditional infrastructure, safe visual fixtures/builders, semantic tokens, shared primitives, forms, navigation, table primitive, layouts, development-only `/dev/ui`, tests, and frontend documentation are implemented.
-- OpenAPI generation script is implemented and fails clearly when `OPENAPI_SCHEMA_URL` is absent.
+- Public environment validation, the shared HTTP client and error normalization, OpenAPI type generation, neutral auth abstractions, TanStack Query, and the direct-fetch lint restriction are implemented.
+- Conditional MSW infrastructure, visual fixtures/builders, semantic tokens, shared primitives, forms, navigation, table primitive, layouts, development-only `/dev/ui`, tests, and frontend documentation are implemented.
+- The technical validation suite has passed from `frontend/`: `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:run`, and `npm run build`.
 
-### Sprint 1 gap remediation
+### Closure notes
 
-- Direct `import.meta.env.DEV` reads are centralized in `frontend/src/config/env.ts` through typed `isDevelopment`; mock startup and `/dev/ui` routing consume that export.
-- Coverage now verifies Badge, FileDropzone selection/removal/type validation, AuthLayout slots, AdminLayout regions, 404, `/dev/ui` development/production registration, default-disabled mocks, HTTP methods, timeout, caller cancellation, network failures, non-JSON responses, and Problem Details (including validation errors). Table rendered state is also covered.
-- The current remediation validation passed: `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:run` (5 files, 24 tests), and `npm run build` from `frontend/`.
-
-### Contract integration completed (2026-07-19)
-
-- Task 4 is resolved from `http://localhost:5185/swagger/v1/swagger.json`: the document declares global HTTP Bearer/JWT security and exact `POST /api/Auth/login` and `POST /api/Auth/register` operations. Each auth operation documents only a 200 response.
-- Tasks 15, 18, 19, 20, 21, and 25 are completed for the confirmed auth contract: generated OpenAPI types, relative endpoint values, a non-persistent optional Bearer header provider, generic `mensaje` resilience handling, and typed 200-only MSW auth handlers are implemented. No auth page, form, persistence, cookie, or credential flow was added.
-- Task 45 proxy smoke validation completed: Vite on `127.0.0.1:8085` returned 200 for `/` and `/dev/ui`; a credential-free `POST {}` to `/api/Auth/login` was proxied to the backend and returned 400. This observed 400 is not treated as a documented contract response.
-- Task 47 remains pending: no manual capture evidence was created or found.
-- Task 48 requires an OpenSpec tool validation if one is available.
-
-### Validation completed in this run
-
-- The prior foundation validation passed: `npm install --legacy-peer-deps`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:run`, and `npm run build`.
-- This contract integration passed `npm run api:types`, `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:run` (6 files, 29 tests), and `npm run build`. Focused auth transport and MSW tests also passed.
-- No supported `openspec` CLI is installed in this runtime (`command -v openspec` returned no path), so Task 48 remains pending external tool validation.
+- Task 47 — Manual captures: pending but non-blocking. No capture, placeholder, or empty evidence file was created; this does not prevent technical closure of the foundation.
+- Task 48 — OpenSpec CLI validation is not applicable by project decision. Structural consistency is attested from the four change artifacts; no CLI installation or external validation is required for closure.
+- UJ-5, UJ-6, UJ-8, and UJ-9 remain unimplemented.
