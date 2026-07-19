@@ -27,20 +27,20 @@ Judge0 se encapsula detrás del backend. El navegador nunca lo consume directame
 
 # 2. Validación Ready to Sprint
 
-| Criterio                   | Estado                  | Evidencia o acción                                     |
-| -------------------------- | ----------------------- | ------------------------------------------------------ |
-| Problema y valor definidos | Listo                   | Documentos 01 y 02.                                    |
-| MVP delimitado             | Listo                   | 15 historias provistas.                                |
-| Actores identificados      | Listo                   | Casos de uso y roles.                                  |
-| Wireframes iniciales       | Listo con mejoras       | Ocho frames; falta completar responsive y componentes. |
-| Backlog priorizado         | Listo                   | Documento 03.                                          |
-| Criterios de aceptación    | Listo para refinamiento | Documento 03.                                          |
-| DoR y DoD                  | Listo                   | Documento 04.                                          |
-| Formato ZIP propuesto      | Listo                   | Documento 04                                           |
-| UML                        | Listo como propuesta    | Documento 05 y fuentes PUML.                           |
-| Modelo de datos            | Listo como propuesta    | Documento 06 y SQL.                                    |
-| Contrato API definitivo    | Pendiente               | Crear OpenAPI en backend.                              |
-| Judge0 disponible          | Pendiente               | Definir instancia y credenciales.                      |
+| Criterio                   | Estado    | Evidencia o acción                |
+| -------------------------- | --------- | --------------------------------- |
+| Problema y valor definidos | Listo     | Documentos 01 y 02.               |
+| MVP delimitado             | Listo     | 15 historias provistas.           |
+| Actores identificados      | Listo     | Casos de uso y roles.             |
+| Wireframes iniciales       | Listos    | Figma.                            |
+| Backlog priorizado         | Listo     | Documento 03.                     |
+| Criterios de aceptación    | Listos    | Documento 03.                     |
+| DoR y DoD                  | Listos    | Documento 04.                     |
+| Formato ZIP propuesto      | Listo     | Documento 04                      |
+| UML                        | Listo     | Documento 05 y fuentes PUML.      |
+| Modelo de datos            | Listo     | Documento 06 y SQL.               |
+| Contrato API definitivo    | Listo     | Crear OpenAPI en backend.         |
+| Judge0 disponible          | Pendiente | Definir instancia y credenciales. |
 
 # 3. Resultado de readiness
 

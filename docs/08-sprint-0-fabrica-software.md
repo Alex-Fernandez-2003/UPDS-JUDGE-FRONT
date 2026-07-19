@@ -16,7 +16,7 @@ Construir una base reproducible para que frontend y backend se desarrollen en pa
 ## 2.2 Backend
 
 - Repositorio separado.
-- URL: pendiente.
+- URL: https://github.com/wilsonyucra413-sys/UPDSjudge
 - Responsabilidad: ASP.NET Core MVC/Web API, Identity, EF Core, Judge0, SignalR, reglas y migraciones.
 
 # 3. Ramas
@@ -138,19 +138,19 @@ REPOSITORIO/
 
 ## 4.1 Responsabilidad de las carpetas principales
 
-| Carpeta                    | Responsabilidad                                                                      |
-| -------------------------- | ------------------------------------------------------------------------------------ |
-| `database/`                | Contiene el script SQL inicial utilizado como referencia académica y documental.     |
-| `docs/`                    | Contiene informes, diagramas, capturas, modelos UML y evidencias del proyecto.       |
-| `docs/capturas/`           | Guarda evidencias visuales del backlog, modelo de datos, tablero y flujo de trabajo. |
-| `docs/images/`             | Contiene las imágenes generadas a partir de los diagramas y modelos del proyecto.    |
-| `docs/puml/`               | Contiene los archivos PlantUML editables.                                            |
+| Carpeta                    | Responsabilidad                                                                                             |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `database/`                | Contiene el script SQL inicial utilizado como referencia académica y documental.                            |
+| `docs/`                    | Contiene informes, diagramas, capturas, modelos UML y evidencias del proyecto.                              |
+| `docs/capturas/`           | Guarda evidencias visuales del backlog, modelo de datos, tablero y flujo de trabajo.                        |
+| `docs/images/`             | Contiene las imágenes generadas a partir de los diagramas y modelos del proyecto.                           |
+| `docs/puml/`               | Contiene los archivos PlantUML editables.                                                                   |
 | `frontend/`                | Estructura prevista para la aplicación React con Vite y TypeScript; pendiente de incorporación al checkout. |
-| `frontend/src/components/` | Ubicación propuesta para componentes visuales reutilizables.                         |
-| `frontend/src/features/`   | Ubicación propuesta para funcionalidades por dominio.                                |
-| `frontend/src/lib/`        | Ubicación propuesta para clientes, utilidades e integraciones compartidas.           |
-| `frontend/src/pages/`      | Ubicación propuesta para pantallas principales.                                      |
-| `frontend/src/routes/`     | Ubicación propuesta para configuración de rutas.                                     |
+| `frontend/src/components/` | Ubicación propuesta para componentes visuales reutilizables.                                                |
+| `frontend/src/features/`   | Ubicación propuesta para funcionalidades por dominio.                                                       |
+| `frontend/src/lib/`        | Ubicación propuesta para clientes, utilidades e integraciones compartidas.                                  |
+| `frontend/src/pages/`      | Ubicación propuesta para pantallas principales.                                                             |
+| `frontend/src/routes/`     | Ubicación propuesta para configuración de rutas.                                                            |
 
 La carpeta `database/` conserva el diseño SQL de referencia utilizado en la documentación. Las migraciones y decisiones definitivas de persistencia serán gestionadas por el responsable del repositorio backend.
 
@@ -257,12 +257,15 @@ restore → build → unit tests → integration tests → publish
 
 ## 9.2 Roles operativos
 
-| Rol                       | Responsable sugerido | Responsabilidad                                          |
-| ------------------------- | -------------------- | -------------------------------------------------------- |
-| Coordinación del squad    | persona              | Ordenar entregables, tablero y revisión general.         |
-| Apoyo técnico/documental  | persona              | Apoyar documentación, validación y revisión de tareas.   |
-| Revisor de PR             | persona              | Revisar cambios antes de mezclar a `develop`.            |
-| Responsable de evidencias | persona              | Tomar capturas y verificar que coincidan con la entrega. |
+| Rol                              | Responsable sugerido                                         | Responsabilidad                                                        |
+| -------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| Coordinación del squad           | Alex Saúl Fernández Valdez.                                  | Ordenar entregables, tablero y revisión general.                       |
+| Apoyo técnico/documental         | Alex Saúl Fernández Valdez.                                  | Apoyar documentación, validación y revisión de tareas.                 |
+| Revisor de PR                    | Alex Saúl Fernández Valdez.                                  | Revisar cambios antes de mezclar a `develop`.                          |
+| Responsable de evidencias        | Personal creador del documento correspondiente a la HU.      | Tomar capturas y verificar que coincidan con la entrega.               |
+| Tester del producto              | Enny Anaí Lopez Saldaña Beymar y Beymar Angelo Vasquez Acha. | Probar los cambios al finalizar un sprint para buscar errores`main`.   |
+| Encargado del backend            | Wilson Yucra Rengifo.                                        | Crear los endpoints del backend necesarios para el equipo de frontend. |
+| Encargado de assets del proyecto | Enny Anaí Lopez Saldaña Beymar y Beymar Angelo Vasquez.      | Crear assets e íconos necesarios para el frontend.                     |
 
 ## 9.3 Flujo de Git
 
@@ -343,15 +346,15 @@ Las evidencias se almacenan dentro de `docs/capturas/`. Una evidencia se marca c
 | Evidencia                                            | Estado     | Archivo o referencia                     |
 | ---------------------------------------------------- | ---------- | ---------------------------------------- |
 | Enlace al repositorio frontend                       | Disponible | Incluido en este documento               |
-| Enlace al repositorio backend                        | Pendiente  | A cargo del responsable del backend      |
+| Enlace al repositorio backend                        | Disponible | Incluido en este documento               |
 | Captura del backlog de historias de usuario          | Disponible | `capturas/backlog-historias-usuario.jpg` |
 | Captura del modelo de datos original                 | Disponible | `capturas/modelo-datos-original.png`     |
 | Captura de las ramas `main` y `develop`              | Disponible | `capturas/ramas.png`                     |
 | Captura de la estructura actual del repositorio      | Disponible | `capturas/estructura-repositorio.png`    |
 | Captura del tablero de Jira                          | Disponible | `capturas/tablero-jira.png`              |
-| Captura de los issues del Sprint 0                   | Pendiente  | Pendiente de generación                  |
-| Captura de la aplicación React con Vite en ejecución | Pendiente  | Pendiente de generación                  |
-| Captura de DoD y DoR en la documentación             | Pendiente  | Pendiente de generación                  |
+| Captura de los issues del Sprint 0                   | Disponible | `capturas/issues-sprint-0.png`           |
+| Captura de la aplicación React con Vite en ejecución | Disponible | `capturas/react-vite-sprint-0.png`       |
+| Captura de DoD y DoR en la documentación             | Disponible | `capturas/dod-dor-readme.png`            |
 
 ---
 
@@ -388,6 +391,24 @@ La captura conserva como referencia el modelo de datos planteado durante la etap
 ### Captura del tablero de Jira
 
 ![Captura de jira](./capturas/tablero-jira.png)
+
+---
+
+### Captura de los issues del Sprint 0
+
+![Captura de issues del Sprint 0](./capturas/issues-sprint-0.png)
+
+---
+
+### Captura de la aplicación React con Vite en ejecución
+
+![Captura de React con Vite](./capturas/react-vite-sprint-0.png)
+
+---
+
+### Captura de DoD y DoR en la documentación
+
+![Captura de DoD y DoR](./capturas/dod-dor-readme.png)
 
 ---
 
