@@ -9,7 +9,7 @@
 | Proceso central      | Organización de concursos y evaluación automática de soluciones |
 | Equipo               | GPTeam                                                          |
 | Repositorio frontend | https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git     |
-| Repositorio backend  | Independiente; URL pendiente                                    |
+| Repositorio backend  | https://github.com/wilsonyucra413-sys/UPDSjudge                 |
 | Estado actual        | Análisis, diseño y preparación para desarrollo                  |
 
 ## Integrantes
@@ -19,7 +19,7 @@
 - Arnold Daniel Torrez Zarate
 - Daniel Javier Aramayo Mancilla
 - Enny Anaí Lopez Saldaña Beymar
-- Angelo Vasquez Acha
+- Beymar Angelo Vasquez Acha
 - Alex Saul Fernandez Valdez
 
 # 1. Contexto del problema

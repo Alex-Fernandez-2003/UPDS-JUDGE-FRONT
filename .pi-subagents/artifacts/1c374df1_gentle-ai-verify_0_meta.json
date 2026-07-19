@@ -1,0 +1,144 @@
+{
+  "runId": "1c374df1",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only validate the new tutorials in `frontend/docs/guia-arquitectura-y-desarrollo.md`. Do not edit or run OpenSpec/api:types. Check both exact headings appear before PR checklist; all mandated tutorial topics exist; StatCard details/props/import/DevUi/test claims match actual code; conceptual SectionHeader and future login service/mutation/component are unmistakably labeled non-implemented; login path/type aliases/HttpClient signature/endpoints/Bearer/MSW claims match source; no Swagger defects or backend recommendations; no functional claim; only this file changed. From frontend run format:check, lint, typecheck, test:run, build. Return precise pass/fail evidence.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\1c374df1\\tutorials-final-verify.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 45603,
+    "output": 3478,
+    "cacheRead": 229888,
+    "cacheWrite": 0,
+    "cost": 0.2236495,
+    "turns": 12
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 45603,
+        "output": 3478,
+        "cacheRead": 229888,
+        "cacheWrite": 0,
+        "cost": 0.2236495,
+        "turns": 12
+      }
+    }
+  ],
+  "durationMs": 111756,
+  "toolCount": 38,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete major finding at frontend/docs/guia-arquitectura-y-desarrollo.md:426 and :444, with generated-type evidence at frontend/src/types/api.generated.ts."
+        }
+      ],
+      "changedFiles": [
+        "frontend/docs/guia-arquitectura-y-desarrollo.md"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "npm run format:check",
+          "result": "failed",
+          "summary": "Run from repository root; ENOENT because root package.json does not exist."
+        },
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "passed",
+          "summary": "Prettier reported all matched files use its code style."
+        },
+        {
+          "command": "cd frontend && npm run lint",
+          "result": "passed",
+          "summary": "oxlint exited successfully."
+        },
+        {
+          "command": "cd frontend && npm run typecheck",
+          "result": "passed",
+          "summary": "tsc -b exited successfully."
+        },
+        {
+          "command": "cd frontend && npm run test:run",
+          "result": "passed",
+          "summary": "Vitest: 6 test files and 29 tests passed."
+        },
+        {
+          "command": "cd frontend && npm run build",
+          "result": "passed",
+          "summary": "tsc -b and Vite production build succeeded."
+        }
+      ],
+      "validationOutput": [
+        "Headings: tutorial component line 313; tutorial endpoint line 396; PR checklist line 514.",
+        "StatCard evidence: frontend/src/components/navigation/index.tsx; DevUi use: frontend/src/dev/ui/DevUi.tsx:69; fixture: frontend/src/mocks/fixtures/ui.ts; label test: frontend/src/components/components.test.tsx.",
+        "Login/transport/MSW evidence: frontend/src/routes/constants.ts, frontend/src/routes/router.tsx, frontend/src/lib/api/endpoints.ts, frontend/src/lib/api/http-client.ts, frontend/src/lib/auth/auth-transport.ts, frontend/src/mocks/handlers/index.ts.",
+        "Type-alias defect evidence: frontend/src/types/api.generated.ts exposes components schemas, while tutorial lines 426 and 444 import nonexistent named aliases."
+      ],
+      "residualRisks": [
+        "Major documentation defect: future login examples will not typecheck as shown because LoginRequest and LoginResponse are not named exports from src/types/api.generated.ts.",
+        "Global single-file-change assertion is blocked by pre-existing untracked .pi-subagents/artifacts/** entries.",
+        "The failed root npm command created an unexpected cache log outside the repository: C:\\Users\\af156\\AppData\\Local\\npm-cache\\_logs\\2026-07-19T06_45_46_049Z-debug-0.log."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Tracked diff contains 201 added lines solely in frontend/docs/guia-arquitectura-y-desarrollo.md; untracked harness artifacts are also present.",
+      "reviewFindings": [
+        "major: frontend/docs/guia-arquitectura-y-desarrollo.md:426, :444 - imports LoginRequest/LoginResponse as named exports from '@/types/api.generated', but frontend/src/types/api.generated.ts exports schemas via components and declares no such named aliases.",
+        "blocker: git status --short reports untracked .pi-subagents/artifacts/** paths, preventing an attestation that only the tutorial file changed globally."
+      ],
+      "manualNotes": "No OpenSpec or api:types command was run."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\1c374df1_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784443621880
+}

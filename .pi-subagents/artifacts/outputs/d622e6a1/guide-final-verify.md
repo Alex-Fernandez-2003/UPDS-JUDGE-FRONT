@@ -1,0 +1,1 @@
+Verificación final completada. No hallazgos bloqueantes ni cambios fuera del alcance documental permitido (ignorando artefactos `.pi*`).
