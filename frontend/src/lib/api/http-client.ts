@@ -20,9 +20,13 @@ const requestIdFrom = (response: Response) =>
   undefined
 
 export class HttpClient {
-  private readonly authTransport: AuthTransport
+  private authTransport: AuthTransport
 
   constructor(authTransport: AuthTransport = neutralAuthTransport) {
+    this.authTransport = authTransport
+  }
+
+  setAuthTransport(authTransport: AuthTransport) {
     this.authTransport = authTransport
   }
 
@@ -147,3 +151,8 @@ export class HttpClient {
 }
 
 export const httpClient = new HttpClient()
+
+/** Configures the single shared client when an application auth integration is available. */
+export const configureHttpClientAuthTransport = (
+  authTransport: AuthTransport,
+) => httpClient.setAuthTransport(authTransport)

@@ -1,0 +1,1 @@
+docs/openspec/changes/uj08-uj09-create-contest-zip-import-frontend/tasks.md

@@ -1,0 +1,126 @@
+{
+  "runId": "be1c1b24",
+  "agent": "scout",
+  "task": "Read-only evidence mapping to create ONLY `docs/historias/UJ08-UJ09-crear-concurso-importar-zip.md`. First inspect whether it exists. Read all four associated change artifacts, real contest feature sources/tests, API endpoints/client/auth, router, MSW handlers/tests, and actual task status. Extract exact filenames, exported names, code behavior, form/schema constraints, multipart keys, UI composition, response/error behavior, test count/commands evidence and pending integrations. Build a precise Spanish document outline covering every user-required heading without exposing Swagger defects, secrets or non-existing behavior. Verify which suggested evidence paths exist and do not use nonexistent image links. Do not edit or run OpenSpec CLI/tests.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\be1c1b24\\uj08-uj09-doc-scout.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 146062,
+    "output": 6360,
+    "cacheRead": 301568,
+    "cacheWrite": 0,
+    "cost": 0.5359470000000001,
+    "turns": 10
+  },
+  "model": "openai-codex/gpt-5.6-terra:low",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra:low"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra:low",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 146062,
+        "output": 6360,
+        "cacheRead": 301568,
+        "cacheWrite": 0,
+        "cost": 0.5359470000000001,
+        "turns": 10
+      }
+    }
+  ],
+  "durationMs": 160634,
+  "toolCount": 51,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only/reviewer-style agent"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only/reviewer-style agent"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete read-only findings cite exact frontend, OpenSpec, test, routing, API/auth, MSW, task-status and image paths; severities and residual risks are recorded."
+        }
+      ],
+      "changedFiles": [
+        ".pi-subagents/artifacts/outputs/be1c1b24/uj08-uj09-doc-scout.md"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "target existence/status/path inspection and read-only grep/find/nl mapping",
+          "result": "passed",
+          "summary": "Confirmed destination missing; mapped artifacts, implementation, tests, image inventory and current working-tree status without running tests or OpenSpec CLI."
+        },
+        {
+          "command": "OpenSpec CLI/tests",
+          "result": "not-run",
+          "summary": "Explicitly prohibited by the task."
+        }
+      ],
+      "validationOutput": [
+        "Target history document does not exist.",
+        "Prior verifier artifacts record format/lint/typecheck/build passed and test:run passed 11 files/41 tests; this scout did not rerun them.",
+        "No verified contest screenshot exists; no image link is recommended."
+      ],
+      "residualRisks": [
+        "Authenticated end-to-end integration remains pending because no application call site configures shared-client AuthTransport.",
+        "Generated API evidence does not type the success body consumed by the feature; keep the user-facing history factual and do not present it as confirmed backend behavior.",
+        "Manual visual/browser evidence and captures remain pending.",
+        "Some implemented feedback and validation behavior has limited direct page/schema test coverage."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Read-only evidence mapping; only the required scout artifact was created.",
+      "reviewFindings": [
+        "high: frontend/src/lib/auth/auth-transport.ts:7-14 and frontend/src/lib/api/http-client.ts:153-158 - Bearer abstraction is not configured by an application call site.",
+        "high: frontend/src/types/api.generated.ts:93-136 versus frontend/src/features/contests/types.ts:15-18 - feature success body lacks matching generated response evidence.",
+        "medium: frontend/src/features/contests/CreateContestPage.test.tsx:17-50 - submit feedback/cancel paths are not directly tested.",
+        "medium: docs/openspec/changes/uj08-uj09-create-contest-zip-import-frontend/tasks.md:7-9 - manual and authenticated integration evidence is pending."
+      ],
+      "manualNotes": "Do not add image links to the requested history until a relevant current-feature image is verified. The proposed outline intentionally avoids Swagger/contract defects, secrets and unimplemented behavior."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\be1c1b24_scout_0_transcript.jsonl",
+  "timestamp": 1784492300613
+}
