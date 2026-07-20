@@ -10,7 +10,7 @@ const values: CreateContestFormValues = {
   contrasena: '',
   urlSetProblemas: ' https://example.test/problems ',
   minutosCongelamiento: 30,
-  codigo: ' C-1 ',
+  codigo: ' Regional-2026 ',
   listaProblemas: [
     { titulo: ' First ', tiempo: 1.5, memoria: 256 },
     { titulo: ' Second ', tiempo: 2, memoria: 512 },
@@ -28,16 +28,43 @@ describe('createContestFormData', () => {
       new Date(values.fechaInicio).toISOString(),
     )
     expect(formData.get('duracionMinutos')).toBe('120')
+    expect(formData.has('contrasena')).toBe(true)
     expect(formData.get('contrasena')).toBe('')
     expect(formData.get('urlSetProblemas')).toBe(
       'https://example.test/problems',
     )
     expect(formData.get('minutosCongelamiento')).toBe('30')
-    expect(formData.get('codigo')).toBe('C-1')
+    expect(formData.get('codigo')).toBe('regional-2026')
     expect(formData.get('listaProblemas[0].inciso')).toBe('A')
     expect(formData.get('listaProblemas[0].titulo')).toBe('First')
     expect(formData.get('listaProblemas[1].inciso')).toBe('B')
     expect(formData.get('listaProblemas[1].memoria')).toBe('512')
     expect(formData.get('archivoZip')).toBeInstanceOf(File)
+  })
+
+  it('always appends a normalized lower-case contest code', () => {
+    const formData = createContestFormData({
+      ...values,
+      codigo: '  LOCAL-01  ',
+    })
+
+    expect(formData.get('codigo')).toBe('local-01')
+  })
+
+  it('always appends a normalized password string for legacy absent and real values', () => {
+    const absent = createContestFormData({
+      ...values,
+      contrasena: undefined as unknown as string,
+    })
+    const whitespace = createContestFormData({ ...values, contrasena: '   ' })
+    const password = createContestFormData({
+      ...values,
+      contrasena: ' secret ',
+    })
+
+    expect(absent.has('contrasena')).toBe(true)
+    expect(absent.get('contrasena')).toBe('')
+    expect(whitespace.get('contrasena')).toBe('')
+    expect(password.get('contrasena')).toBe('secret')
   })
 })

@@ -1,21 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type Resolver } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button, Card } from '@/components/common'
-import {
-  FileDropzone,
-  FormError,
-  FormField,
-  Input,
-  PasswordInput,
-  Textarea,
-} from '@/components/forms'
+import { FormField, Input, PasswordInput, Textarea } from '@/components/forms'
 import { Breadcrumbs } from '@/components/navigation'
 import { ApiError } from '@/lib/api'
 import { routes } from '@/routes/constants'
 import { ContestProblemList } from './ContestProblemList'
+import { ContestZipField } from './ContestZipField'
 import { CreateContestSummary } from './CreateContestSummary'
+import {
+  CONTEST_CODE_HINT,
+  getContestZipError,
+  newContestProblem,
+} from './constants'
 import { createContestSchema } from './schema'
 import type { CreateContestFormValues } from './types'
 import { problemLetter } from './types'
@@ -30,7 +29,7 @@ const defaults: CreateContestFormValues = {
   urlSetProblemas: '',
   minutosCongelamiento: 0,
   codigo: '',
-  listaProblemas: [{ titulo: '', tiempo: 1, memoria: 256 }],
+  listaProblemas: [newContestProblem()],
   archivoZip: undefined,
 }
 
@@ -39,7 +38,10 @@ export function CreateContestPage() {
   const mutation = useCreateContestMutation()
   const form = useForm<CreateContestFormValues>({
     defaultValues: defaults,
-    resolver: zodResolver(createContestSchema),
+    // The UI contract is string-only; the schema additionally tolerates legacy absent values.
+    resolver: zodResolver(
+      createContestSchema,
+    ) as Resolver<CreateContestFormValues>,
   })
   const values = form.watch()
   const { errors } = form.formState
@@ -55,7 +57,14 @@ export function CreateContestPage() {
         ? mutation.error.message
         : undefined
 
-  const onSubmit = (values: CreateContestFormValues) => mutation.mutate(values)
+  const onSubmit = (values: CreateContestFormValues) => {
+    const zipError = getContestZipError(values.archivoZip)
+    if (zipError) {
+      form.setError('archivoZip', { type: 'validate', message: zipError })
+      return
+    }
+    mutation.mutate(values)
+  }
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
@@ -116,8 +125,15 @@ export function CreateContestPage() {
                   {...form.register('descripcion')}
                 />
               </FormField>
-              <FormField label="Código" error={errors.codigo?.message}>
+              <FormField
+                label="Código"
+                hint={CONTEST_CODE_HINT}
+                error={errors.codigo?.message}
+              >
                 <Input
+                  placeholder="regional-2026"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   disabled={mutation.isPending}
                   {...form.register('codigo')}
                 />
@@ -204,29 +220,38 @@ export function CreateContestPage() {
               <div>
                 <h2 className="text-lg font-semibold">Recursos</h2>
                 <p className="text-sm text-[var(--text-secondary)]">
-                  El ZIP debe contener las carpetas de los problemas:{' '}
-                  {values.listaProblemas
-                    .map((_, index) => problemLetter(index))
-                    .join(', ')}
-                  .
+                  Adjuntá el archivo ZIP con los casos del concurso.
                 </p>
               </div>
-              <FileDropzone
-                accept=".zip"
+              <ContestZipField
+                value={values.archivoZip}
+                error={errors.archivoZip?.message}
                 disabled={mutation.isPending}
                 onChange={(file) => {
-                  form.setValue('archivoZip', file, { shouldValidate: true })
+                  form.setValue('archivoZip', file, {
+                    shouldDirty: true,
+                    shouldValidate: Boolean(file),
+                  })
                 }}
+                onError={(message) => {
+                  form.setValue('archivoZip', undefined, { shouldDirty: true })
+                  form.setError('archivoZip', { type: 'validate', message })
+                }}
+                onClearError={() => form.clearErrors('archivoZip')}
               />
-              {errors.archivoZip && (
-                <FormError>{errors.archivoZip.message}</FormError>
-              )}
             </Card>
           </div>
           <aside>
             <CreateContestSummary values={values} />
           </aside>
         </div>
+        <Alert tone="info" className="mt-6">
+          El ZIP debe contener las carpetas de los problemas:{' '}
+          {values.listaProblemas
+            .map((_, index) => problemLetter(index))
+            .join(', ')}
+          . Tamaño máximo: 100 MB.
+        </Alert>
         <div className="mt-6 flex flex-wrap justify-end gap-3">
           <Button
             type="button"

@@ -1,3 +1,4 @@
+import { ClipboardList } from 'lucide-react'
 import { Badge, Card, Divider } from '@/components/common'
 import { problemLetter, type CreateContestFormValues } from './types'
 
@@ -10,62 +11,65 @@ const empty = 'Sin definir'
 export function CreateContestSummary({ values }: Props) {
   const problems = values.listaProblemas ?? []
   const modality = values.contrasena?.trim() ? 'Privado' : 'Público'
+  const rows = [
+    ['Nombre', values.nombre?.trim() || empty],
+    ['Código', values.codigo?.trim() || empty],
+    ['Inicio', values.fechaInicio || empty],
+    [
+      'Duración',
+      values.duracionMinutos ? `${values.duracionMinutos} minutos` : empty,
+    ],
+    [
+      'Congelamiento',
+      typeof values.minutosCongelamiento === 'number'
+        ? `${values.minutosCongelamiento} minutos`
+        : empty,
+    ],
+    [
+      'Problemas',
+      `${problems.length} ${problems.length === 1 ? 'problema' : 'problemas'}`,
+    ],
+    [
+      'Incisos',
+      problems.length
+        ? problems.map((_, index) => problemLetter(index)).join(', ')
+        : empty,
+    ],
+    ['Archivo ZIP', values.archivoZip?.name || 'No seleccionado'],
+  ]
 
   return (
     <Card
-      className="space-y-4 md:sticky md:top-5"
+      className="overflow-hidden p-0 md:sticky md:top-5"
       aria-labelledby="summary-heading"
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center gap-3 bg-[var(--primary)] px-5 py-4 text-white">
+        <ClipboardList className="size-5" aria-hidden="true" />
         <h2 id="summary-heading" className="text-lg font-semibold">
-          Resumen
+          Resumen del concurso
         </h2>
-        <Badge tone={modality === 'Público' ? 'info' : 'warning'}>
-          {modality}
-        </Badge>
       </div>
-      <Divider />
-      <dl className="space-y-3 text-sm">
-        <div>
-          <dt className="text-[var(--text-secondary)]">Nombre</dt>
-          <dd className="font-medium">{values.nombre?.trim() || empty}</dd>
-        </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Código</dt>
-          <dd className="font-medium">{values.codigo?.trim() || empty}</dd>
-        </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Inicio</dt>
-          <dd>{values.fechaInicio || empty}</dd>
-        </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Duración</dt>
+      <dl className="px-5">
+        <div className="flex items-center justify-between gap-3 py-3 text-sm">
+          <dt className="text-[var(--text-secondary)]">Modalidad</dt>
           <dd>
-            {values.duracionMinutos
-              ? `${values.duracionMinutos} minutos`
-              : empty}
+            <Badge tone={modality === 'Público' ? 'info' : 'warning'}>
+              {modality}
+            </Badge>
           </dd>
         </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Congelamiento</dt>
-          <dd>
-            {typeof values.minutosCongelamiento === 'number'
-              ? `${values.minutosCongelamiento} minutos`
-              : empty}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Problemas</dt>
-          <dd>
-            {problems.length} {problems.length === 1 ? 'problema' : 'problemas'}
-            {problems.length > 0 &&
-              ` (${problems.map((_, index) => problemLetter(index)).join(', ')})`}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-[var(--text-secondary)]">Archivo ZIP</dt>
-          <dd className="break-all">{values.archivoZip?.name || empty}</dd>
-        </div>
+        <Divider />
+        {rows.map(([label, value], index) => (
+          <div key={label}>
+            <div className="py-3 text-sm">
+              <dt className="text-[var(--text-secondary)]">{label}</dt>
+              <dd className="mt-1 break-all font-medium text-[var(--text-primary)]">
+                {value}
+              </dd>
+            </div>
+            {index < rows.length - 1 && <Divider />}
+          </div>
+        ))}
       </dl>
     </Card>
   )

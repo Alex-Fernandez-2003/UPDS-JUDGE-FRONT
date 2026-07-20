@@ -1,3 +1,4 @@
+import { normalizeContestCode, normalizeContestPassword } from './constants'
 import { problemLetter, type CreateContestFormValues } from './types'
 
 export const createContestFormData = (values: CreateContestFormValues) => {
@@ -6,10 +7,10 @@ export const createContestFormData = (values: CreateContestFormValues) => {
   formData.append('descripcion', values.descripcion.trim())
   formData.append('fechaInicio', new Date(values.fechaInicio).toISOString())
   formData.append('duracionMinutos', String(values.duracionMinutos))
-  formData.append('contrasena', values.contrasena.trim())
+  formData.append('contrasena', normalizeContestPassword(values.contrasena))
   formData.append('urlSetProblemas', values.urlSetProblemas.trim())
   formData.append('minutosCongelamiento', String(values.minutosCongelamiento))
-  formData.append('codigo', values.codigo.trim())
+  formData.append('codigo', normalizeContestCode(values.codigo))
   values.listaProblemas.forEach((problem, index) => {
     const key = `listaProblemas[${index}]`
     formData.append(`${key}.inciso`, problemLetter(index))

@@ -1,4 +1,12 @@
 import { z } from 'zod'
+import {
+  CONTEST_CODE_ERROR,
+  CONTEST_CODE_PATTERN,
+  MAX_CONTEST_PROBLEMS,
+  MAX_CONTEST_ZIP_SIZE_BYTES,
+  normalizeContestCode,
+  normalizeContestPassword,
+} from './constants'
 
 const requiredText = (label: string) =>
   z.string().trim().min(1, `${label} es obligatorio.`)
@@ -15,7 +23,7 @@ export const createContestSchema = z
     descripcion: requiredText('La descripción'),
     fechaInicio: requiredText('La fecha de inicio'),
     duracionMinutos: positiveInteger('La duración'),
-    contrasena: z.string(),
+    contrasena: z.preprocess(normalizeContestPassword, z.string()),
     urlSetProblemas: z
       .string()
       .trim()
@@ -25,7 +33,10 @@ export const createContestSchema = z
       .number({ error: 'Los minutos de congelamiento son obligatorios.' })
       .int('Los minutos de congelamiento deben ser un número entero.')
       .min(0, 'Los minutos de congelamiento no pueden ser negativos.'),
-    codigo: requiredText('El código'),
+    codigo: z
+      .preprocess(normalizeContestCode, z.string())
+      .refine((code) => code.length > 0, 'El código es obligatorio.')
+      .refine((code) => CONTEST_CODE_PATTERN.test(code), CONTEST_CODE_ERROR),
     listaProblemas: z
       .array(
         z.object({
@@ -37,7 +48,10 @@ export const createContestSchema = z
         }),
       )
       .min(1, 'Debe incluir al menos un problema.')
-      .max(26, 'Puede incluir como máximo 26 problemas.'),
+      .max(
+        MAX_CONTEST_PROBLEMS,
+        `Puede incluir como máximo ${MAX_CONTEST_PROBLEMS} problemas.`,
+      ),
     archivoZip: z
       .instanceof(File)
       .optional()
@@ -45,6 +59,10 @@ export const createContestSchema = z
       .refine(
         (file) => !file || file.name.toLowerCase().endsWith('.zip'),
         'El archivo debe tener extensión .zip.',
+      )
+      .refine(
+        (file) => !file || file.size <= MAX_CONTEST_ZIP_SIZE_BYTES,
+        'El ZIP no puede superar 100 MB.',
       ),
   })
   .superRefine((values, context) => {

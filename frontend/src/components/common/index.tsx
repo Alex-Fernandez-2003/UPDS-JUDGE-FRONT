@@ -11,7 +11,7 @@ import reactMark from '@/assets/react.svg'
 import { cn } from '@/lib/utils/cn'
 
 const buttonStyles = cva(
-  'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus)] enabled:hover:brightness-95 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -48,10 +48,12 @@ export function Button({
   rightIcon,
   children,
   disabled,
+  type = 'button',
   ...props
 }: ButtonProps) {
   return (
     <button
+      type={type}
       className={cn(buttonStyles({ variant, size, fullWidth }), className)}
       disabled={disabled || loading}
       {...props}
@@ -70,10 +72,12 @@ export function IconButton({
   label,
   children,
   className,
+  type = 'button',
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
   return (
     <button
+      type={type}
       aria-label={label}
       className={cn(
         buttonStyles({ variant: 'ghost', size: 'sm' }),

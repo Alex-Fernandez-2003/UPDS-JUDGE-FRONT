@@ -1,8 +1,14 @@
 import { Plus, Trash2 } from 'lucide-react'
-import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form'
-import { useFieldArray } from 'react-hook-form'
+import { useState } from 'react'
+import {
+  useFieldArray,
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+} from 'react-hook-form'
 import { Button, Card, IconButton } from '@/components/common'
 import { FormError, Input, Label } from '@/components/forms'
+import { MAX_CONTEST_PROBLEMS, newContestProblem } from './constants'
 import { problemLetter, type CreateContestFormValues } from './types'
 
 type Props = {
@@ -11,8 +17,6 @@ type Props = {
   errors: FieldErrors<CreateContestFormValues>
   disabled?: boolean
 }
-
-const newProblem = () => ({ titulo: '', tiempo: 1, memoria: 256 })
 
 export function ContestProblemList({
   control,
@@ -24,6 +28,35 @@ export function ContestProblemList({
     control,
     name: 'listaProblemas',
   })
+  const [bulkOpen, setBulkOpen] = useState(false)
+  const [quantity, setQuantity] = useState('')
+  const [bulkError, setBulkError] = useState<string>()
+  const availableSlots = Math.max(0, MAX_CONTEST_PROBLEMS - fields.length)
+
+  const closeBulk = () => {
+    setBulkOpen(false)
+    setQuantity('')
+    setBulkError(undefined)
+  }
+
+  const addSeveral = () => {
+    if (!/^\d+$/.test(quantity)) {
+      setBulkError('Ingresá un número entero.')
+      return
+    }
+    const count = Number(quantity)
+    if (!Number.isSafeInteger(count) || count < 1) {
+      setBulkError('La cantidad debe ser al menos 1.')
+      return
+    }
+    if (count > availableSlots) {
+      setBulkError(`Solo podés agregar hasta ${availableSlots} problemas.`)
+      return
+    }
+
+    append(Array.from({ length: count }, newContestProblem))
+    closeBulk()
+  }
 
   return (
     <section aria-labelledby="problems-heading" className="space-y-4">
@@ -33,21 +66,81 @@ export function ContestProblemList({
             Problemas
           </h2>
           <p className="text-sm text-[var(--text-secondary)]">
-            Definí los límites de cada problema. Los incisos se asignan
+            Definí los límites de cada problema. Podés tener hasta{' '}
+            {MAX_CONTEST_PROBLEMS} problemas; los incisos se asignan
             automáticamente.
           </p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          leftIcon={<Plus className="size-4" aria-hidden="true" />}
-          disabled={disabled || fields.length >= 26}
-          onClick={() => append(newProblem())}
-        >
-          Agregar problema
-        </Button>
+        <div className="flex items-center gap-2">
+          <IconButton
+            type="button"
+            label="Agregar un problema"
+            disabled={disabled || availableSlots === 0}
+            className="border border-[var(--border)] enabled:hover:bg-[var(--surface-muted)] enabled:active:scale-95"
+            onClick={() => append(newContestProblem())}
+          >
+            <Plus className="size-4" aria-hidden="true" />
+          </IconButton>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={disabled || availableSlots === 0}
+            className="enabled:hover:bg-[var(--surface-muted)] enabled:active:scale-[0.98]"
+            onClick={() => {
+              setBulkOpen(true)
+              setBulkError(undefined)
+            }}
+          >
+            Agregar varios
+          </Button>
+        </div>
       </div>
+      {bulkOpen && (
+        <div className="rounded-lg border border-[var(--border)] bg-[var(--surface-muted)] p-4">
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="min-w-48 flex-1">
+              <Label htmlFor="bulk-problem-quantity">Cantidad adicional</Label>
+              <Input
+                id="bulk-problem-quantity"
+                inputMode="numeric"
+                value={quantity}
+                disabled={disabled || availableSlots === 0}
+                aria-describedby={bulkError ? 'bulk-problem-error' : undefined}
+                error={Boolean(bulkError)}
+                onChange={(event) => {
+                  setQuantity(event.target.value)
+                  setBulkError(undefined)
+                }}
+              />
+            </div>
+            <p className="pb-2 text-sm text-[var(--text-secondary)]">
+              Podés agregar hasta {availableSlots} problema
+              {availableSlots === 1 ? '' : 's'}.
+            </p>
+            <Button
+              type="button"
+              size="sm"
+              disabled={disabled || availableSlots === 0}
+              onClick={addSeveral}
+            >
+              Agregar
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={disabled}
+              onClick={closeBulk}
+            >
+              Cancelar
+            </Button>
+          </div>
+          {bulkError && (
+            <FormError id="bulk-problem-error">{bulkError}</FormError>
+          )}
+        </div>
+      )}
       {errors.listaProblemas?.message && (
         <FormError>{errors.listaProblemas.message}</FormError>
       )}
@@ -63,6 +156,7 @@ export function ContestProblemList({
                   type="button"
                   label={`Eliminar problema ${letter}`}
                   disabled={disabled || fields.length === 1}
+                  className="border border-[var(--danger)] text-[var(--danger)] enabled:hover:bg-red-50"
                   onClick={() => remove(index)}
                 >
                   <Trash2 className="size-4" aria-hidden="true" />

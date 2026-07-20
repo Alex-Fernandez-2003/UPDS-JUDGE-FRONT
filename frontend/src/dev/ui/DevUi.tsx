@@ -1,3 +1,4 @@
+import { Plus } from 'lucide-react'
 import { useState } from 'react'
 import {
   Alert,
@@ -6,6 +7,7 @@ import {
   Button,
   Card,
   EmptyState,
+  IconButton,
   ProgressBar,
   Spinner,
 } from '@/components/common'
@@ -35,6 +37,9 @@ export default function DevUi() {
           <BrandMark />
           <Button>Primary</Button>
           <Button variant="outline">Outline</Button>
+          <IconButton label="Add example">
+            <Plus className="size-4" aria-hidden="true" />
+          </IconButton>
           <Button loading>Saving</Button>
           <Button disabled={disabled} onClick={() => setDisabled(true)}>
             Disabled state

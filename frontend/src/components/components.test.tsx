@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Alert, Badge, BrandMark, Button } from './common'
+import { Alert, Badge, BrandMark, Button, IconButton } from './common'
 import { FileDropzone, FormField, Input, PasswordInput } from './forms'
 import { StatCard, Stepper } from './navigation'
 import { DataTable } from './tables'
@@ -25,6 +25,32 @@ describe('foundation components', () => {
     expect(click).not.toHaveBeenCalled()
     expect(screen.getByRole('alert')).toHaveTextContent('Problem')
     expect(screen.getByAltText('Technical mark')).toBeInTheDocument()
+  })
+
+  it('exposes pointer, hover, disabled, and non-submit icon action states', () => {
+    render(
+      <form>
+        <Button>Primary action</Button>
+        <IconButton label="Remove item" disabled>
+          ×
+        </IconButton>
+      </form>,
+    )
+
+    expect(screen.getByRole('button', { name: 'Primary action' })).toHaveClass(
+      'cursor-pointer',
+      'enabled:hover:brightness-95',
+    )
+    expect(
+      screen.getByRole('button', { name: 'Primary action' }),
+    ).toHaveAttribute('type', 'button')
+    expect(screen.getByRole('button', { name: 'Remove item' })).toHaveAttribute(
+      'type',
+      'button',
+    )
+    expect(screen.getByRole('button', { name: 'Remove item' })).toHaveClass(
+      'disabled:cursor-not-allowed',
+    )
   })
 
   it('renders Badge content with its selected tone', () => {
