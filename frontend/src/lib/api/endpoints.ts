@@ -4,4 +4,8 @@ export const endpoints = {
     login: 'Auth/login',
     register: 'Auth/register',
   },
+  contests: {
+    list: 'Concursos/mis-creados',
+    create: 'Concursos/crear',
+  },
 } as const

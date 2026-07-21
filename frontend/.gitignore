@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -26,3 +27,5 @@ dist-ssr
 # Local frontend environment overrides
 .env
 .env.local
+package.json
+package-lock.json
