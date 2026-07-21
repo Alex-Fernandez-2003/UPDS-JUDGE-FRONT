@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, renderHook, screen, waitFor } from '@testing-library/react'
+import { render, renderHook, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
@@ -87,7 +87,6 @@ describe('listConcursos service', () => {
 
     const result = await listConcursos({
       filtro: 'Proximo',
-      modalidad: 'Publico',
       busqueda: 'div4',
       tamanoPagina: 2,
       pagina: 1,
@@ -97,7 +96,6 @@ describe('listConcursos service', () => {
     expect(url.pathname).toBe('/api/Concursos')
     expect(Object.fromEntries(url.searchParams)).toEqual({
       filtro: 'Proximo',
-      modalidad: 'Publico',
       busqueda: 'div4',
       tamanoPagina: '2',
       pagina: '1',
@@ -129,13 +127,14 @@ describe('listConcursos service', () => {
 })
 
 describe('ContestsFiltersBar', () => {
-  it('reports search, estado and modalidad changes', async () => {
+  it('reports search and estado changes', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
     render(
       <ContestsFiltersBar
-        value={{ busqueda: '', filtro: 'todos', modalidad: '' }}
+        value={{ busqueda: '', filtro: 'todos' }}
         onChange={onChange}
+        onClear={vi.fn()}
       />,
     )
 
@@ -153,14 +152,6 @@ describe('ContestsFiltersBar', () => {
     )
     expect(onChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ filtro: 'Activo' }),
-    )
-
-    await user.selectOptions(
-      screen.getByRole('combobox', { name: 'Filtrar por modalidad' }),
-      'Privado',
-    )
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({ modalidad: 'Privado' }),
     )
   })
 })
@@ -204,32 +195,40 @@ describe('useDebouncedValue', () => {
 })
 
 describe('ContestsAdminScreen', () => {
-  it('loads the summary cards and the table from the confirmed contract', async () => {
+  it('loads the table from the confirmed contract', async () => {
+    server.use(
+      http.get('/api/Concursos', () =>
+        HttpResponse.json({
+          total: 1,
+          pagina: 1,
+          tamanoPagina: 10,
+          concursos: [
+            {
+              ...sampleItem,
+              nombre: 'Concurso interno de Programación 2026',
+              codigo: 'div4-003',
+            },
+          ],
+        }),
+      ),
+    )
+
     render(<ContestsAdminScreen />, { wrapper: createWrapper() })
 
     expect(
       await screen.findByText('Concurso interno de Programación 2026'),
     ).toBeInTheDocument()
-    expect(screen.getByText('div4-003')).toBeInTheDocument()
-    await waitFor(() =>
-      expect(screen.getAllByText('3').length).toBeGreaterThan(0),
-    )
+    expect(screen.getAllByText('div4-003')).toHaveLength(2)
   })
 
   it('shows a general error with a retry action when the request fails', async () => {
     server.use(
-      http.get('/api/Concursos', ({ request }) => {
-        const url = new URL(request.url)
-        if (url.searchParams.get('tamanoPagina') === '1')
-          return HttpResponse.json(
-            { total: 0, pagina: 1, tamanoPagina: 1, concursos: [] },
-            { status: 200 },
-          )
-        return HttpResponse.json(
+      http.get('/api/Concursos', () =>
+        HttpResponse.json(
           { title: 'No se pudo listar los concursos.' },
           { status: 500 },
-        )
-      }),
+        ),
+      ),
     )
 
     render(<ContestsAdminScreen />, { wrapper: createWrapper() })

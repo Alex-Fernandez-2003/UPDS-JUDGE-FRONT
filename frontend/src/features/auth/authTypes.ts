@@ -1,19 +1,19 @@
 export interface LoginRequest {
-  correo: string;
-  contrasena: string;
+  correo: string
+  contrasena: string
 }
 
 export interface LoginResponse {
-  token: string;
-  expiraEn: string;
+  token: string
+  expiraEn: string
 }
 
 export interface RegisterRequest {
-  nombre: string;
-  correo: string;
-  contrasena: string;
+  nombre: string
+  correo: string
+  contrasena: string
 }
 
 export interface RegisterResponse {
-  mensaje: string;
+  mensaje: string
 }

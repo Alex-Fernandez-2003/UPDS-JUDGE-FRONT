@@ -5,6 +5,7 @@ type LoginResponse = components['schemas']['LoginResponse']
 type RegisterResponse = components['schemas']['RegisterResponse']
 
 const loginResponse = {
+  token: 'mock-session-token',
   expiraEn: '2030-01-01T00:00:00Z',
 } satisfies LoginResponse
 

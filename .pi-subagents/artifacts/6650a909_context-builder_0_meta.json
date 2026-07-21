@@ -1,0 +1,153 @@
+{
+  "runId": "6650a909",
+  "agent": "context-builder",
+  "task": "Perform a comprehensive READ-ONLY integration audit of current UPDS Judge frontend per user request. Do NOT edit/create files, commands destructive, or OpenSpec CLI. Locate/read docs named administracion-concursos-estructurado.md, UJ-05*, UJ-06*, UJ08-UJ09*, and all relevant OpenSpec changes. Inspect current code/auth/contests/api/routes/mocks/components/types/tests and live OpenAPI if available. Run required safe grep and frontend validation commands + briefly start/stop Vite. Produce evidence-rich report matching all 20 requested response sections: git state, inventory, route matrix, actual auth/session/Header flow, contracts, roles, collisions/casing/conflicts, endpoint table, types/mocks/tests, prioritized P0-P3 findings and constrained next change proposal. State No verificable where evidence unavailable; distinguish factual implementation from docs. No changes.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\6650a909\\integration-audit.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 256647,
+    "output": 8551,
+    "cacheRead": 526848,
+    "cacheWrite": 0,
+    "cost": 0.9015945000000001,
+    "turns": 10
+  },
+  "model": "openai-codex/gpt-5.6-terra:medium",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra:medium"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra:medium",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 256647,
+        "output": 8551,
+        "cacheRead": 526848,
+        "cacheWrite": 0,
+        "cost": 0.9015945000000001,
+        "turns": 10
+      }
+    }
+  ],
+  "durationMs": 242761,
+  "toolCount": 32,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only/reviewer-style agent"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only/reviewer-style agent"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete severity-tagged findings cite frontend source paths/lines, live OpenAPI evidence, and validation output in sections 7-18."
+        }
+      ],
+      "changedFiles": [],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "git status --short --branch; git diff --check",
+          "result": "passed",
+          "summary": "No staged files; only pre-existing harness artifacts were untracked."
+        },
+        {
+          "command": "curl http://localhost:5185/swagger/v1/swagger.json",
+          "result": "passed",
+          "summary": "HTTP 200; parsed live OpenAPI bearer/auth/contest contracts."
+        },
+        {
+          "command": "npm run format:check",
+          "result": "failed",
+          "summary": "26 files require Prettier formatting."
+        },
+        {
+          "command": "npm run lint",
+          "result": "passed",
+          "summary": "oxlint exit 0."
+        },
+        {
+          "command": "npm run typecheck",
+          "result": "failed",
+          "summary": "TS5101 at tsconfig.app.json:8."
+        },
+        {
+          "command": "npm run test:run",
+          "result": "failed",
+          "summary": "5 failed, 60 passed tests."
+        },
+        {
+          "command": "npm run build",
+          "result": "failed",
+          "summary": "Blocked by TS5101 typecheck error."
+        },
+        {
+          "command": "npm run dev (brief start/stop)",
+          "result": "failed",
+          "summary": "Vite announced ready; local curl returned 000, so serving could not be verified."
+        }
+      ],
+      "validationOutput": [
+        "Live OpenAPI HTTP 200",
+        "lint passed",
+        "format/typecheck/test/build failed as detailed in section 15"
+      ],
+      "residualRisks": [
+        "Bearer session is not wired into HttpClient",
+        "Admin/list feature is unreachable and incomplete",
+        "Real backend response/roles and authenticated E2E behavior are not verified"
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Read-only audit; no product-source changes. Required audit artifact only.",
+      "reviewFindings": [
+        "P0: src/lib/api/http-client.ts and src/features/auth/Pages/LoginPage.tsx - session token is never configured as shared Bearer authorization.",
+        "P0: frontend/tsconfig.app.json:8 - TS5101 blocks typecheck/build.",
+        "P1: src/features/contests/hooks.ts:1-4 and src/routes/router.tsx:32 - admin feature imports missing symbols and is not routed.",
+        "P1: src/features/contests/types.ts:20-23 - create response is not supported by current live OpenAPI."
+      ],
+      "manualNotes": "No destructive commands, OpenSpec CLI, API mutations, or product file edits were performed."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\6650a909_context-builder_0_transcript.jsonl",
+  "timestamp": 1784616326374
+}

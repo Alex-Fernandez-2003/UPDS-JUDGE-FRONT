@@ -20,7 +20,10 @@ describe('auth contract handlers', () => {
       endpoints.auth.login,
     )
 
-    expect(login).toEqual({ expiraEn: '2030-01-01T00:00:00Z' })
+    expect(login).toEqual({
+      token: 'mock-session-token',
+      expiraEn: '2030-01-01T00:00:00Z',
+    })
   })
 
   it('returns the generated register response shape for the exact confirmed route', async () => {

@@ -7,18 +7,15 @@ import {
   ContestsFiltersBar,
   type ContestsFiltersValue,
 } from './components/ContestsFiltersBar'
-import { ContestsSummaryCards } from './components/ContestsSummaryCards'
 import { ContestsAdminTable } from './components/ContestsAdminTable'
-import { useConcursosAdminList, useDebouncedValue } from './hooks'
-import type { ListConcursosAdminParams } from './types'
+import { useConcursosList, useDebouncedValue } from './hooks'
+import type { ListConcursosParams } from './types'
 
 const PAGE_SIZE = 10
 
 const initialFilters: ContestsFiltersValue = {
   busqueda: '',
   filtro: 'todos',
-  modalidad: '',
-  fecha: undefined,
 }
 
 const errorMessage = (error: unknown) =>
@@ -31,20 +28,18 @@ export function ContestsAdminScreen() {
   const [page, setPage] = useState(1)
   const debouncedBusqueda = useDebouncedValue(filters.busqueda)
 
-  const queryParams: ListConcursosAdminParams = useMemo(
+  const queryParams: ListConcursosParams = useMemo(
     () => ({
-      filtro: (filters.filtro === 'todos' ? 'todos' : filters.filtro) as
-        'todos' | 'Activo' | 'Proximo' | 'Finalizado',
-      modalidad: filters.modalidad || undefined,
+      filtro: filters.filtro === 'todos' ? undefined : filters.filtro,
       busqueda: debouncedBusqueda || undefined,
       pagina: page,
       tamanoPagina: PAGE_SIZE,
     }),
-    [filters.filtro, filters.modalidad, debouncedBusqueda, page],
+    [filters.filtro, debouncedBusqueda, page],
   )
 
   const { data, isLoading, isFetching, error, refetch } =
-    useConcursosAdminList(queryParams)
+    useConcursosList(queryParams)
 
   const totalPages = data
     ? Math.max(1, Math.ceil(data.total / data.tamanoPagina))
@@ -68,11 +63,6 @@ export function ContestsAdminScreen() {
           Nuevo concurso
         </LinkButton>
       </div>
-
-      <ContestsSummaryCards
-        resumen={data?.resumen}
-        isLoading={isLoading || isFetching}
-      />
 
       <Card>
         <div className="space-y-4">

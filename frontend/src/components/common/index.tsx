@@ -5,7 +5,7 @@ import type {
   ButtonHTMLAttributes,
   HTMLAttributes,
   ImgHTMLAttributes,
-  PropsWithChildren
+  PropsWithChildren,
 } from 'react'
 import reactMark from '@/assets/react.svg'
 import { cn } from '@/lib/utils/cn'
@@ -298,5 +298,3 @@ export function EmptyState({
     </div>
   )
 }
-
-

@@ -16,6 +16,7 @@ describe('application routes', () => {
   })
 
   it('renders the contest creation page inside the existing admin layout', async () => {
+    sessionStorage.setItem('token', 'test-session-token')
     const router = createAppRouter(false)
     await router.navigate('/admin/contests/new')
     render(
@@ -29,6 +30,7 @@ describe('application routes', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Overview')).toBeInTheDocument()
     expect(screen.getByText('Nuevo concurso')).toBeInTheDocument()
+    sessionStorage.removeItem('token')
   })
 
   it('registers /dev/ui only in development', async () => {

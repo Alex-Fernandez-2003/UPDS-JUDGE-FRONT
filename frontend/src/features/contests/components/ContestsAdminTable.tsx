@@ -1,15 +1,15 @@
 import { Badge } from '@/components/common'
 import { DataTable, type TableColumn } from '@/components/tables'
 import {
-  estadoTiempoAdminLabel,
-  estadoTiempoAdminTone,
+  estadoTiempoLabel,
+  estadoTiempoTone,
   formatDuracion,
   formatFechaHora,
   modalidadLabel,
 } from '../format'
-import type { ConcursoAdminItem } from '../types'
+import type { ConcursoListItem } from '../types'
 
-const columns: TableColumn<ConcursoAdminItem>[] = [
+const columns: TableColumn<ConcursoListItem>[] = [
   {
     key: 'nombre',
     header: 'Concurso',
@@ -24,8 +24,8 @@ const columns: TableColumn<ConcursoAdminItem>[] = [
     key: 'estadoTiempo',
     header: 'Estado',
     render: (row) => (
-      <Badge tone={estadoTiempoAdminTone[row.estadoTiempo]}>
-        {estadoTiempoAdminLabel[row.estadoTiempo]}
+      <Badge tone={estadoTiempoTone[row.estadoTiempo]}>
+        {estadoTiempoLabel[row.estadoTiempo]}
       </Badge>
     ),
   },
@@ -62,7 +62,7 @@ export function ContestsAdminTable({
   loading,
   error,
 }: {
-  rows: ConcursoAdminItem[]
+  rows: ConcursoListItem[]
   loading?: boolean
   error?: string
 }) {

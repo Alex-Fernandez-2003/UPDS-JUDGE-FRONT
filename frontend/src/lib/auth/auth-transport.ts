@@ -13,4 +13,17 @@ export const createBearerAuthTransport = (
   },
 })
 
+const getSessionStorageToken = () => {
+  try {
+    return typeof window === 'undefined'
+      ? undefined
+      : window.sessionStorage?.getItem('token') || undefined
+  } catch {
+    return undefined
+  }
+}
+
+export const createSessionStorageAuthTransport = () =>
+  createBearerAuthTransport(getSessionStorageToken)
+
 export const neutralAuthTransport: AuthTransport = {}

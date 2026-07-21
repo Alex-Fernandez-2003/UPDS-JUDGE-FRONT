@@ -1,4 +1,8 @@
-import type { EstadoTiempoConcurso, ModalidadConcurso, EstadoTiempoAdmin } from './types'
+import type {
+  EstadoTiempoConcurso,
+  ModalidadConcurso,
+  EstadoTiempoAdmin,
+} from './types'
 
 const dateTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   day: '2-digit',

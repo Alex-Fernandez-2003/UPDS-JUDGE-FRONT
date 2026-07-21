@@ -1,0 +1,222 @@
+{
+  "runId": "697aca09",
+  "agent": "worker",
+  "task": "Implement existing integration change fully per artifacts just read. Scope allowed frontend auth/router/pages/contests/api bootstrap tsconfig existing tests/MSW and only change tasks. No new tests. Fix TS5101 minimal, configure dynamic sessionStorage token AuthTransport at bootstrap, login redirect admin dashboard, protect admin routes existing guard redirect dashboard, move AdminContestsPage/pages, connect real admin minimal and repair 5 tests/contracts. Follow specs exactly, run validations/dev, update tasks.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\697aca09\\sprint1-integration-implementation.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 1435575,
+    "output": 23241,
+    "cacheRead": 3740672,
+    "cacheWrite": 0,
+    "cost": 4.8727205000000025,
+    "turns": 48
+  },
+  "model": "openai-codex/gpt-5.6-terra:high",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra:high"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra:high",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 1435575,
+        "output": 23241,
+        "cacheRead": 3740672,
+        "cacheWrite": 0,
+        "cost": 4.8727205000000025,
+        "turns": 48
+      }
+    }
+  ],
+  "durationMs": 697458,
+  "toolCount": 110,
+  "acceptance": {
+    "status": "checked",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "checked",
+      "explicit": false,
+      "inferredReason": [
+        "write-capable worker/task"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Implement the requested change without widening scope",
+          "evidence": [
+            "changed-files",
+            "tests-added",
+            "commands-run",
+            "residual-risks",
+            "no-staged-files"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "changed-files",
+        "tests-added",
+        "commands-run",
+        "residual-risks",
+        "no-staged-files"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "write-capable worker/task"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Implement the requested change without widening scope",
+        "evidence": [
+          "changed-files",
+          "tests-added",
+          "commands-run",
+          "residual-risks",
+          "no-staged-files"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [
+      {
+        "id": "criterion:criterion-1",
+        "status": "passed",
+        "message": "Required criterion 'criterion-1' satisfied."
+      },
+      {
+        "id": "evidence:changed-files",
+        "status": "passed",
+        "message": "changed-files evidence present."
+      },
+      {
+        "id": "evidence:tests-added",
+        "status": "passed",
+        "message": "tests-added evidence present."
+      },
+      {
+        "id": "evidence:commands-run",
+        "status": "passed",
+        "message": "commands-run evidence present."
+      },
+      {
+        "id": "evidence:residual-risks",
+        "status": "passed",
+        "message": "residual-risks evidence present."
+      },
+      {
+        "id": "evidence:no-staged-files",
+        "status": "passed",
+        "message": "no-staged-files evidence present."
+      },
+      {
+        "id": "no-staged-files",
+        "status": "passed",
+        "message": "No staged files detected."
+      }
+    ],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "The implementation stays in the allowed frontend auth/router/pages/contests/api/bootstrap/tsconfig/MSW/test areas. It wires dynamic sessionStorage Bearer transport before React mounts, uses the canonical protected routes, moves and routes AdminContestsPage, consolidates the documented contest listing operation, resolves TS5101, and retains 65 tests."
+        }
+      ],
+      "changedFiles": [
+        "docs/openspec/changes/integrate-sprint-1-auth-admin-contests-minimal-frontend/tasks.md",
+        "frontend/tsconfig.app.json",
+        "frontend/src/main.tsx",
+        "frontend/src/lib/auth/auth-transport.ts",
+        "frontend/src/lib/api/endpoints.ts",
+        "frontend/src/routes/constants.ts",
+        "frontend/src/routes/ProtectedRoute.tsx",
+        "frontend/src/routes/router.tsx",
+        "frontend/src/routes/router.test.tsx",
+        "frontend/src/features/auth/Components/LoginForm.tsx",
+        "frontend/src/features/auth/Pages/LoginPage.tsx",
+        "frontend/src/features/auth/Pages/DashboardPage.tsx",
+        "frontend/src/features/contests/pages/AdminContestsPage.tsx",
+        "frontend/src/pages/AdminContestsPage.tsx (deleted)",
+        "frontend/src/pages/.gitkeep (deleted)",
+        "frontend/src/features/contests/types.ts",
+        "frontend/src/features/contests/service.ts",
+        "frontend/src/features/contests/hooks.ts",
+        "frontend/src/features/contests/ContestsAdminScreen.tsx",
+        "frontend/src/features/contests/components/ContestsAdminTable.tsx",
+        "frontend/src/features/contests/components/ContestsFiltersBar.tsx",
+        "frontend/src/features/contests/contests.test.tsx",
+        "frontend/src/mocks/handlers/index.ts",
+        "frontend/src/mocks/handlers/handlers.test.ts"
+      ],
+      "testsAddedOrUpdated": [
+        "frontend/src/features/contests/contests.test.tsx",
+        "frontend/src/routes/router.test.tsx",
+        "frontend/src/mocks/handlers/handlers.test.ts"
+      ],
+      "commandsRun": [
+        {
+          "command": "cd frontend && npm run typecheck (baseline)",
+          "result": "failed",
+          "summary": "Recorded TS5101 for deprecated baseUrl before the minimal configuration fix."
+        },
+        {
+          "command": "cd frontend && npm run test:run (baseline)",
+          "result": "failed",
+          "summary": "Recorded 5 failed and 60 passed tests out of 65."
+        },
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "failed",
+          "summary": "Only 13 known pre-existing untouched files require formatting; modified files pass the scoped check."
+        },
+        {
+          "command": "cd frontend && npm run lint && npm run typecheck && npm run test:run && npm run build",
+          "result": "passed",
+          "summary": "Oxlint and TypeScript passed; Vitest reported 13 files and 65 tests passed; Vite production build completed."
+        },
+        {
+          "command": "cd frontend && npx prettier --check <all modified frontend files>",
+          "result": "passed",
+          "summary": "All modified frontend files conform to Prettier."
+        },
+        {
+          "command": "cd frontend && npm run dev -- --host 127.0.0.1; curl http://127.0.0.1:8085/; stop process",
+          "result": "passed",
+          "summary": "Vite became ready on port 8085 and / returned HTTP 200."
+        },
+        {
+          "command": "git diff --check; git diff --cached --name-only; git status --short",
+          "result": "passed",
+          "summary": "No diff whitespace errors and no staged files."
+        }
+      ],
+      "validationOutput": [
+        "Final Vitest result: 13 passed test files, 65 passed tests.",
+        "TypeScript TS5101 is absent; typecheck and Vite build pass.",
+        "The Vite development server returned HTTP 200 for the root path.",
+        "The global formatting failure is limited to 13 pre-existing untouched files documented in tasks.md."
+      ],
+      "residualRisks": [
+        "Manual browser verification of login, reload, live Bearer request, and successful authenticated create was not performed; no mutating backend request was sent.",
+        "The available OpenAPI description does not publish a GET /api/Concursos response schema, so the existing frontend list DTO remains dependent on backend behavior already represented by the existing tests.",
+        "Global format:check remains blocked by 13 pre-existing untouched files."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Configured dynamic sessionStorage authentication during bootstrap; made admin routing canonical and protected; moved and integrated the contest admin page with one real listing service; repaired existing contracts/tests; and applied the targeted TS5101 compatibility option.",
+      "reviewFindings": [
+        "no blockers found in the scoped implementation after lint, typecheck, test, build, development-server, scoped-format, and diff checks.",
+        "advisory: the global format check has pre-existing failures only, listed in the OpenSpec task status.",
+        "advisory: live authenticated backend behavior and the undocumented list response remain for manual verification."
+      ],
+      "manualNotes": "No dependencies, backend, database, READMEs, other OpenSpec changes, commits, or pushes were modified. The expected report artifact was written separately under .pi-subagents."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\697aca09_worker_0_transcript.jsonl",
+  "timestamp": 1784619104709
+}
