@@ -1,6 +1,7 @@
 export const routes = {
   login: '/login',
   register: '/register',
+  studentHome: '/student',
   dashboard: '/admin/dashboard',
   legacyDashboard: '/dashboard',
   contests: '/admin/contests',

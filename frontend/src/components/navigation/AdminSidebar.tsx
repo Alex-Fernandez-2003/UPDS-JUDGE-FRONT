@@ -1,0 +1,111 @@
+import { LayoutDashboard, PlusCircle, Trophy } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { BrandMark } from '@/components/common'
+import type { Identity } from '@/lib/auth/identity'
+import { isAdministrator, isContestsAdmin } from '@/lib/auth/identity'
+import { cn } from '@/lib/utils/cn'
+import { routes } from '@/routes/constants'
+
+type NavigationItem = {
+  label: string
+  path: string
+  icon: typeof Trophy
+  visible: (identity?: Identity) => boolean
+  keywords: string[]
+}
+
+export const adminNavigation: NavigationItem[] = [
+  {
+    label: 'Resumen',
+    path: routes.dashboard,
+    icon: LayoutDashboard,
+    visible: isAdministrator,
+    keywords: ['inicio', 'panel'],
+  },
+  {
+    label: 'Concursos',
+    path: routes.contests,
+    icon: Trophy,
+    visible: isContestsAdmin,
+    keywords: ['competencias'],
+  },
+  {
+    label: 'Crear concurso',
+    path: routes.newContest,
+    icon: PlusCircle,
+    visible: isContestsAdmin,
+    keywords: ['nuevo'],
+  },
+]
+
+export function AdminSidebar({
+  identity,
+  onNavigate,
+}: {
+  identity?: Identity
+  onNavigate?: () => void
+}) {
+  const [query, setQuery] = useState('')
+  const location = useLocation()
+  const visibleItems = useMemo(() => {
+    const normalizedQuery = query.trim().toLocaleLowerCase()
+    return adminNavigation.filter(
+      (item) =>
+        item.visible(identity) &&
+        (!normalizedQuery ||
+          [item.label, ...item.keywords].some((term) =>
+            term.toLocaleLowerCase().includes(normalizedQuery),
+          )),
+    )
+  }, [identity, query])
+
+  return (
+    <div className="flex h-full flex-col p-5">
+      <BrandMark alt="UPDS Judge" />
+      <p className="mt-3 font-semibold">Panel Administrativo</p>
+      <label
+        className="mt-8 text-sm font-semibold"
+        htmlFor="admin-module-search"
+      >
+        Buscar módulos
+      </label>
+      <input
+        id="admin-module-search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        placeholder="Buscar módulo..."
+        className="mt-2 w-full rounded-md border border-white/30 bg-white/10 px-3 py-2 text-sm placeholder:text-white/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      />
+      <nav className="mt-5" aria-label="Navegación administrativa">
+        {visibleItems.length ? (
+          <ul className="space-y-1">
+            {visibleItems.map((item) => {
+              const Icon = item.icon
+              const active = location.pathname === item.path
+              return (
+                <li key={item.path}>
+                  <NavLink
+                    to={item.path}
+                    onClick={onNavigate}
+                    aria-current={active ? 'page' : undefined}
+                    className={cn(
+                      'flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white',
+                      active && 'bg-white/20 underline',
+                    )}
+                  >
+                    <Icon className="size-4" aria-hidden="true" /> {item.label}
+                  </NavLink>
+                </li>
+              )
+            })}
+          </ul>
+        ) : (
+          <p role="status" className="text-sm text-white/80">
+            No se encontraron módulos.
+          </p>
+        )}
+      </nav>
+    </div>
+  )
+}

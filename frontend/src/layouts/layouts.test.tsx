@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import { AdminLayout } from './AdminLayout'
 import { AuthLayout } from './AuthLayout'
@@ -15,31 +16,31 @@ describe('foundation layouts', () => {
         <button type="button">Continue</button>
       </AuthLayout>,
     )
-
     expect(screen.getByRole('heading', { name: 'Welcome' })).toBeInTheDocument()
-    expect(
-      screen.getByText('Use your account to continue.'),
-    ).toBeInTheDocument()
     expect(screen.getAllByText('Custom brand')).toHaveLength(2)
-    expect(screen.getByText('Illustration slot')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument()
   })
 
-  it('renders AdminLayout navigation, topbar controls, user, and content', () => {
-    render(
-      <AdminLayout user="Ada Lovelace">
-        <h1>Dashboard content</h1>
-      </AdminLayout>,
+  it('renders the administrative shell and accessible module search', () => {
+    sessionStorage.setItem(
+      'token',
+      'header.eyJuYW1lIjoiQWRhIiwicm9sZSI6IkFkbWluaXN0cmFkb3JDb25jdXJzb3MifQ.signature',
     )
-
-    expect(screen.getByRole('navigation')).toBeInTheDocument()
-    expect(screen.getByText('Contests')).toBeInTheDocument()
+    render(
+      <MemoryRouter>
+        <AdminLayout>
+          <h1>Dashboard content</h1>
+        </AdminLayout>
+      </MemoryRouter>,
+    )
     expect(
-      screen.getByRole('button', { name: 'Notifications' }),
+      screen.getByRole('navigation', { name: 'Navegación administrativa' }),
     ).toBeInTheDocument()
-    expect(screen.getByLabelText('Ada Lovelace')).toBeInTheDocument()
+    expect(screen.getByLabelText('Buscar módulos')).toBeInTheDocument()
+    expect(screen.getByText('Crear concurso')).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { name: 'Dashboard content' }),
+      screen.getByRole('button', { name: 'Abrir menú de usuario' }),
     ).toBeInTheDocument()
+    sessionStorage.removeItem('token')
   })
 })

@@ -4,11 +4,22 @@ import { Spinner } from '@/components/common'
 import { isDevelopment } from '@/config/env'
 import LoginPage from '@/features/auth/Pages/LoginPage'
 import RegisterPage from '@/features/auth/Pages/RegisterPage'
+import UserLandingPage from '@/features/auth/Pages/UserLandingPage'
 import { CreateContestPage } from '@/features/contests/CreateContestPage'
 import AdminContestsPage from '@/features/contests/pages/AdminContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
+import { roles } from '@/lib/auth/identity'
+import { forbiddenRoute } from '@/lib/auth/session'
 import ProtectedRoute from '@/routes/ProtectedRoute'
+import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
+
+const Forbidden = () => (
+  <main className="p-8">
+    <h1>Acceso denegado</h1>
+    <p>No tenés permisos para acceder a esta sección.</p>
+  </main>
+)
 
 export const createAppRouter = (development = isDevelopment) => {
   const DevUi = development ? lazy(() => import('@/dev/ui/DevUi')) : null
@@ -18,11 +29,23 @@ export const createAppRouter = (development = isDevelopment) => {
       <p>The requested page was not found.</p>
     </main>
   )
+  const adminRoles = [roles.contestsAdmin, roles.rolesAdmin]
 
   return createBrowserRouter([
     { path: '/', element: <Navigate to={routes.login} replace /> },
     { path: routes.login, element: <LoginPage /> },
     { path: routes.register, element: <RegisterPage /> },
+    {
+      path: routes.studentHome,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <UserLandingPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    { path: forbiddenRoute, element: <Forbidden /> },
     {
       path: routes.legacyDashboard,
       element: <Navigate to={routes.dashboard} replace />,
@@ -31,7 +54,9 @@ export const createAppRouter = (development = isDevelopment) => {
       path: routes.dashboard,
       element: (
         <ProtectedRoute>
-          <AdminContestsPage />
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminContestsPage />
+          </RoleRoute>
         </ProtectedRoute>
       ),
     },
@@ -39,7 +64,9 @@ export const createAppRouter = (development = isDevelopment) => {
       path: routes.contests,
       element: (
         <ProtectedRoute>
-          <AdminContestsPage />
+          <RoleRoute allowedRoles={[roles.contestsAdmin]}>
+            <AdminContestsPage />
+          </RoleRoute>
         </ProtectedRoute>
       ),
     },
@@ -47,9 +74,11 @@ export const createAppRouter = (development = isDevelopment) => {
       path: routes.newContest,
       element: (
         <ProtectedRoute>
-          <AdminLayout>
-            <CreateContestPage />
-          </AdminLayout>
+          <RoleRoute allowedRoles={[roles.contestsAdmin]}>
+            <AdminLayout>
+              <CreateContestPage />
+            </AdminLayout>
+          </RoleRoute>
         </ProtectedRoute>
       ),
     },
