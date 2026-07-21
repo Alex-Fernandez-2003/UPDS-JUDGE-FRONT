@@ -5,7 +5,7 @@ export const endpoints = {
     register: 'Auth/register',
   },
   contests: {
-    list: 'Concursos',
+    list: 'Concursos/mis-creados',
     create: 'Concursos/crear',
   },
 } as const

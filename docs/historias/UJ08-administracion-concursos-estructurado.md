@@ -38,20 +38,21 @@ Se implementó la vista de administración de concursos con listado, filtros, b�
 
 > **Captura 1 – Vista principal**
 
-![Vista principal](image.png)
+![Vista principal de Administrador de concursos](../capturas/uj08-pantalla-principal.png)
 
 <br>
 
 > **Captura 2 – Filtros y búsqueda**
 
-![Filtros](image-3.png)
-![Filtro de ](image-1.png)
-![alt text](image-2.png)
+![Barra de filtrador](../capturas/uj08-barra-filtros.png)
+
+![Filtros por estado](../capturas/uj08-barra-filtros-filtro-estado.png)
+
 <br>
 
 > **Captura 3 – Tabla y paginación**
 
-![alt text](image-4.png)
+![Listado de Concursos](../capturas/uj08-listado-concursos.png)
 
 ## Flujo frontend
 
@@ -90,19 +91,14 @@ UI → Hook → Servicio → HttpClient → API → Renderizado.
 
 
 
-## Pruebas realizadas
-
-
-- Validación de filtros.
-![alt text](image-5.png)
 
 
 ## Evidencia sugerida
 
 ```text
-docs/capturas/admin-concursos-principal.png
-docs/capturas/admin-concursos-filtros.png
-docs/capturas/admin-concursos-tabla.png
+docs/capturas/uj08-pantalla-principal.png
+docs/capturas/uj08-barra-filtros.png
+docs/capturas/uj08-listado-concursos.png
 ```
 
 ## Confirmaciones de seguridad
