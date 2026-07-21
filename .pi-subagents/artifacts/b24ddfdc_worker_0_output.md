@@ -1,0 +1,1 @@
+Implemented the surgical documentation correction: the summary no longer claims to render the problem-set link and now lists only the factual fields rendered by `CreateContestSummary`.

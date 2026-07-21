@@ -1,0 +1,182 @@
+{
+  "runId": "782babe3",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only final practical validation for existing contest change. Do not edit. Start an owned Vite dev server on 127.0.0.1:8085 (port was cleared), verify `/admin/contests/new` and `/dev/ui` return 200, then stop exactly that process. Use MSW-enabled local config only if it can be done without persistent source/env edits; otherwise rely on automated MSW suite. Verify current task status file, exact allowed scope, and rerun from frontend format:check/lint/typecheck/test:run/build. Treat user-approved complement `{codigo,mensaje}`, 400/401 messages and indexed keys as valid authority; do not flag them as invented. Do not run api:types/OpenSpec CLI. Report results precisely.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\782babe3\\contest-practical-final-verify.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 38652,
+    "output": 4804,
+    "cacheRead": 362496,
+    "cacheWrite": 0,
+    "cost": 0.259314,
+    "turns": 16
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 38652,
+        "output": 4804,
+        "cacheRead": 362496,
+        "cacheWrite": 0,
+        "cost": 0.259314,
+        "turns": 16
+      }
+    }
+  ],
+  "durationMs": 139985,
+  "toolCount": 30,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete high-severity protected-scope finding identified at frontend/src/lib/api/http-client.ts:22-29,151-155; validation evidence includes exact command results and paths."
+        }
+      ],
+      "changedFiles": [
+        "frontend/src/lib/api/endpoints.ts",
+        "frontend/src/lib/api/http-client.ts",
+        "frontend/src/mocks/handlers/handlers.test.ts",
+        "frontend/src/mocks/handlers/index.ts",
+        "frontend/src/routes/router.test.tsx",
+        "frontend/src/routes/router.tsx",
+        "frontend/src/features/contests/ContestProblemList.tsx",
+        "frontend/src/features/contests/CreateContestPage.test.tsx",
+        "frontend/src/features/contests/CreateContestPage.tsx",
+        "frontend/src/features/contests/CreateContestSummary.tsx",
+        "frontend/src/features/contests/mapper.test.ts",
+        "frontend/src/features/contests/mapper.ts",
+        "frontend/src/features/contests/schema.test.ts",
+        "frontend/src/features/contests/schema.ts",
+        "frontend/src/features/contests/service.test.ts",
+        "frontend/src/features/contests/service.ts",
+        "frontend/src/features/contests/types.ts",
+        "frontend/src/features/contests/use-create-contest.test.tsx",
+        "frontend/src/features/contests/use-create-contest.ts",
+        "docs/openspec/changes/uj08-uj09-create-contest-zip-import-frontend/"
+      ],
+      "testsAddedOrUpdated": [
+        "frontend/src/features/contests/CreateContestPage.test.tsx",
+        "frontend/src/features/contests/mapper.test.ts",
+        "frontend/src/features/contests/schema.test.ts",
+        "frontend/src/features/contests/service.test.ts",
+        "frontend/src/features/contests/use-create-contest.test.tsx",
+        "frontend/src/mocks/handlers/handlers.test.ts",
+        "frontend/src/routes/router.test.tsx"
+      ],
+      "commandsRun": [
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "passed",
+          "summary": "Prettier reported all matched files use Prettier code style."
+        },
+        {
+          "command": "cd frontend && npm run lint",
+          "result": "passed",
+          "summary": "oxlint completed with no findings."
+        },
+        {
+          "command": "cd frontend && npm run typecheck",
+          "result": "passed",
+          "summary": "tsc -b completed successfully."
+        },
+        {
+          "command": "cd frontend && npm run test:run",
+          "result": "passed",
+          "summary": "Vitest: 11 test files and 41 tests passed."
+        },
+        {
+          "command": "cd frontend && npm run build",
+          "result": "passed",
+          "summary": "tsc -b and Vite production build completed."
+        },
+        {
+          "command": "cd frontend && npm run dev -- --host 127.0.0.1 --port 8085",
+          "result": "passed",
+          "summary": "Owned server returned HTTP 200 for /admin/contests/new and /dev/ui."
+        },
+        {
+          "command": "taskkill.exe //PID 3028 //F",
+          "result": "passed",
+          "summary": "Terminated the surviving owned Vite listener after its npm parent exited."
+        },
+        {
+          "command": "netstat -ano | grep ':8085' | grep LISTENING",
+          "result": "passed",
+          "summary": "No listener remained on port 8085."
+        }
+      ],
+      "validationOutput": [
+        "/admin/contests/new returned HTTP 200.",
+        "/dev/ui returned HTTP 200.",
+        "Automated MSW-enabled suite passed: 41/41 tests.",
+        "No api:types or OpenSpec CLI command was run.",
+        "No staged files were reported."
+      ],
+      "residualRisks": [
+        "High: frontend/src/lib/api/http-client.ts changes protected shared HTTP infrastructure despite the declared consumer-only scope.",
+        "Manual visual/MSW flow evidence remains pending (Task 26).",
+        "Authenticated backend/session integration remains pending (Task 27)."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Contest creation feature, mapper/schema/service/hook tests, centralized endpoint, MSW handler, and route integration are present; shared HTTP client was also modified outside declared protected scope.",
+      "reviewFindings": [
+        "high: frontend/src/lib/api/http-client.ts:22-29,151-155 - modifies protected global HTTP infrastructure although the approved proposal/design defines HttpClient/AuthTransport as existing consumer-only dependencies.",
+        "no blockers from format, lint, typecheck, test, build, route HTTP checks, or automated MSW coverage."
+      ],
+      "manualNotes": "Initial shutdown trap ended npm PID 1894 but left owned Vite listener PID 3028. PID 3028 was explicitly terminated, then no LISTENING socket remained on 127.0.0.1:8085. No files were edited during validation."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\782babe3_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784487423573
+}

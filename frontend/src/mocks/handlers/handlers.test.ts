@@ -33,4 +33,35 @@ describe('auth contract handlers', () => {
       correo: 'demo.user@example.test',
     })
   })
+
+  it('reads multipart contest data and returns the controlled success contract', async () => {
+    const formData = new FormData()
+    formData.append('nombre', 'Contest')
+    formData.append('codigo', 'C-1')
+    const contest = await new HttpClient().post<{
+      codigo: string
+      mensaje: string
+    }>(endpoints.contests.create, formData)
+
+    expect(contest).toEqual({
+      codigo: 'contest-demo',
+      mensaje: 'Concurso, problemas y casos de prueba creados exitosamente.',
+    })
+  })
+
+  it('returns the exact controlled 400 and 401 messages', async () => {
+    await expect(
+      new HttpClient().post(endpoints.contests.create, new FormData()),
+    ).rejects.toMatchObject({
+      status: 400,
+      message: 'El nombre del concurso es obligatorio.',
+    })
+
+    const unauthorized = new FormData()
+    unauthorized.append('nombre', 'Contest')
+    unauthorized.append('codigo', 'unauthorized')
+    await expect(
+      new HttpClient().post(endpoints.contests.create, unauthorized),
+    ).rejects.toMatchObject({ status: 401, message: 'Token inválido' })
+  })
 })

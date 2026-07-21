@@ -1,0 +1,152 @@
+{
+  "runId": "a74da89b",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only independent audit of current implementation for `uj08-uj09-create-contest-zip-import-frontend`. Do not edit or run OpenSpec/api:types. Inspect actual diff/source and verify contract complement use, no invented fields/responses, FormData indexed keys/ISO/no manual boundary, shared HttpClient/Bearer composition no persistence, exact MSW bodies, schema/useFieldArray/ZIP summary/error handling/routing AdminLayout composition/no duplicate shell/no excluded features. Confirm only allowed paths changed excluding .pi artifacts. From frontend run format:check, lint, typecheck, test:run, build. Check existing 8085 process command/source before deciding whether it is owned; do not kill unknown process. Report blockers with line evidence or clean result.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\a74da89b\\contest-final-verify.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 56200,
+    "output": 4070,
+    "cacheRead": 438784,
+    "cacheWrite": 0,
+    "cost": 0.31124599999999997,
+    "turns": 13
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 56200,
+        "output": 4070,
+        "cacheRead": 438784,
+        "cacheWrite": 0,
+        "cost": 0.31124599999999997,
+        "turns": 13
+      }
+    }
+  ],
+  "durationMs": 138117,
+  "toolCount": 19,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete blockers include frontend/src/types/api.generated.ts:128-136, frontend/src/features/contests/types.ts:42-45, frontend/src/mocks/handlers/index.ts:34-37, and frontend/src/lib/api/http-client.ts:153-158."
+        }
+      ],
+      "changedFiles": [
+        "docs/openspec/changes/uj08-uj09-create-contest-zip-import-frontend/",
+        "frontend/src/features/contests/",
+        "frontend/src/lib/api/endpoints.ts",
+        "frontend/src/lib/api/http-client.ts",
+        "frontend/src/mocks/handlers/index.ts",
+        "frontend/src/mocks/handlers/handlers.test.ts",
+        "frontend/src/routes/router.tsx",
+        "frontend/src/routes/router.test.tsx"
+      ],
+      "testsAddedOrUpdated": [
+        "frontend/src/features/contests/CreateContestPage.test.tsx",
+        "frontend/src/features/contests/mapper.test.ts",
+        "frontend/src/features/contests/schema.test.ts",
+        "frontend/src/features/contests/service.test.ts",
+        "frontend/src/features/contests/use-create-contest.test.tsx",
+        "frontend/src/mocks/handlers/handlers.test.ts",
+        "frontend/src/routes/router.test.tsx"
+      ],
+      "commandsRun": [
+        {
+          "command": "cd frontend && npm run format:check",
+          "result": "passed",
+          "summary": "Prettier reports all matched files formatted."
+        },
+        {
+          "command": "cd frontend && npm run lint",
+          "result": "passed",
+          "summary": "oxlint completed without findings."
+        },
+        {
+          "command": "cd frontend && npm run typecheck",
+          "result": "passed",
+          "summary": "tsc -b completed."
+        },
+        {
+          "command": "cd frontend && npm run test:run",
+          "result": "passed",
+          "summary": "11 test files and 41 tests passed."
+        },
+        {
+          "command": "cd frontend && npm run build",
+          "result": "passed",
+          "summary": "tsc -b and Vite production build completed."
+        }
+      ],
+      "validationOutput": [
+        "Generated OpenAPI describes multipart request fields for /api/Concursos/crear.",
+        "Generated OpenAPI declares HTTP 200 content?: never; it does not attest codigo/mensaje.",
+        "PID 25004 listening on 127.0.0.1:8085 is Vite launched from this repository frontend; it was not terminated."
+      ],
+      "residualRisks": [
+        "The unverified/invented success payload can cause runtime success handling to display undefined values or fail against the actual backend.",
+        "The shared singleton client remains neutral unless an absent runtime caller invokes configureHttpClientAuthTransport, so contest creation will not attach Bearer authorization."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Adds create-contest form, multipart mapper/service/mutation, route/layout integration, MSW handler, and tests; functional checks pass but contract/auth blockers remain.",
+      "reviewFindings": [
+        "blocker: frontend/src/types/api.generated.ts:128-136 versus frontend/src/features/contests/types.ts:42-45 - success response codigo/mensaje is invented rather than represented by the generated contract.",
+        "high: frontend/src/lib/api/http-client.ts:153-158 - shared HttpClient has neutral auth by default and its configuration function has no runtime call site, leaving no Bearer composition."
+      ],
+      "manualNotes": "No edits were made. api:types and OpenSpec commands were not run."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\a74da89b_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784487136573
+}

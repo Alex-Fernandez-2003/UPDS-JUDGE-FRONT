@@ -1,0 +1,113 @@
+{
+  "runId": "8b3be564",
+  "agent": "gentle-ai-verify",
+  "task": "Read-only audit ONLY `docs/historias/UJ08-UJ09-crear-concurso-importar-zip.md` against current contest feature/change/test sources. Do not edit/run tests/OpenSpec. Check exact title, every user-required section/fact, no non-existing file/function/component, no overclaim of auth/backend/captures/tests, no Swagger defect/secrets, suggested evidence plain non-links, and status correctly distinguishes pending integrations. Confirm whether the document is the only newly added path for this documentation task, distinguishing pre-existing feature changes/artifacts. Return concise blockers only.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\8b3be564\\uj08-uj09-doc-final-verify.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 26152,
+    "output": 2120,
+    "cacheRead": 53760,
+    "cacheWrite": 0,
+    "cost": 0.11062,
+    "turns": 6
+  },
+  "model": "openai-codex/gpt-5.6-terra",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 26152,
+        "output": 2120,
+        "cacheRead": 53760,
+        "cacheWrite": 0,
+        "cost": 0.11062,
+        "turns": 6
+      }
+    }
+  ],
+  "durationMs": 59694,
+  "toolCount": 29,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only task wording"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only task wording"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Hallazgo concreto en docs/historias/UJ08-UJ09-crear-concurso-importar-zip.md:53 contrastado con frontend/src/features/contests/CreateContestSummary.tsx."
+        }
+      ],
+      "changedFiles": [],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "none",
+          "result": "not-run",
+          "summary": "La tarea prohibió ejecutar pruebas y no autorizó comandos de inspección Git."
+        }
+      ],
+      "validationOutput": [
+        "El título, las rutas/componentes principales, contrato multipart, cautelas de autenticación/backend, evidencia sugerida sin enlaces, ausencia de secretos/Swagger y pendientes de integración fueron revisados contra las fuentes disponibles.",
+        "El único desacople funcional hallado es la afirmación de que el resumen muestra el enlace al set de problemas."
+      ],
+      "residualRisks": [
+        "No verificado: que esta documentación sea la única ruta nueva del delta Git y que los demás cambios del feature sean preexistentes."
+      ],
+      "noStagedFiles": false,
+      "diffSummary": "No verificado mediante Git; auditoría de solo lectura de la documentación contra las fuentes actuales.",
+      "reviewFindings": [
+        "high: docs/historias/UJ08-UJ09-crear-concurso-importar-zip.md:53 - el documento afirma que el resumen refleja el enlace, pero CreateContestSummary.tsx no renderiza urlSetProblemas.",
+        "blocker: no se pudo atestar el alcance de rutas nuevas/preexistentes sin inspección Git autorizada."
+      ],
+      "manualNotes": "No se editaron archivos ni se ejecutaron pruebas, OpenSpec o comandos."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\8b3be564_gentle-ai-verify_0_transcript.jsonl",
+  "timestamp": 1784492741955
+}

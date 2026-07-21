@@ -1,0 +1,119 @@
+{
+  "runId": "c2d5ae9f",
+  "agent": "scout",
+  "task": "Read-only map existing contest feature + shared components/tests/change original and fix artifacts for `fix-create-contest-password-zip-and-form-ux`. Inspect image `C:\\Users\\af156\\OneDrive\\reference.png` too. Identify real file names/defaults/schema/mapper/ZIP selector/summary/problem controls/tests and exact minimal allowed edits, plus any contract risks. Do not edit/CLI.\n\n---\n**Output:**\nWrite your findings to exactly this path: C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\outputs\\c2d5ae9f\\contest-fix-scout.md\nThis path is authoritative for this run.\nIgnore any other output filename or output path mentioned elsewhere, including output destinations in the base agent prompt, system prompt, or task instructions.",
+  "exitCode": 0,
+  "usage": {
+    "input": 99020,
+    "output": 5326,
+    "cacheRead": 153600,
+    "cacheWrite": 0,
+    "cost": 0.36584,
+    "turns": 9
+  },
+  "model": "openai-codex/gpt-5.6-terra:low",
+  "attemptedModels": [
+    "openai-codex/gpt-5.6-terra:low"
+  ],
+  "modelAttempts": [
+    {
+      "model": "openai-codex/gpt-5.6-terra:low",
+      "success": true,
+      "exitCode": 0,
+      "usage": {
+        "input": 99020,
+        "output": 5326,
+        "cacheRead": 153600,
+        "cacheWrite": 0,
+        "cost": 0.36584,
+        "turns": 9
+      }
+    }
+  ],
+  "durationMs": 137357,
+  "toolCount": 42,
+  "acceptance": {
+    "status": "attested",
+    "explicit": false,
+    "effectiveAcceptance": {
+      "level": "attested",
+      "explicit": false,
+      "inferredReason": [
+        "read-only/reviewer-style agent"
+      ],
+      "criteria": [
+        {
+          "id": "criterion-1",
+          "must": "Return concrete findings with file paths and severity when applicable",
+          "evidence": [
+            "review-findings",
+            "residual-risks"
+          ],
+          "severity": "required"
+        }
+      ],
+      "evidence": [
+        "review-findings",
+        "residual-risks"
+      ],
+      "verify": [],
+      "stopRules": []
+    },
+    "inferredReason": [
+      "read-only/reviewer-style agent"
+    ],
+    "criteria": [
+      {
+        "id": "criterion-1",
+        "must": "Return concrete findings with file paths and severity when applicable",
+        "evidence": [
+          "review-findings",
+          "residual-risks"
+        ],
+        "severity": "required"
+      }
+    ],
+    "runtimeChecks": [],
+    "verifyRuns": [],
+    "childReport": {
+      "criteriaSatisfied": [
+        {
+          "id": "criterion-1",
+          "status": "satisfied",
+          "evidence": "Concrete paths, responsibilities, minimal edit boundaries, and severity-tagged contract findings are documented above."
+        }
+      ],
+      "changedFiles": [
+        ".pi-subagents/artifacts/outputs/c2d5ae9f/contest-fix-scout.md"
+      ],
+      "testsAddedOrUpdated": [],
+      "commandsRun": [
+        {
+          "command": "No CLI commands requested",
+          "result": "not-run",
+          "summary": "Read-only inspection used repository file tools only."
+        }
+      ],
+      "validationOutput": [
+        "Mapped contest feature, shared form/common components, tests, route, MSW, original change, and fix artifacts.",
+        "Reference image retrieval failed: supplied path returned ENOENT."
+      ],
+      "residualRisks": [
+        "Actual backend handling of multipart contrasena='' is unverified.",
+        "Reference image was unavailable at the supplied path.",
+        "Shared component modification would require broader regression coverage than current tests provide."
+      ],
+      "noStagedFiles": true,
+      "diffSummary": "Read-only scout artifact only; no product source, test, OpenSpec, or original-change file was edited.",
+      "reviewFindings": [
+        "high: frontend/src/features/contests/schema.ts:19 and mapper.ts:9 - normal UI already yields blank string; undefined/null normalization is not currently a typed frontend input and backend behavior is unproven.",
+        "high: frontend/src/components/forms/index.tsx:184-260 - generic FileDropzone cannot by itself guarantee required RHF/input reset and selected-state ZIP UX.",
+        "medium: frontend/src/components/common/index.tsx:12-75 - shared interactive-style changes have cross-consumer regression risk.",
+        "medium: frontend/src/features/contests/CreateContestPage.test.tsx:1-52 - no coverage for requested ZIP/password/bulk/summary behavior."
+      ],
+      "manualNotes": "No CLI was run and no code was changed."
+    }
+  },
+  "transcriptPath": "C:\\dev\\UPDS-JUDGE-FRONT\\.pi-subagents\\artifacts\\c2d5ae9f_scout_0_transcript.jsonl",
+  "timestamp": 1784521081046
+}

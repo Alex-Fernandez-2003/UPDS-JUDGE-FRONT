@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Navigate} from 'react-router-dom'
 import { Spinner } from '@/components/common'
 import { isDevelopment } from '@/config/env'
+import { CreateContestPage } from '@/features/contests/CreateContestPage'
+import { AdminLayout } from '@/layouts/AdminLayout'
 import { routes } from './constants'
 import LoginPage from '@/features/auth/Pages/LoginPage';
 import RegisterPage from '@/features/auth/Pages/RegisterPage';
@@ -28,7 +30,14 @@ export const createAppRouter = (development = isDevelopment) => {
     { path: routes.dashboard,element: (<ProtectedRoute><DashboardPage /></ProtectedRoute>),},
     { path: routes.register, element: <RegisterPage /> },
     { path: routes.contests, element: <Placeholder title="Contests" /> },
-    { path: routes.newContest, element: <Placeholder title="New contest" /> },
+    {
+      path: routes.newContest,
+      element: (
+        <AdminLayout>
+          <CreateContestPage />
+        </AdminLayout>
+      ),
+    },
     ...(DevUi
       ? [
           {
