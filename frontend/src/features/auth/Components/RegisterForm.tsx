@@ -215,7 +215,7 @@ export default function RegisterForm({ onToggleMode }: RegisterFormProps) {
           <button
             type="button"
             onClick={onToggleMode}
-            className="font-semibold text-[var(--primary)] hover:underline"
+            className="font-semibold text-[var(--primary)] hover:underline cursor-pointer"
           >
             Iniciar sesión
           </button>
