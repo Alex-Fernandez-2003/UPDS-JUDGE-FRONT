@@ -8,7 +8,12 @@ import {
   type ContestsFiltersValue,
 } from './components/ContestsFiltersBar'
 import { ContestsAdminTable } from './components/ContestsAdminTable'
-import { useConcursosList, useDebouncedValue } from './hooks'
+import { ContestsSummaryCards } from './components/ContestsSummaryCards'
+import {
+  useConcursosAdminResumen,
+  useConcursosList,
+  useDebouncedValue,
+} from './hooks'
 import type { ListConcursosParams } from './types'
 
 const PAGE_SIZE = 10
@@ -30,7 +35,7 @@ export function ContestsAdminScreen() {
 
   const queryParams: ListConcursosParams = useMemo(
     () => ({
-      filtro: filters.filtro === 'todos' ? undefined : filters.filtro,
+      filtro: filters.filtro,
       busqueda: debouncedBusqueda || undefined,
       pagina: page,
       tamanoPagina: PAGE_SIZE,
@@ -38,16 +43,21 @@ export function ContestsAdminScreen() {
     [filters.filtro, debouncedBusqueda, page],
   )
 
-  const { data, isLoading, isFetching, error, refetch } =
-    useConcursosList(queryParams)
-
-  const totalPages = data
-    ? Math.max(1, Math.ceil(data.total / data.tamanoPagina))
+  const list = useConcursosList(queryParams)
+  const summary = useConcursosAdminResumen()
+  const refreshing = list.isFetching || summary.isFetching
+  const totalPages = list.data
+    ? Math.max(1, Math.ceil(list.data.total / list.data.tamanoPagina))
     : 1
 
   const updateFilters = (next: ContestsFiltersValue) => {
     setFilters(next)
     setPage(1)
+  }
+
+  const refreshAll = async () => {
+    if (refreshing) return
+    await Promise.all([list.refetch(), summary.refetch()])
   }
 
   return (
@@ -64,6 +74,13 @@ export function ContestsAdminScreen() {
         </LinkButton>
       </div>
 
+      <ContestsSummaryCards
+        resumen={summary.data}
+        error={summary.error ? errorMessage(summary.error) : undefined}
+        isLoading={summary.isLoading}
+        isRefreshing={summary.isFetching}
+      />
+
       <Card>
         <div className="space-y-4">
           <ContestsFiltersBar
@@ -72,13 +89,13 @@ export function ContestsAdminScreen() {
             onClear={() => updateFilters(initialFilters)}
           />
 
-          {error ? (
+          {list.error ? (
             <Alert tone="danger">
-              {errorMessage(error)}{' '}
+              {errorMessage(list.error)}{' '}
               <button
                 type="button"
                 className="font-semibold underline"
-                onClick={() => refetch()}
+                onClick={() => list.refetch()}
               >
                 Reintentar
               </button>
@@ -86,13 +103,14 @@ export function ContestsAdminScreen() {
           ) : (
             <>
               <ContestsAdminTable
-                rows={data?.concursos ?? []}
-                loading={isLoading || isFetching}
+                rows={list.data?.concursos ?? []}
+                loading={list.isLoading || list.isFetching}
               />
-
               <div className="flex items-center justify-between">
                 <p className="text-sm text-[var(--text-secondary)]">
-                  {data ? `${data.total} concurso(s) encontrados` : ' '}
+                  {list.data
+                    ? `${list.data.total} concurso(s) encontrados`
+                    : ' '}
                 </p>
                 <Pagination
                   page={page}
@@ -106,8 +124,14 @@ export function ContestsAdminScreen() {
       </Card>
 
       <div className="flex justify-end">
-        <Button variant="ghost" onClick={() => refetch()} disabled={isFetching}>
-          Actualizar listado
+        <Button
+          variant="ghost"
+          onClick={refreshAll}
+          disabled={refreshing}
+          loading={refreshing}
+          aria-label="Actualizar listado y resumen"
+        >
+          Actualizar
         </Button>
       </div>
     </div>

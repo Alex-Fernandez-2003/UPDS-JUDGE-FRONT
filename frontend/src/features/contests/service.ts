@@ -1,6 +1,7 @@
 import { endpoints, httpClient } from '@/lib/api'
 import { createContestFormData } from './mapper'
 import type {
+  ConcursosAdminResumen,
   CreateContestFormValues,
   CreateContestResponse,
   ListConcursosParams,
@@ -20,9 +21,10 @@ export const listConcursos = (params: ListConcursosParams) => {
     if (value !== undefined && value !== '') query.set(key, String(value))
   }
 
-  const path = query.size
-    ? `${endpoints.contests.list}?${query.toString()}`
-    : endpoints.contests.list
-
-  return httpClient.get<ListConcursosResponse>(path)
+  return httpClient.get<ListConcursosResponse>(
+    `${endpoints.contests.adminList}?${query.toString()}`,
+  )
 }
+
+export const getConcursosAdminResumen = () =>
+  httpClient.get<ConcursosAdminResumen>(endpoints.contests.adminSummary)

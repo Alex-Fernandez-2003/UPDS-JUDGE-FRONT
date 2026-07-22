@@ -1,5 +1,6 @@
 import { Button } from '@/components/common'
 import { SearchInput, Select } from '@/components/forms'
+import { ADMIN_CONTEST_FILTERS } from '../constants'
 import type { FiltroEstadoConcurso } from '../types'
 
 export type ContestsFiltersValue = {
@@ -17,7 +18,7 @@ export function ContestsFiltersBar({
   onClear: () => void
 }) {
   return (
-    <div className="flex flex-row items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <SearchInput
         className="min-w-2xs flex-1"
         aria-label="Buscar concursos por código"
@@ -39,10 +40,11 @@ export function ContestsFiltersBar({
           })
         }
       >
-        <option value="todos">Todos los estados</option>
-        <option value="Activo">Activos</option>
-        <option value="Proximo">Próximos</option>
-        <option value="Finalizado">Finalizados</option>
+        {ADMIN_CONTEST_FILTERS.map((filter) => (
+          <option key={filter.value} value={filter.value}>
+            {filter.label}
+          </option>
+        ))}
       </Select>
 
       <Button

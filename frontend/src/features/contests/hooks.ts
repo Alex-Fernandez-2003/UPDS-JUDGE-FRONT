@@ -1,18 +1,38 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { listConcursos } from './service'
+import { getConcursosAdminResumen, listConcursos } from './service'
 import type { ListConcursosParams } from './types'
 
 export const concursosKeys = {
   all: ['concursos'] as const,
-  list: (params: ListConcursosParams) => ['concursos', 'list', params] as const,
+  adminList: (params: ListConcursosParams) =>
+    [
+      'concursos',
+      'admin-list',
+      params.filtro,
+      params.modalidad,
+      params.busqueda,
+      params.pagina,
+      params.tamanoPagina,
+    ] as const,
+  adminSummary: () => ['concursos', 'admin-summary'] as const,
 }
 
 export function useConcursosList(params: ListConcursosParams) {
   return useQuery({
-    queryKey: concursosKeys.list(params),
+    queryKey: concursosKeys.adminList(params),
     queryFn: () => listConcursos(params),
     placeholderData: (previous) => previous,
+  })
+}
+
+export function useConcursosAdminResumen() {
+  return useQuery({
+    queryKey: concursosKeys.adminSummary(),
+    queryFn: getConcursosAdminResumen,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 }
 

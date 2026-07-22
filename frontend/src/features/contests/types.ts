@@ -24,7 +24,8 @@ export type CreateContestResponse = {
 
 export type EstadoTiempoConcurso = 'Activo' | 'Proximo' | 'Finalizado'
 export type EstadoTiempoAdmin = EstadoTiempoConcurso
-export type FiltroEstadoConcurso = 'todos' | EstadoTiempoConcurso
+export type FiltroEstadoConcurso =
+  'todos' | 'activos' | 'proximos' | 'finalizados'
 export type ModalidadConcurso = 'Publico' | 'Privado'
 
 export type ConcursoListItem = {
@@ -48,10 +49,11 @@ export type ConcursoListItem = {
 }
 
 export type ListConcursosParams = {
-  filtro?: FiltroEstadoConcurso
+  filtro: FiltroEstadoConcurso
+  modalidad?: ModalidadConcurso
   busqueda?: string
-  pagina?: number
-  tamanoPagina?: number
+  pagina: number
+  tamanoPagina: number
 }
 
 export type ListConcursosResponse = {
