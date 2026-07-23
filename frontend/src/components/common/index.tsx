@@ -200,11 +200,16 @@ export function Badge({
     />
   )
 }
-export function StatusDot({ tone = 'neutral' }: { tone?: keyof typeof tones }) {
+export function StatusDot({
+  tone = 'neutral',
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement> & { tone?: keyof typeof tones }) {
   return (
     <span
       aria-label={`${tone} status`}
-      className={cn('inline-block size-2 rounded-full', tones[tone])}
+      className={cn('inline-block size-2 rounded-full', tones[tone], className)}
+      {...props}
     />
   )
 }
@@ -221,19 +226,26 @@ export function Alert({
     />
   )
 }
-export function Spinner({ label = 'Loading' }: { label?: string }) {
+export function Spinner({
+  label = 'Loading',
+  className,
+  ...props
+}: React.ComponentProps<typeof LoaderCircle> & { label?: string }) {
   return (
     <LoaderCircle
       role="status"
       aria-label={label}
-      className="size-5 animate-spin"
+      className={cn('size-5 animate-spin', className)}
+      {...props}
     />
   )
 }
 export function ProgressBar({
   value,
   label = 'Progress',
-}: {
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & {
   value: number
   label?: string
 }) {
@@ -245,7 +257,11 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={safeValue}
-      className="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]"
+      className={cn(
+        'h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]',
+        className,
+      )}
+      {...props}
     >
       <div
         className="h-full bg-[var(--primary)]"
@@ -269,13 +285,23 @@ export function EmptyState({
   title,
   description,
   action,
-}: PropsWithChildren<{
-  title: string
-  description?: string
-  action?: React.ReactNode
-}>) {
+  className,
+  ...props
+}: PropsWithChildren<
+  HTMLAttributes<HTMLDivElement> & {
+    title: string
+    description?: string
+    action?: React.ReactNode
+  }
+>) {
   return (
-    <div className="rounded-lg border border-dashed border-[var(--border)] p-8 text-center">
+    <div
+      className={cn(
+        'rounded-lg border border-dashed border-[var(--border)] p-8 text-center',
+        className,
+      )}
+      {...props}
+    >
       <h2 className="font-semibold">{title}</h2>
       {description && (
         <p className="mt-1 text-sm text-[var(--text-secondary)]">

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Alert, EmptyState, Skeleton } from '@/components/common'
+import { cn } from '@/lib/utils/cn'
 
 export type TableColumn<T> = {
   key: keyof T | string
@@ -42,12 +43,12 @@ export type DataTableProps<T extends object> = {
    * Permite reemplazar los estilos predeterminados
    * de partes específicas de la tabla.
    */
+  className?: string
   classNames?: DataTableClassNames
 }
 
 const defaultClassNames: Required<DataTableClassNames> = {
-  container:
-    'overflow-x-auto rounded-lg border border-[var(--border)]',
+  container: 'overflow-x-auto rounded-lg border border-[var(--border)]',
   table: 'min-w-full text-left text-sm',
   thead: '',
   headerRow: '',
@@ -69,48 +70,36 @@ export function DataTable<T extends object>({
   error,
   rowActions,
   emptyText = 'No data available.',
+  className,
   classNames,
 }: DataTableProps<T>) {
   if (error) {
     return <Alert tone="danger">{error}</Alert>
   }
 
-  const columnCount =
-    columns.length + Number(Boolean(rowActions))
+  const columnCount = columns.length + Number(Boolean(rowActions))
 
   return (
     <div
-      className={
-        classNames?.container ??
-        defaultClassNames.container
-      }
+      className={cn(
+        defaultClassNames.container,
+        className,
+        classNames?.container,
+      )}
     >
-      <table
-        className={
-          classNames?.table ??
-          defaultClassNames.table
-        }
-      >
-        <thead
-          className={
-            classNames?.thead ??
-            defaultClassNames.thead
-          }
-        >
+      <table className={cn(defaultClassNames.table, classNames?.table)}>
+        <thead className={cn(defaultClassNames.thead, classNames?.thead)}>
           <tr
-            className={
-              classNames?.headerRow ??
-              defaultClassNames.headerRow
-            }
+            className={cn(defaultClassNames.headerRow, classNames?.headerRow)}
           >
             {columns.map((column) => (
               <th
                 key={String(column.key)}
-                className={
-                  column.headerClassName ??
-                  classNames?.headerCell ??
-                  defaultClassNames.headerCell
-                }
+                className={cn(
+                  defaultClassNames.headerCell,
+                  classNames?.headerCell,
+                  column.headerClassName,
+                )}
               >
                 {column.header}
               </th>
@@ -118,10 +107,10 @@ export function DataTable<T extends object>({
 
             {rowActions && (
               <th
-                className={
-                  classNames?.actionsHeaderCell ??
-                  defaultClassNames.actionsHeaderCell
-                }
+                className={cn(
+                  defaultClassNames.actionsHeaderCell,
+                  classNames?.actionsHeaderCell,
+                )}
               >
                 Actions
               </th>
@@ -129,31 +118,21 @@ export function DataTable<T extends object>({
           </tr>
         </thead>
 
-        <tbody
-          className={
-            classNames?.tbody ??
-            defaultClassNames.tbody
-          }
-        >
+        <tbody className={cn(defaultClassNames.tbody, classNames?.tbody)}>
           {loading ? (
-            <tr
-              className={
-                classNames?.row ??
-                defaultClassNames.row
-              }
-            >
+            <tr className={cn(defaultClassNames.row, classNames?.row)}>
               <td
                 colSpan={columnCount}
-                className={
-                  classNames?.loadingCell ??
-                  defaultClassNames.loadingCell
-                }
+                className={cn(
+                  defaultClassNames.loadingCell,
+                  classNames?.loadingCell,
+                )}
               >
                 <Skeleton
-                  className={
-                    classNames?.skeleton ??
-                    defaultClassNames.skeleton
-                  }
+                  className={cn(
+                    defaultClassNames.skeleton,
+                    classNames?.skeleton,
+                  )}
                 />
               </td>
             </tr>
@@ -161,35 +140,29 @@ export function DataTable<T extends object>({
             rows.map((row, index) => (
               <tr
                 key={index}
-                className={
-                  classNames?.row ??
-                  defaultClassNames.row
-                }
+                className={cn(defaultClassNames.row, classNames?.row)}
               >
                 {columns.map((column) => (
                   <td
                     key={String(column.key)}
-                    className={
-                      column.cellClassName ??
-                      classNames?.cell ??
-                      defaultClassNames.cell
-                    }
+                    className={cn(
+                      defaultClassNames.cell,
+                      classNames?.cell,
+                      column.cellClassName,
+                    )}
                   >
                     {column.render
                       ? column.render(row)
-                      : String(
-                        row[column.key as keyof T] ??
-                        '',
-                      )}
+                      : String(row[column.key as keyof T] ?? '')}
                   </td>
                 ))}
 
                 {rowActions && (
                   <td
-                    className={
-                      classNames?.actionsCell ??
-                      defaultClassNames.actionsCell
-                    }
+                    className={cn(
+                      defaultClassNames.actionsCell,
+                      classNames?.actionsCell,
+                    )}
                   >
                     {rowActions(row)}
                   </td>
@@ -197,18 +170,13 @@ export function DataTable<T extends object>({
               </tr>
             ))
           ) : (
-            <tr
-              className={
-                classNames?.row ??
-                defaultClassNames.row
-              }
-            >
+            <tr className={cn(defaultClassNames.row, classNames?.row)}>
               <td
                 colSpan={columnCount}
-                className={
-                  classNames?.emptyCell ??
-                  defaultClassNames.emptyCell
-                }
+                className={cn(
+                  defaultClassNames.emptyCell,
+                  classNames?.emptyCell,
+                )}
               >
                 <EmptyState title={emptyText} />
               </td>
