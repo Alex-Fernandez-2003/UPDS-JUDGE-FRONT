@@ -547,3 +547,13 @@
   - PR 3: movimientos administrativos de contests e imports.
   - PR 4: shared/user boundary, API pública y regresión completa.
   - PR 5: movimiento documental, Starfish, SMART y validación final.
+
+## Closure Evidence
+
+- Status: completed; archival is authorized after the checks below.
+- Retrospective and Starfish source are present at their documented final paths; its evidence images resolve under `docs/images/` and `docs/capturas/`.
+- The retrospective records UJ-11 as future work and does not add UJ-11 code.
+- `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:run`, and `npm run build` completed successfully on 2026-07-22.
+- `npm run dev -- --port 8086 --strictPort` started Vite successfully on the alternate port because 8085 was occupied; the bounded validation command then timed out intentionally.
+- `git diff --check` and the final staged-files check completed without findings.
+- No commit, push, OpenSpec CLI, backend, or database change was made during closure.
