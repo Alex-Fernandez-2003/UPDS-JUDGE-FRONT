@@ -1,0 +1,25 @@
+@startuml
+' Sprint 1 retrospective board — UPDS JUDGE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam rectangle {
+  RoundCorner 12
+  BorderColor #1E3A8A
+  FontColor #172554
+}
+
+rectangle "<b>Keep Doing</b>\n--\n• Document changes with verifiable criteria\n• Centralize contracts and HttpClient\n• Maintain automated tests\n• Deliver incrementally" as Keep #DBEAFE
+rectangle "<b>Less Of</b>\n--\n• Reactive fixes without contract inspection\n• Temporary UI components\n• Late structural changes\n• Deferred manual validation" as Less #FEF3C7
+rectangle "<b>More Of</b>\n--\n• Backend contract inspection\n• Reproducible validation\n• Visual and responsive checks\n• Component and feature inventories" as More #DCFCE7
+rectangle "<b>Stop Doing</b>\n--\n• Inventing routes or endpoints\n• Using visible labels as API values\n• Duplicating base components\n• Closing changes with failing checks" as Stop #FEE2E2
+rectangle "<b>Start Doing</b>\n--\n• Optional className in shared UI\n• Admin/user/shared feature boundaries\n• Sprint improvement backlog actions\n• Full checks before review" as Start #F3E8FF
+
+rectangle "<size:20><b>UPDS JUDGE</b></size>\n<size:16>Sprint 1 — Starfish retrospective</size>" as Center #E0E7FF
+
+Keep -[hidden]- Less
+More -[hidden]- Stop
+Keep -[hidden]- Center
+Center -[hidden]- Stop
+More -[hidden]- Start
+
+@enduml
