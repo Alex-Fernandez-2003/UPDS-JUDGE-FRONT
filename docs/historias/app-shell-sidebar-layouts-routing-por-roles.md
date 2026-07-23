@@ -49,3 +49,15 @@ El flujo es login → guardar token → decodificar payload → normalizar roles
 ### 2. Captura del Layout de administración
 
 ![Captura del Layout de administración](../capturas/layout-admin.png)
+
+## Fix posterior: concursos, branding y layout de Usuario
+
+La administración separa los contratos `Concursos/mis-creados` (tabla paginada) y `Concursos/mis-resumen` (conteos globales). El catálogo de filtros conserva etiquetas visibles y valores contractuales plurales: Todos → `todos`, Activos → `activos`, Pendientes → `proximos` y Finalizados → `finalizados`. `ContestsSummaryCards` se restauró antes de los filtros y la tabla; Pendientes presenta `proximos`. El botón Actualizar coordina ambos requests sin reiniciar búsqueda, filtro ni página, mientras sus estados de carga y error permanecen independientes.
+
+`AppLogo` centraliza `logo.svg` para la interfaz clara y deja `logo-dark.svg` como variante explícita futura, sin habilitar tema oscuro. El favicon continúa apuntando al asset real. `GlobeIllustration` es una ilustración presentacional reutilizable, con tamaño, clase y semántica decorativa o accesible.
+
+La ruta existente `/student` ahora compone `UserLayout`: marca real, navegación exclusiva de rutas existentes, identidad, avatar/fallback, `UserMenu` y contenido. No se muestra Clasificación global. El logout compartido elimina `sessionStorage['token']`, cierra el menú y navega a `/login` con `replace`.
+
+Archivos principales: `features/contests/{constants,service,hooks,ContestsAdminScreen}`, `components/branding/AppLogo.tsx`, `components/illustrations/GlobeIllustration.tsx` y `layouts/UserLayout/index.tsx`.
+
+Validaciones ejecutadas: tests focalizados de contratos administrativos, pantalla, router y layouts. Las capturas de este fix siguen pendientes; no se agregan enlaces hacia archivos inexistentes.
