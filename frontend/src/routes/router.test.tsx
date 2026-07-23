@@ -36,6 +36,28 @@ describe('application routes', () => {
     sessionStorage.removeItem('token')
   })
 
+  it('renders the existing student route inside UserLayout', async () => {
+    sessionStorage.setItem(
+      'token',
+      'header.eyJuYW1lIjoiQWRhIiwicm9sZSI6IlVzdWFyaW8ifQ.signature',
+    )
+    const router = createAppRouter(false)
+    await router.navigate('/student')
+    render(<RouterProvider router={router} />)
+
+    expect(
+      await screen.findByRole('heading', { name: 'Área de usuario' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Navegación de usuario' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Abrir menú de usuario' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Clasificación global')).not.toBeInTheDocument()
+    sessionStorage.removeItem('token')
+  })
+
   it('registers /dev/ui only in development', async () => {
     const developmentRouter = createAppRouter(true)
     await developmentRouter.navigate('/dev/ui')

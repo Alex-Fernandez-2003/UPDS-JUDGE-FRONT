@@ -8,6 +8,7 @@ import UserLandingPage from '@/features/auth/Pages/UserLandingPage'
 import { CreateContestPage } from '@/features/contests/CreateContestPage'
 import AdminContestsPage from '@/features/contests/pages/AdminContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
+import { UserLayout } from '@/layouts/UserLayout'
 import { roles } from '@/lib/auth/identity'
 import { forbiddenRoute } from '@/lib/auth/session'
 import ProtectedRoute from '@/routes/ProtectedRoute'
@@ -40,7 +41,9 @@ export const createAppRouter = (development = isDevelopment) => {
       element: (
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.user]}>
-            <UserLandingPage />
+            <UserLayout>
+              <UserLandingPage />
+            </UserLayout>
           </RoleRoute>
         </ProtectedRoute>
       ),

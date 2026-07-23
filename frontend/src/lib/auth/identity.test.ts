@@ -29,11 +29,11 @@ describe('JWT identity helpers', () => {
     expect(normalizeRoles({ name: 'Ada' })).toEqual([])
   })
 
-  it('prioritizes administration and does not invent a student route', () => {
+  it('prioritizes administration and routes Usuario to the existing student layout', () => {
     expect(
       getInitialRoute(token({ role: [roles.user, roles.rolesAdmin] })),
     ).toBe('/admin/dashboard')
-    expect(getInitialRoute(token({ role: roles.user }))).toBe(forbiddenRoute)
+    expect(getInitialRoute(token({ role: roles.user }))).toBe('/student')
     expect(getInitialRoute(token({ role: 'Unknown' }))).toBe(forbiddenRoute)
   })
 })
