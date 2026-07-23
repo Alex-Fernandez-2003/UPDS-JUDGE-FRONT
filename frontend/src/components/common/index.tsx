@@ -7,7 +7,7 @@ import type {
   ImgHTMLAttributes,
   PropsWithChildren,
 } from 'react'
-import reactMark from '@/assets/react.svg'
+import { AppLogo } from '@/components/branding/AppLogo'
 import { cn } from '@/lib/utils/cn'
 
 const buttonStyles = cva(
@@ -105,25 +105,13 @@ export function LinkButton({
   )
 }
 export function BrandMark({
-  src = reactMark,
-  alt = 'UPDS Judge placeholder brand mark',
+  alt = 'UPDS Judge',
   size = 'md',
-  className,
   ...props
-}: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> & {
-  src?: string
-  alt?: string
+}: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: 'sm' | 'md' | 'lg'
 }) {
-  const sizes = { sm: 'size-7', md: 'size-10', lg: 'size-14' }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={cn(sizes[size], className)}
-      {...props}
-    />
-  )
+  return <AppLogo alt={alt} size={size} {...props} />
 }
 export function Surface({
   className,
