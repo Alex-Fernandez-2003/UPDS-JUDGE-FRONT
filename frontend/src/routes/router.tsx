@@ -13,6 +13,7 @@ import { forbiddenRoute } from '@/lib/auth/session'
 import ProtectedRoute from '@/routes/ProtectedRoute'
 import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
+import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 
 const Forbidden = () => (
   <main className="p-8">
@@ -45,6 +46,16 @@ export const createAppRouter = (development = isDevelopment) => {
         </ProtectedRoute>
       ),
     },
+    {
+    path: '/student/contest/:contestCode/submissions',
+    element: (
+      <ProtectedRoute>
+        <RoleRoute allowedRoles={[roles.user]}>
+          <SubmissionsPage />
+        </RoleRoute>
+      </ProtectedRoute>
+    ),
+  },
     { path: forbiddenRoute, element: <Forbidden /> },
     {
       path: routes.legacyDashboard,

@@ -8,4 +8,7 @@ export const endpoints = {
     list: 'Concursos/mis-creados',
     create: 'Concursos/crear',
   },
+  submissions: {
+    mine: 'Envios/mis-envios',
+  },
 } as const
