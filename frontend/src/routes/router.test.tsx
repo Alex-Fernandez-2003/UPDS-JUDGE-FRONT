@@ -43,7 +43,11 @@ describe('application routes', () => {
     )
     const router = createAppRouter(false)
     await router.navigate('/student')
-    render(<RouterProvider router={router} />)
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>,
+    )
 
     expect(
       await screen.findByRole('heading', { name: 'Área de usuario' }),

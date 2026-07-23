@@ -8,5 +8,7 @@ export const endpoints = {
     adminList: 'Concursos/mis-creados',
     adminSummary: 'Concursos/mis-resumen',
     create: 'Concursos/crear',
+    userStats: 'ParticipanteConcursos/stats-contest',
+    userSubmissions: 'Envios/mis-envios',
   },
 } as const

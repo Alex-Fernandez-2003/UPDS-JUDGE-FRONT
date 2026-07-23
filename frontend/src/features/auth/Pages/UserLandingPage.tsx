@@ -1,10 +1,17 @@
+import { RecentSubmissionsSection } from '@/features/contests/user/RecentSubmissionsSection'
+import { UserContestStatsSection } from '@/features/contests/user/UserContestStatsSection'
+
 export default function UserLandingPage() {
   return (
-    <section>
+    <div>
       <h1 className="text-2xl font-bold">Área de usuario</h1>
       <p className="mt-2 text-[var(--text-secondary)]">
-        Consultá las opciones disponibles desde la navegación.
+        Consultá el resumen de tu actividad y tus envíos recientes.
       </p>
-    </section>
+      <div className="mt-6">
+        <UserContestStatsSection />
+      </div>
+      <RecentSubmissionsSection />
+    </div>
   )
 }
