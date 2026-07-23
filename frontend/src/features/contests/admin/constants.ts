@@ -1,4 +1,4 @@
-import type { ContestProblemForm } from './types'
+import type { ContestProblemForm, FiltroEstadoConcurso } from './types'
 
 export const MAX_CONTEST_ZIP_SIZE_BYTES = 100 * 1024 * 1024
 export const MAX_CONTEST_PROBLEMS = 12
@@ -13,6 +13,16 @@ export const CONTEST_CODE_ERROR =
   'El código debe usar letras minúsculas, números y guiones simples.'
 export const CONTEST_CODE_HINT =
   'Usá letras minúsculas, números y guiones simples (ej.: regional-2026).'
+
+export const ADMIN_CONTEST_FILTERS: readonly {
+  label: string
+  value: FiltroEstadoConcurso
+}[] = [
+  { label: 'Todos', value: 'todos' },
+  { label: 'Activos', value: 'activos' },
+  { label: 'Pendientes', value: 'proximos' },
+  { label: 'Finalizados', value: 'finalizados' },
+]
 
 export const newContestProblem = (): ContestProblemForm => ({
   titulo: '',

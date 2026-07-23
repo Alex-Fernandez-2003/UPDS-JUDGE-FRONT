@@ -21,6 +21,31 @@ export const handlers: RequestHandler[] = [
   http.post('/api/Auth/register', () =>
     HttpResponse.json(registerResponse, { status: 200 }),
   ),
+  http.get('/api/Concursos/mis-creados', ({ request }) => {
+    let filtro: string | null
+    try {
+      filtro = new URL(request.url).searchParams.get('filtro')
+    } catch {
+      return HttpResponse.json(
+        { mensaje: 'Solicitud inválida.' },
+        { status: 400 },
+      )
+    }
+    if (
+      !['todos', 'activos', 'proximos', 'finalizados'].includes(filtro ?? '')
+    ) {
+      return HttpResponse.json({ mensaje: 'Filtro inválido.' }, { status: 400 })
+    }
+    return HttpResponse.json({
+      total: 0,
+      pagina: 1,
+      tamanoPagina: 10,
+      concursos: [],
+    })
+  }),
+  http.get('/api/Concursos/mis-resumen', () =>
+    HttpResponse.json({ activos: 0, proximos: 0, finalizados: 0 }),
+  ),
   http.post('/api/Concursos/crear', async ({ request }) => {
     const formData = await request.formData()
     const nombre = formData.get('nombre')

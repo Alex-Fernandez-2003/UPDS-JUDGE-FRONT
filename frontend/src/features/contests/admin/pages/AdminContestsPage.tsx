@@ -1,4 +1,4 @@
-import { ContestsAdminScreen } from '@/features/contests/ContestsAdminScreen'
+import { ContestsAdminScreen } from '@/features/contests/admin/ContestsAdminScreen'
 import { Breadcrumbs } from '@/components/navigation'
 import { AdminLayout } from '@/layouts/AdminLayout'
 

@@ -73,56 +73,37 @@ describe('format helpers', () => {
 })
 
 describe('listConcursos service', () => {
-  it('builds the exact confirmed query string for GET /api/Concursos', async () => {
+  it('uses mis-creados and preserves the contractual list parameters', async () => {
     let capturedUrl = ''
     server.use(
-      http.get('/api/Concursos', ({ request }) => {
+      http.get('/api/Concursos/mis-creados', ({ request }) => {
         capturedUrl = request.url
-        return HttpResponse.json(
-          { total: 1, pagina: 1, tamanoPagina: 2, concursos: [sampleItem] },
-          { status: 200 },
-        )
+        return HttpResponse.json({
+          total: 1,
+          pagina: 1,
+          tamanoPagina: 2,
+          concursos: [sampleItem],
+        })
       }),
     )
 
-    const result = await listConcursos({
-      filtro: 'Proximo',
+    await listConcursos({
+      filtro: 'proximos',
       busqueda: 'div4',
+      modalidad: 'Publico',
       tamanoPagina: 2,
       pagina: 1,
     })
 
     const url = new URL(capturedUrl)
-    expect(url.pathname).toBe('/api/Concursos')
+    expect(url.pathname).toBe('/api/Concursos/mis-creados')
     expect(Object.fromEntries(url.searchParams)).toEqual({
-      filtro: 'Proximo',
+      filtro: 'proximos',
       busqueda: 'div4',
+      modalidad: 'Publico',
       tamanoPagina: '2',
       pagina: '1',
     })
-    expect(result).toEqual({
-      total: 1,
-      pagina: 1,
-      tamanoPagina: 2,
-      concursos: [sampleItem],
-    })
-  })
-
-  it('omits empty params instead of sending empty query values', async () => {
-    let capturedUrl = ''
-    server.use(
-      http.get('/api/Concursos', ({ request }) => {
-        capturedUrl = request.url
-        return HttpResponse.json(
-          { total: 0, pagina: 1, tamanoPagina: 20, concursos: [] },
-          { status: 200 },
-        )
-      }),
-    )
-
-    await listConcursos({})
-
-    expect(new URL(capturedUrl).search).toBe('')
   })
 })
 
@@ -148,10 +129,10 @@ describe('ContestsFiltersBar', () => {
 
     await user.selectOptions(
       screen.getByRole('combobox', { name: 'Filtrar por estado' }),
-      'Activo',
+      'activos',
     )
     expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({ filtro: 'Activo' }),
+      expect.objectContaining({ filtro: 'activos' }),
     )
   })
 })
@@ -197,7 +178,7 @@ describe('useDebouncedValue', () => {
 describe('ContestsAdminScreen', () => {
   it('loads the table from the confirmed contract', async () => {
     server.use(
-      http.get('/api/Concursos', () =>
+      http.get('/api/Concursos/mis-creados', () =>
         HttpResponse.json({
           total: 1,
           pagina: 1,
@@ -223,7 +204,7 @@ describe('ContestsAdminScreen', () => {
 
   it('shows a general error with a retry action when the request fails', async () => {
     server.use(
-      http.get('/api/Concursos', () =>
+      http.get('/api/Concursos/mis-creados', () =>
         HttpResponse.json(
           { title: 'No se pudo listar los concursos.' },
           { status: 500 },

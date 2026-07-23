@@ -5,8 +5,15 @@ import { Avatar, IconButton } from '@/components/common'
 import type { Identity } from '@/lib/auth/identity'
 import { roleDescription } from '@/lib/auth/identity'
 import { clearSession } from '@/lib/auth/session'
+import { cn } from '@/lib/utils/cn'
 
-export function UserMenu({ identity }: { identity?: Identity }) {
+export function UserMenu({
+  identity,
+  className,
+}: {
+  identity?: Identity
+  className?: string
+}) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -30,7 +37,7 @@ export function UserMenu({ identity }: { identity?: Identity }) {
   }
 
   return (
-    <div className="relative">
+    <div className={cn('relative', className)}>
       <button
         ref={buttonRef}
         type="button"

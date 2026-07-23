@@ -1,21 +1,10 @@
-import { useNavigate } from 'react-router-dom'
-import { Button } from '@/components/common'
-import { clearSession } from '@/lib/auth/session'
-import { routes } from '@/routes/constants'
-
 export default function UserLandingPage() {
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    clearSession()
-    navigate(routes.login, { replace: true })
-  }
-
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <Button type="button" onClick={handleLogout}>
-        Cerrar sesión
-      </Button>
-    </main>
+    <section>
+      <h1 className="text-2xl font-bold">Área de usuario</h1>
+      <p className="mt-2 text-[var(--text-secondary)]">
+        Consultá las opciones disponibles desde la navegación.
+      </p>
+    </section>
   )
 }

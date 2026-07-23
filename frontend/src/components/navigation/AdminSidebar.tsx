@@ -42,9 +42,11 @@ export const adminNavigation: NavigationItem[] = [
 export function AdminSidebar({
   identity,
   onNavigate,
+  className,
 }: {
   identity?: Identity
   onNavigate?: () => void
+  className?: string
 }) {
   const [query, setQuery] = useState('')
   const location = useLocation()
@@ -61,7 +63,7 @@ export function AdminSidebar({
   }, [identity, query])
 
   return (
-    <div className="flex h-full flex-col p-5">
+    <div className={cn('flex h-full flex-col p-5', className)}>
       <BrandMark alt="UPDS Judge" />
       <p className="mt-3 font-semibold">Panel Administrativo</p>
       <label
