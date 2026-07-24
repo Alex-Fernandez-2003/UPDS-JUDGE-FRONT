@@ -4,19 +4,22 @@ import { Spinner } from '@/components/common'
 import { isDevelopment } from '@/config/env'
 import LoginPage from '@/features/auth/Pages/LoginPage'
 import RegisterPage from '@/features/auth/Pages/RegisterPage'
-import UserLandingPage from '@/features/auth/Pages/UserLandingPage'
 import { CreateContestPage } from '@/features/contests/admin/CreateContestPage'
+import { UserDashboardPage } from '@/features/contests/user'
 import AdminContestsPage from '@/features/contests/admin/pages/AdminContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { UserLayout } from '@/layouts/UserLayout'
-import { roles } from '@/lib/auth/identity'
+import { deriveIdentity, roles } from '@/lib/auth/identity'
 import { forbiddenRoute } from '@/lib/auth/session'
 import ProtectedRoute from '@/routes/ProtectedRoute'
 import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 
-
-import UserContestsPage from '@/features/contests/user/pages/UserContestsPage'
+const UserDashboard = () => (
+  <UserDashboardPage
+    name={deriveIdentity(sessionStorage.getItem('token'))?.name}
+  />
+)
 
 const Forbidden = () => (
   <main className="p-8">
@@ -41,15 +44,7 @@ export const createAppRouter = (development = isDevelopment) => {
     { path: routes.register, element: <RegisterPage /> },
     {
       path: routes.studentHome,
-      element: (
-        <ProtectedRoute>
-          <RoleRoute allowedRoles={[roles.user]}>
-            <UserLayout>
-              <UserLandingPage />
-            </UserLayout>
-          </RoleRoute>
-        </ProtectedRoute>
-      ),
+      element: <Navigate to={routes.studentListCompetitions} replace />,
     },
     {
       path: routes.studentListCompetitions,
@@ -57,7 +52,7 @@ export const createAppRouter = (development = isDevelopment) => {
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.user]}>
             <UserLayout>
-              <UserContestsPage></UserContestsPage>
+              <UserDashboard />
             </UserLayout>
           </RoleRoute>
         </ProtectedRoute>

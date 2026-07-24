@@ -7,6 +7,7 @@ import type { PropsWithChildren } from 'react'
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
 import { handlers } from '@/mocks/handlers'
 import { RecentSubmissionsSection } from './RecentSubmissionsSection'
+import { RecentSubmissionsTable } from './RecentSubmissionsTable'
 import {
   formatExecutionTime,
   formatMemoryUsage,
@@ -106,6 +107,26 @@ describe('submission formatters and mapper', () => {
 })
 
 describe('recent submissions', () => {
+  it('uses the definitive visual column order with one date and no file column', () => {
+    render(<RecentSubmissionsTable rows={[]} />)
+
+    expect(
+      screen.getAllByRole('columnheader').map((header) => header.textContent),
+    ).toEqual([
+      'ID',
+      'CONCURSO',
+      'PROBLEMA',
+      'LENGUAJE',
+      'VEREDICTO',
+      'TIEMPO',
+      'MEMORIA',
+      'FECHA',
+    ])
+    expect(
+      screen.queryByRole('columnheader', { name: 'Archivo' }),
+    ).not.toBeInTheDocument()
+  })
+
   it('uses all supported query parameters', async () => {
     let url = ''
     server.use(

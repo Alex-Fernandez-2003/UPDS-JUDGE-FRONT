@@ -19,8 +19,8 @@ export function RecentSubmissionsTable({ rows, loading, error }: Props) {
       columns={[
         { key: 'id', header: 'ID' },
         { key: 'contestCode', header: 'CONCURSO' },
-        { key: 'language', header: 'LENGUAJE' },
         { key: 'problemLabel', header: 'PROBLEMA' },
+        { key: 'language', header: 'LENGUAJE' },
         {
           key: 'verdictLabel',
           header: 'VEREDICTO',

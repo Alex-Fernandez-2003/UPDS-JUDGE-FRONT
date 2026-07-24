@@ -33,7 +33,9 @@ describe('JWT identity helpers', () => {
     expect(
       getInitialRoute(token({ role: [roles.user, roles.rolesAdmin] })),
     ).toBe('/admin/dashboard')
-    expect(getInitialRoute(token({ role: roles.user }))).toBe('/student')
+    expect(getInitialRoute(token({ role: roles.user }))).toBe(
+      '/student/concursos',
+    )
     expect(getInitialRoute(token({ role: 'Unknown' }))).toBe(forbiddenRoute)
   })
 })

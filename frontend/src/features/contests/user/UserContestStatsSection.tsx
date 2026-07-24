@@ -18,7 +18,7 @@ export function UserContestStatsSection() {
       <h2 id="user-stats-title" className="text-xl font-bold">
         Tu actividad
       </h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-4 grid grid-cols-1 gap-4">
         {statLabels.map(([key, label]) => (
           <Card key={key} className="p-4">
             <p className="text-sm text-[var(--text-secondary)]">{label}</p>
