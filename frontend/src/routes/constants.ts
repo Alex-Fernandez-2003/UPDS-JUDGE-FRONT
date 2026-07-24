@@ -2,7 +2,7 @@ export const routes = {
   login: '/login',
   register: '/register',
   studentHome: '/student',
-  studentListCompetitions:'/student/concursos',
+   submissions: '/submissions',
   dashboard: '/admin/dashboard',
   legacyDashboard: '/dashboard',
   contests: '/admin/contests',

@@ -153,7 +153,10 @@ export function DataTable<T extends object>({
                   >
                     {column.render
                       ? column.render(row)
-                      : String(row[column.key as keyof T] ?? '')}
+                      : String(
+                        row[column.key as keyof T] ??
+                        '',
+                      )}
                   </td>
                 ))}
 

@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react(), tailwindcss()],
+    optimizeDeps: {
+      include: ['react-simple-code-editor'],
+    },
     resolve: {
       alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     },
