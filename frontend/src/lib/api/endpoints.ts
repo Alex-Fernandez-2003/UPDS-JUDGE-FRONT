@@ -7,5 +7,6 @@ export const endpoints = {
   contests: {
     list: 'Concursos/mis-creados',
     create: 'Concursos/crear',
+    dashboard: (codigo: string) => `Concursos/dashboard/${codigo}`,
   },
 } as const

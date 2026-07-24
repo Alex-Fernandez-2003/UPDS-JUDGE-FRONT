@@ -6,4 +6,6 @@ export const routes = {
   contests: '/admin/contests',
   newContest: '/admin/contests/new',
   devUi: '/dev/ui',
+  problems: '/admin/problem/:codigo',
+  problemsPath: (codigo: string) => `/admin/problem/${codigo}`,
 } as const

@@ -9,6 +9,7 @@ import AdminContestsPage from '@/features/contests/pages/AdminContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import ProtectedRoute from '@/routes/ProtectedRoute'
 import { routes } from './constants'
+import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
 
 export const createAppRouter = (development = isDevelopment) => {
   const DevUi = development ? lazy(() => import('@/dev/ui/DevUi')) : null
@@ -40,6 +41,16 @@ export const createAppRouter = (development = isDevelopment) => {
       element: (
         <ProtectedRoute>
           <AdminContestsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.problems, // ahora es '/admin/problem/:codigo'
+      element: (
+        <ProtectedRoute>
+          <AdminLayout>
+            <ContestProblemsPage />
+          </AdminLayout>
         </ProtectedRoute>
       ),
     },
