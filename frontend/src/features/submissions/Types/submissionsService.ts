@@ -1,45 +1,45 @@
-import { endpoints, httpClient } from '@/lib/api'
-
-import type {
-  GetMySubmissionsParams,
-  GetMySubmissionsResponse,
+import { httpClient } from '@/lib/api/http-client' // Ajusta a la ruta de tu cliente
+import type { 
+  GetMySubmissionsResponse, 
+  GetMySubmissionsFilters 
 } from './submissionTypes'
-
-const buildQueryString = (params?: GetMySubmissionsParams) => {
-  if (!params) return ''
-
-  const searchParams = new URLSearchParams()
-
-  if (params.resultado) {
-    searchParams.set('resultado', params.resultado)
-  }
-
-  if (params.concursoCodigo) {
-    searchParams.set('concursoCodigo', params.concursoCodigo)
-  }
-
-  if (params.inciso) {
-    searchParams.set('inciso', params.inciso)
-  }
-
-  if (params.pagina !== undefined) {
-    searchParams.set('pagina', String(params.pagina))
-  }
-
-  if (params.tamanoPagina !== undefined) {
-    searchParams.set('tamanoPagina', String(params.tamanoPagina))
-  }
-
-  const query = searchParams.toString()
-  return query ? `?${query}` : ''
-}
+import type { CrearEnvioDto } from './sumbitTypes' // Ajusta la ruta a tu archivo de tipos
 
 export const submissionsService = {
-  getMySubmissions(params?: GetMySubmissionsParams) {
-    const query = buildQueryString(params)
+  getMySubmissions: async (
+    concursoCodigo: string,
+    filters: GetMySubmissionsFilters = {}
+  ): Promise<GetMySubmissionsResponse> => {
+    const queryParams = new URLSearchParams()
 
-    return httpClient.get<GetMySubmissionsResponse>(
-      `${endpoints.submissions.mine}${query}`
+    if (concursoCodigo) {
+      queryParams.append('concursoCodigo', concursoCodigo)
+    }
+    if (filters.resultado) {
+      queryParams.append('resultado', filters.resultado)
+    }
+    if (filters.inciso) {
+      queryParams.append('inciso', filters.inciso)
+    }
+    if (filters.pagina) {
+      queryParams.append('pagina', filters.pagina.toString())
+    }
+    if (filters.tamanoPagina) {
+      queryParams.append('tamanoPagina', filters.tamanoPagina.toString())
+    }
+
+    const response = await httpClient.get<GetMySubmissionsResponse>(
+      `/envios/mis-envios?${queryParams.toString()}`
     )
+
+    return response
+  },
+
+  /**
+   * Crea un nuevo envío de solución
+   */
+  createSubmission: async (payload: CrearEnvioDto): Promise<void> => {
+    // Si tu API retorna el objeto creado, puedes cambiar `Promise<void>` por el tipo de respuesta adecuado
+    await httpClient.post('/envios', payload)
   },
 }

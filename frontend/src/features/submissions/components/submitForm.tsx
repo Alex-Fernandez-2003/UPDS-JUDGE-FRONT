@@ -1,379 +1,253 @@
-// import { useState } from 'react'
-// import Editor from 'react-simple-code-editor'
-// import Prism from 'prismjs'
-// import { Send } from 'lucide-react'
+import { useState } from 'react'
+import { Code2, Upload, Send } from 'lucide-react'
 
-// import type { CreateSubmissionPayload } from '../Types/submissionTypes'
-// import { validateSubmitSolution } from '../schemas/submit-solution.schema'
+import type { CrearEnvioDto } from '../Types/sumbitTypes'
+import { validateSubmitSolution } from '../schemas/sumbitSolution'
+import { submissionsService } from '../Types/sumbitService' 
 
-// import {
-//   FormField,
-//   Select,
-//   Checkbox,
-//   FileDropzone,
-// } from '@/components/forms'
+import {
+  FormField,
+  Select,
+  Checkbox,
+  FileDropzone,
+} from '@/components/forms'
 
-// import {
-//   Button,
-//   Card,
-//   Divider,
-// } from '../../../components/common/index'
-// import 'prismjs/components/index.js'
-// import 'prismjs/themes/prism-tomorrow.css'
+import { Button, Card, Divider } from '@/components/common'
+import { CodeEditor } from './submtCodeEditor'
 
-// interface SubmitFormProps {
-//   contestCode: string
-//   onSubmit: (payload: CreateSubmissionPayload) => Promise<void>
-//   isSubmitting?: boolean
-// }
+interface SubmitFormProps {
+  contestCode: string
+  onSubmit: (payload: CrearEnvioDto) => Promise<void>
+  isSubmitting?: boolean
+  // Usamos la misma interfaz que el filtro
+  problems?: { inciso: string; titulo?: string }[] 
+}
 
-// /* =========================
-//    PROBLEMAS
-// ========================= */
-// const PROBLEM_OPTIONS = [
-//   { value: 'A', label: 'A — Matriz dispersa' },
-//   { value: 'B', label: 'B — Secuencia creciente' },
-//   { value: 'C', label: 'C — Caminos mínimos' },
-//   { value: 'D', label: 'D — Árboles binarios' },
-//   { value: 'E', label: 'E — Grafos conexos' },
-// ]
+// CORRECCIÓN 1: Se actualizó la estructura para que coincida con la nueva interfaz de problems
+const DEFAULT_PROBLEMS = [
+  { inciso: 'A', titulo: 'Matriz dispersa' },
+  { inciso: 'B', titulo: 'Secuencia creciente' },
+  { inciso: 'C', titulo: 'Caminos mínimos' },
+]
 
-// /* =========================
-//    LENGUAJES DEL BACKEND
-// ========================= */
-// const LANGUAGE_OPTIONS = [
-//   {
-//     value: 'cpp',
-//     label: 'C++ (GCC 9.2.0)',
-//     judge0Id: 54,
-//   },
-//   {
-//     value: 'py',
-//     label: 'Python (3.8.1)',
-//     judge0Id: 71,
-//   },
-//   {
-//     value: 'cs',
-//     label: 'C# (Mono 6.6.0.161)',
-//     judge0Id: 51,
-//   },
-// ] as const
+const LANGUAGE_OPTIONS = [
+  { value: 1, label: 'C++ 17', key: 'cpp' },
+  { value: 2, label: 'Python 3', key: 'py' },
+  { value: 3, label: 'C#', key: 'cs' },
+] as const
 
-// /* =========================
-//    PLANTILLAS AUTOMÁTICAS
-// ========================= */
-// const CODE_TEMPLATES: Record<string, string> = {
-//   cpp: `#include <bits/stdc++.h>
-// using namespace std;
+const CODE_TEMPLATES: Record<number, string> = {
+  1: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    return 0;\n}`,
+  2: `def solve():\n    pass\n\nif __name__ == "__main__":\n    solve()`,
+  3: `using System;\n\nclass Program {\n    static void Main() {\n    }\n}`,
+}
 
-// int main() {
-//     cout << "Hola Mundo";
-//     return 0;
-// }`,
+export function SubmitForm({
+  contestCode,
+  onSubmit,
+  isSubmitting = false,
+  problems = DEFAULT_PROBLEMS,
+}: SubmitFormProps) {
+  const [incisoProblema, setIncisoProblema] = useState('')
+  const [idLenguaje, setIdLenguaje] = useState<number>(1)
+  const [mode, setMode] = useState<'upload' | 'paste'>('upload')
+  const [selectedFile, setSelectedFile] = useState<File | undefined>()
+  const [confirmedHonesty, setConfirmedHonesty] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-//   py: `def main():
-//     print("Hola Mundo")
+  const [codeByLanguage, setCodeByLanguage] =
+    useState<Record<number, string>>(CODE_TEMPLATES)
 
-// if __name__ == "__main__":
-//     main()`,
+  const currentCode = codeByLanguage[idLenguaje] || ''
 
-//   cs: `using System;
+  const handleLanguageChange = (newId: number) => {
+    setIdLenguaje(newId)
+    if (!codeByLanguage[newId]) {
+      setCodeByLanguage(prev => ({ ...prev, [newId]: CODE_TEMPLATES[newId] || '' }))
+    }
+  }
 
-// class Program
-// {
-//     static void Main()
-//     {
-//         Console.WriteLine("Hola Mundo");
-//     }
-// }`,
-// }
+  const updateCode = (value: string) => {
+    setCodeByLanguage((prev) => ({ ...prev, [idLenguaje]: value }))
+  }
 
-// export function SubmitForm({
-//   contestCode,
-//   onSubmit,
-//   isSubmitting = false,
-// }: SubmitFormProps) {
-//   /* =========================
-//      ESTADOS
-//   ========================= */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
 
-//   const [problemCode, setProblemCode] = useState('')
+    // 1. Validar con el Schema
+    const validation = validateSubmitSolution({
+      incisoProblema,
+      idLenguaje,
+      mode,
+      file: selectedFile,
+      sourceCode: currentCode,
+      confirmedHonesty,
+    })
 
-//   // Lenguaje por defecto
-//   const [language, setLanguage] = useState<'cpp' | 'py' | 'cs'>('cpp')
+    if (!validation.isValid) {
+      setErrors(validation.errors)
+      return
+    }
 
-//   const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('upload')
+    setErrors({})
 
-//   // Guardar código por lenguaje
-//   const [codeByLanguage, setCodeByLanguage] = useState({
-//     cpp: CODE_TEMPLATES.cpp,
-//     py: CODE_TEMPLATES.py,
-//     cs: CODE_TEMPLATES.cs,
-//   })
+    try {
+      let codigoFuenteFinal = ''
+      
+      if (mode === 'upload' && selectedFile) {
+        codigoFuenteFinal = await submissionsService.readFileAsText(selectedFile)
+      } else {
+        codigoFuenteFinal = currentCode
+      }
 
-//   const [selectedFile, setSelectedFile] = useState<File>()
-//   const [confirmedHonesty, setConfirmedHonesty] = useState(false)
-//   const [errors, setErrors] = useState<Record<string, string>>({})
+      const payload: CrearEnvioDto = {
+        codigoConcurso: contestCode,
+        incisoProblema,
+        idLenguaje,
+        codigoFuente: codigoFuenteFinal,
+      }
 
-//   /* =========================
-//      CÓDIGO ACTUAL
-//   ========================= */
+      await onSubmit(payload)
+      
+      // Opcional: Limpiar archivo tras éxito
+      if (mode === 'upload') {
+        setSelectedFile(undefined)
+      }
+      
+    } catch (error) {
+      setErrors({ form: 'Error al procesar el archivo de código.' })
+    }
+  }
 
-//   // ESTA ES LA VARIABLE QUE SE ENVÍA AL BACKEND
-//   const sourceCode = codeByLanguage[language]
+  const currentLanguageConfig = LANGUAGE_OPTIONS.find((x) => x.value === idLenguaje)
+  const prismLanguage = currentLanguageConfig?.key === 'cpp' ? 'cpp' : 
+                        currentLanguageConfig?.key === 'py' ? 'python' : 'csharp'
 
-//   const updateCode = (value: string) => {
-//     setCodeByLanguage((prev) => ({
-//       ...prev,
-//       [language]: value,
-//     }))
-//   }
+  return (
+    <Card className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 px-6 py-5 text-white">
+        <div className="flex items-center gap-3">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/10">
+            <Code2 className="h-5 w-5" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold">Enviar solución</h2>
+            <p className="text-sm text-slate-300">Concurso: {contestCode}</p>
+          </div>
+        </div>
+      </div>
 
-//   /* =========================
-//      ENVÍO AL BACKEND
-//   ========================= */
+      <form onSubmit={handleSubmit} className="space-y-6 p-6">
+        {errors.form && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-600">
+            {errors.form}
+          </div>
+        )}
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault()
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField label="Problema" error={errors.incisoProblema}>
+            <Select value={incisoProblema} onChange={(e) => setIncisoProblema(e.target.value)}>
+              <option value="">Selecciona un problema</option>
+              {problems.map((p) => (
+                <option key={p.inciso} value={p.inciso}>
+                  {p.inciso} {p.titulo ? `— ${p.titulo}` : ''}
+                </option>
+              ))}
+            </Select>
+          </FormField>
 
-//     // Validación checkbox
-//     if (!confirmedHonesty) {
-//       setErrors((prev) => ({
-//         ...prev,
-//         honesty: 'Debes confirmar la honestidad académica.',
-//       }))
-//       return
-//     }
+          <FormField label="Lenguaje" error={errors.idLenguaje}>
+            <Select
+              value={idLenguaje}
+              onChange={(e) => handleLanguageChange(Number(e.target.value))}
+            >
+              {LANGUAGE_OPTIONS.map((item) => (
+                <option key={item.value} value={item.value}>{item.label}</option>
+              ))}
+            </Select>
+          </FormField>
+        </div>
 
-//     // AQUÍ SE TOMA EL TEXTO DEL EDITOR
-//     const codeToSend =
-//       activeTab === 'paste' ? sourceCode : undefined
+        <Divider />
 
-//     const payload: CreateSubmissionPayload = {
-//       contestCode,
-//       problemCode,
-//       language, // cpp | py | cs
-//       file:
-//         activeTab === 'upload'
-//           ? selectedFile
-//           : undefined,
-//       sourceCode: codeToSend,
-//     }
+        {/* Tabs de Modo */}
+        <div className="grid grid-cols-2 gap-3">
+          <button
+            type="button"
+            onClick={() => setMode('upload')}
+            className={`rounded-2xl border px-4 py-3 font-medium transition ${
+              mode === 'upload'
+                ? 'border-slate-800 bg-slate-900 text-white'
+                : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <Upload className="mr-2 inline h-4 w-4" />
+            Subir archivo
+          </button>
 
-//     const validation = validateSubmitSolution(payload)
+          <button
+            type="button"
+            onClick={() => setMode('paste')}
+            className={`rounded-2xl border px-4 py-3 font-medium transition ${
+              mode === 'paste'
+                ? 'border-slate-800 bg-slate-900 text-white'
+                : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <Code2 className="mr-2 inline h-4 w-4" />
+            Pegar código
+          </button>
+        </div>
 
-//     if (!validation.isValid) {
-//       setErrors(validation.errors)
-//       return
-//     }
+        {/* Área de entrada de código */}
+        {mode === 'upload' ? (
+          <div className="space-y-2">
+            <FormField label="Archivo fuente" error={errors.file}>
+              <FileDropzone
+                accept=".cpp,.py,.cs"
+                maxSizeBytes={2 * 1024 * 1024}
+                onChange={(file) => setSelectedFile(file)} 
+              />
+            </FormField>
+            {/* Opcional: Feedback visual del archivo seleccionado */}
+            {selectedFile && (
+              <p className="text-sm text-slate-600 italic px-1">
+                Archivo seleccionado: <span className="font-semibold">{selectedFile.name}</span>
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="font-semibold text-slate-800">Código fuente</label>
+              <span className="rounded bg-slate-100 px-2 py-1 font-mono text-xs text-slate-600">
+                {currentLanguageConfig?.label}
+              </span>
+            </div>
 
-//     setErrors({})
+            <CodeEditor
+              value={currentCode}
+              language={prismLanguage}
+              onChange={updateCode}
+            />
+            {errors.sourceCode && (
+              <p className="text-xs text-red-600">{errors.sourceCode}</p>
+            )}
+          </div>
+        )}
 
-//     await onSubmit(payload)
-//   }
-
-//   /* =========================
-//      JSX
-//   ========================= */
-
-//   return (
-//     <Card className="space-y-5">
-//       {/* Header */}
-//       <div>
-//         <h2 className="text-lg font-semibold">
-//           Enviar solución
-//         </h2>
-//       </div>
-
-//       <Divider />
-
-//       <form
-//         onSubmit={handleSubmit}
-//         className="space-y-4"
-//       >
-//         {/* Problema */}
-//         <FormField
-//           label="Problema"
-//           error={errors.problemCode}
-//         >
-//           <Select
-//             value={problemCode}
-//             onChange={(e) =>
-//               setProblemCode(e.target.value)
-//             }
-//           >
-//             <option value="">
-//               Selecciona un problema
-//             </option>
-
-//             {PROBLEM_OPTIONS.map((problem) => (
-//               <option
-//                 key={problem.value}
-//                 value={problem.value}
-//               >
-//                 {problem.label}
-//               </option>
-//             ))}
-//           </Select>
-//         </FormField>
-
-//         {/* Lenguaje */}
-//         <FormField
-//           label="Lenguaje"
-//           error={errors.language}
-//         >
-//           <Select
-//             value={language}
-//             onChange={(e) =>
-//               setLanguage(
-//                 e.target.value as 'cpp' | 'py' | 'cs',
-//               )
-//             }
-//           >
-//             {LANGUAGE_OPTIONS.map((lang) => (
-//               <option
-//                 key={lang.value}
-//                 value={lang.value}
-//               >
-//                 {lang.label}
-//               </option>
-//             ))}
-//           </Select>
-//         </FormField>
-
-//         {/* Tabs */}
-//         <div className="grid grid-cols-2 gap-2">
-//           <Button
-//             type="button"
-//             variant={
-//               activeTab === 'upload'
-//                 ? 'primary'
-//                 : 'secondary'
-//             }
-//             onClick={() => setActiveTab('upload')}
-//           >
-//             Subir archivo
-//           </Button>
-
-//           <Button
-//             type="button"
-//             variant={
-//               activeTab === 'paste'
-//                 ? 'primary'
-//                 : 'secondary'
-//             }
-//             onClick={() => setActiveTab('paste')}
-//           >
-//             Pegar código
-//           </Button>
-//         </div>
-
-//         {/* Contenido */}
-//         {activeTab === 'upload' ? (
-//           <FormField
-//             label="Archivo fuente"
-//             error={errors.sourceCode}
-//           >
-//             <FileDropzone
-//               accept=".cpp,.c,.py,.cs,.txt"
-//               maxSizeBytes={2 * 1024 * 1024}
-//               onChange={setSelectedFile}
-//             />
-//           </FormField>
-//         ) : (
-//           <div className="space-y-2">
-//             <div className="flex items-center justify-between">
-//               <label className="text-sm font-medium text-[var(--text-primary)]">
-//                 Código fuente
-//               </label>
-
-//               <span className="text-xs text-[var(--text-secondary)]">
-//                 {
-//                   LANGUAGE_OPTIONS.find(
-//                     (l) => l.value === language,
-//                   )?.label
-//                 }
-//               </span>
-//             </div>
-
-//             {/* Editor Prism */}
-//             <div className="overflow-hidden rounded-lg border border-[var(--border)] bg-[#1E1E1E]">
-//               <Editor
-//                 value={sourceCode}
-//                 onValueChange={updateCode}
-//                 highlight={(code) => {
-//                     const prismLanguage =
-//                     language === 'cpp'
-//                     ? 'cpp'
-//                     : language === 'py'
-//                     ? 'python'
-//                     : 'csharp'
-//                   return Prism.highlight(
-//                     code,
-//                     Prism.languages[prismLanguage] ?? Prism.languages.plain,
-//                     prismLanguage,
-//                   )
-//                 }}
-//                 padding={16}
-//                 textareaId="code-editor"
-//                 textareaClassName="outline-none"
-//                 preClassName="!m-0"
-//                 style={{
-//                   fontFamily:
-//                     'JetBrains Mono, Fira Code, monospace',
-//                   fontSize: 14,
-//                   minHeight: '420px',
-//                   backgroundColor: '#1E1E1E',
-//                   color: '#D4D4D4',
-//                 }}
-//               />
-//             </div>
-
-//             {errors.sourceCode && (
-//               <p className="text-sm text-[var(--danger)]">
-//                 {errors.sourceCode}
-//               </p>
-//             )}
-//           </div>
-//         )}
-
-//         {/* Honestidad */}
-//         <div className="flex items-start gap-3">
-//           <Checkbox
-//             id="honesty-checkbox"
-//             checked={confirmedHonesty}
-//             onChange={(e) =>
-//               setConfirmedHonesty(e.target.checked)
-//             }
-//           />
-
-//           <label
-//             htmlFor="honesty-checkbox"
-//             className="text-sm text-[var(--text-secondary)]"
-//           >
-//             Confirmo que esta solución fue
-//             desarrollada íntegramente por mí y
-//             cumple las normas de honestidad
-//             académica.
-//           </label>
-//         </div>
-
-//         {errors.honesty && (
-//           <p className="text-sm text-[var(--danger)]">
-//             {errors.honesty}
-//           </p>
-//         )}
-
-//         {/* Botón */}
-//         <Button
-//           type="submit"
-//           fullWidth
-//           loading={isSubmitting}
-//           leftIcon={<Send className="size-4" />}
-//         >
-//           Enviar solución
-//         </Button>
-//       </form>
-//     </Card>
-//   )
-// }
+        <Divider />
+        <Button
+          type="submit"
+          fullWidth
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          leftIcon={!isSubmitting && <Send className="h-4 w-4" />}
+        >
+          {isSubmitting ? 'Evaluando...' : 'Enviar solución'}
+        </Button>
+      </form>
+    </Card>
+  )
+}

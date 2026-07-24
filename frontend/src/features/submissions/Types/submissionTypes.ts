@@ -1,27 +1,12 @@
-// =========================
-// Filtros que acepta el endpoint
-// GET /api/Envios/mis-envios
-// =========================
+export type ResultadoFiltro = 'AC' | 'WA' | 'TLE' | 'MLE' | 'CE' | 'RE'
 
-export type ResultadoFiltro =
-  | 'AC'
-  | 'WA'
-  | 'TLE'
-  | 'MLE'
-  | 'CE'
-  | 'RE'
-
-export interface GetMySubmissionsParams {
+// Filtros OPCIONALES en la URL (?resultado=...&inciso=...&pagina=...)
+export interface GetMySubmissionsFilters {
   resultado?: ResultadoFiltro
-  concursoCodigo?: string
   inciso?: string
   pagina?: number
   tamanoPagina?: number
 }
-
-// =========================
-// Veredictos que devuelve el backend
-// =========================
 
 export type Verdict =
   | 'Accepted'
@@ -30,10 +15,6 @@ export type Verdict =
   | 'Runtime Error'
   | 'Time Limit Exceeded'
   | 'Memory Limit Exceeded'
-
-// =========================
-// Un envío individual
-// =========================
 
 export interface SubmissionItem {
   idEnvio: number
@@ -47,24 +28,32 @@ export interface SubmissionItem {
   fechaEnvio: string
 }
 
-// =========================
-// Respuesta completa del endpoint
-// =========================
-
 export interface GetMySubmissionsResponse {
   total: number
   pagina: number
   tamanoPagina: number
   datos: SubmissionItem[]
 }
-// =========================
-// Payload para enviar una solución
-// =========================
+export type ProgrammingLanguage = 'cpp' | 'py' | 'cs'
 
 export interface CreateSubmissionPayload {
-  concursoCodigo: string
-  problemaId: number | null
-  lenguajeId: number | null
-  archivo?: File | null
-  codigoFuente?: string
+  contestCode: string
+  problemCode: string
+  language: ProgrammingLanguage
+
+  // Uno de los dos debe existir
+  file?: File
+  sourceCode?: string
+}
+
+export interface CreateSubmissionResponse {
+  idEnvio: number
+  mensaje: string
+  estado: 'En Cola' | 'Procesando' | 'Evaluando'
+}
+export interface GetSubmissionsResponse {
+  total: number
+  pagina: number
+  tamanoPagina: number
+  datos: SubmissionItem[]
 }

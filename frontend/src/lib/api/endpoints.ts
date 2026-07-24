@@ -10,6 +10,8 @@ export const endpoints = {
     create: 'Concursos/crear',
   },
   submissions: {
-    mine: 'Envios/mis-envios',
+    // Genera la ruta: /envios/concurso/div4med (ajusta /envios según tu Controller)
+    listByContest: (concursoCodigo: string) => `/envios/concurso/${concursoCodigo}`,
+    create: '/envios',
   },
 } as const

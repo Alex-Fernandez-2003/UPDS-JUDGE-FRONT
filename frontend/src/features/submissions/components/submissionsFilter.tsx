@@ -1,30 +1,39 @@
-import { Filter } from 'lucide-react'
-import { Select } from '@/components/forms'
+  import { Filter } from 'lucide-react'
+  import { Select } from '@/components/forms'
 
-interface Props {
-  value: string
-  onChange: (value: string) => void
-  problems: { inciso: string; titulo: string }[]
-}
+  export interface ProblemOption {
+    inciso: string
+    titulo?: string
+  }
 
-export function SubmissionsFilter({
-  value,
-  onChange,
-  problems,
-}: Props) {
-  return (
-    <div className="flex items-center gap-2">
-      <Filter className="size-4 text-[var(--text-secondary)]" />
+  interface Props {
+    value: string
+    onChange: (value: string) => void
+    problems: ProblemOption[]
+    placeholder?: string
+    showIcon?: boolean
+  }
 
-      <Select value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">Todos los problemas</option>
+  export function SubmissionsFilter({
+    value,
+    onChange,
+    problems,
+    placeholder = 'Todos los problemas',
+    showIcon = true,
+  }: Props) {
+    return (
+      <div className="flex items-center gap-2">
+        {showIcon && <Filter className="size-4 text-[var(--text-secondary)]" />}
 
-        {problems.map((problem) => (
-          <option key={problem.inciso} value={problem.inciso}>
-            {problem.inciso} - {problem.titulo}
-          </option>
-        ))}
-      </Select>
-    </div>
-  )
-}
+        <Select value={value} onChange={(e) => onChange(e.target.value)}>
+          <option value="">{placeholder}</option>
+
+          {problems.map((problem) => (
+            <option key={problem.inciso} value={problem.inciso}>
+              {problem.inciso} {problem.titulo ? `— ${problem.titulo}` : ''}
+            </option>
+          ))}
+        </Select>
+      </div>
+    )
+  }
