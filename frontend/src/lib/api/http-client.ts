@@ -46,14 +46,14 @@ export class HttpClient {
     signal?.addEventListener('abort', abort, { once: true })
     const isFormData = body instanceof FormData
     const requestHeaders = new Headers(headers)
-    const requestBody =
+    const requestBody: BodyInit | null | undefined =
       body &&
       typeof body === 'object' &&
       !isFormData &&
       !(body instanceof Blob) &&
       !(body instanceof URLSearchParams)
         ? JSON.stringify(body)
-        : body
+        : (body as BodyInit | null | undefined)
     if (requestBody && !isFormData && !requestHeaders.has('content-type'))
       requestHeaders.set('content-type', 'application/json')
     if (!requestHeaders.has('accept'))

@@ -8,14 +8,14 @@ export default function CodeIllustration({ mode }: CodeIllustrationProps) {
   return (
     <div className="relative hidden lg:flex w-1/2 min-h-screen flex-col justify-between overflow-hidden bg-[var(--brand)] p-12 text-white select-none">
       {/* Logo */}
-      <div className="z-10">
-        <BrandMark size="md" />
+      <div className="z-10 flex items-center justify-center">
+        <BrandMark size="lg" />
       </div>
 
       {/* Dynamic content */}
       <div className="relative z-10 my-12 flex max-w-lg flex-1 flex-col justify-center">
         {mode === 'login' ? (
-          <div className="space-y-6">
+          <div className="space-y-6 mb-45">
             <h1 className="text-4xl font-extrabold tracking-tight leading-tight">
               Compite, resuelve y mejora
             </h1>
@@ -26,7 +26,7 @@ export default function CodeIllustration({ mode }: CodeIllustrationProps) {
             </p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 mb-45">
             <h1 className="text-4xl font-extrabold tracking-tight leading-tight">
               Comienza tu camino competitivo
             </h1>

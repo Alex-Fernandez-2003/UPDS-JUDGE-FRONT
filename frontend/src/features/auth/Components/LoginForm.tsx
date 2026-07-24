@@ -112,7 +112,7 @@ export default function LoginForm({
           <div className="flex justify-end">
             <button
               type="button"
-              className="text-sm font-semibold text-[var(--primary)] hover:underline"
+              className="text-sm font-semibold text-[var(--primary)] hover:underline cursor-pointer"
             >
               ¿Olvidaste tu contraseña?
             </button>
@@ -141,7 +141,7 @@ export default function LoginForm({
           <button
             type="button"
             onClick={onToggleMode}
-            className="font-semibold text-[var(--primary)] hover:underline"
+            className="font-semibold text-[var(--primary)] hover:underline cursor-pointer"
           >
             Crear cuenta
           </button>

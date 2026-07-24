@@ -1,9 +1,25 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Alert, Badge, BrandMark, Button, IconButton } from './common'
-import { FileDropzone, FormField, Input, PasswordInput } from './forms'
-import { StatCard, Stepper } from './navigation'
+import {
+  Alert,
+  Badge,
+  BrandMark,
+  Button,
+  EmptyState,
+  IconButton,
+  ProgressBar,
+  StatusDot,
+} from './common'
+import {
+  Checkbox,
+  FileDropzone,
+  FormField,
+  Input,
+  PasswordInput,
+  Radio,
+} from './forms'
+import { Breadcrumbs, Pagination, StatCard, Stepper } from './navigation'
 import { DataTable } from './tables'
 
 describe('foundation components', () => {
@@ -57,6 +73,39 @@ describe('foundation components', () => {
     render(<Badge tone="success">Published</Badge>)
 
     expect(screen.getByText('Published')).toHaveClass('bg-green-100')
+  })
+
+  it('merges root className values without losing base classes or native props', () => {
+    const click = vi.fn()
+    render(
+      <>
+        <StatusDot data-testid="status" className="size-3 ring-1" />
+        <ProgressBar value={25} className="h-4" data-testid="progress" />
+        <EmptyState title="Empty" className="mt-2" data-testid="empty" />
+        <Checkbox className="size-5" data-testid="checkbox" onClick={click} />
+        <Radio className="size-5" data-testid="radio" disabled />
+        <Breadcrumbs items={[{ label: 'Home' }]} className="mt-3" />
+        <Pagination
+          page={1}
+          totalPages={2}
+          onPageChange={click}
+          className="mt-4"
+        />
+      </>,
+    )
+
+    expect(screen.getByTestId('status')).toHaveClass('size-3', 'ring-1')
+    expect(screen.getByTestId('progress')).toHaveClass('h-4', 'rounded-full')
+    expect(screen.getByTestId('empty')).toHaveClass('mt-2', 'border-dashed')
+    expect(screen.getByTestId('checkbox')).toHaveClass(
+      'size-5',
+      'accent-[var(--primary)]',
+    )
+    expect(screen.getByTestId('radio')).toBeDisabled()
+    expect(screen.getByLabelText('Breadcrumb')).toHaveClass('mt-3')
+    expect(screen.getByLabelText('Pagination')).toHaveClass('mt-4')
+    fireEvent.click(screen.getByTestId('checkbox'))
+    expect(click).toHaveBeenCalledTimes(1)
   })
 
   it('associates a field and toggles password visibility', async () => {

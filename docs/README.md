@@ -13,6 +13,7 @@ Esta carpeta contiene la documentación académica y técnica preparada a partir
 7. [Plan Ready to Sprint](07-plan-ready-to-sprint.md)
 8. [Sprint 0](08-sprint-0-fabrica-software.md)
 9. [Informe final LaTeX](informe-final.tex)
+10. [Retrospectiva Sprint 1](retrospectivas/retrospectiva-sprint-1.md)
 
 ## Carpetas
 

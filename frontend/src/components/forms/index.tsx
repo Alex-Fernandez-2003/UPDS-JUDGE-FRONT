@@ -88,18 +88,28 @@ export function Select({
     />
   )
 }
-export function Checkbox(props: InputHTMLAttributes<HTMLInputElement>) {
+export function Checkbox({
+  className,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       type="checkbox"
-      className="size-4 accent-[var(--primary)]"
+      className={cn('size-4 accent-[var(--primary)] cursor-pointer', className)}
       {...props}
     />
   )
 }
-export function Radio(props: InputHTMLAttributes<HTMLInputElement>) {
+export function Radio({
+  className,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <input type="radio" className="size-4 accent-[var(--primary)]" {...props} />
+    <input
+      type="radio"
+      className={cn('size-4 accent-[var(--primary)]', className)}
+      {...props}
+    />
   )
 }
 export function PasswordInput({
@@ -130,7 +140,9 @@ export function FormField({
   hint,
   error,
   children,
-}: {
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
   label: string
   hint?: string
   error?: string
@@ -141,7 +153,7 @@ export function FormField({
     [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ') ||
     undefined
   return (
-    <div>
+    <div className={className} {...props}>
       <Label htmlFor={id}>{label}</Label>
       {React.cloneElement(children, {
         id,
@@ -167,11 +179,15 @@ export function SearchInput({
     </div>
   )
 }
-export function PasswordStrength({ value }: { value: string }) {
+export function PasswordStrength({
+  value,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & { value: string }) {
   const score =
     value.length >= 12 ? 100 : value.length >= 8 ? 66 : value.length ? 33 : 0
   return (
-    <div aria-label="Password strength">
+    <div aria-label="Password strength" className={className} {...props}>
       <div className="h-1.5 rounded bg-[var(--surface-muted)]">
         <div
           className="h-full rounded bg-[var(--primary)]"
@@ -186,7 +202,9 @@ export function FileDropzone({
   maxSizeBytes,
   disabled,
   onChange,
-}: {
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement> & {
   accept?: string
   maxSizeBytes?: number
   disabled?: boolean
@@ -219,7 +237,7 @@ export function FileDropzone({
     onChange?.(candidate)
   }
   return (
-    <div>
+    <div className={className} {...props}>
       <input
         ref={input}
         type="file"

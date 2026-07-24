@@ -16,7 +16,10 @@ describe('application routes', () => {
   })
 
   it('renders the contest creation page inside the existing admin layout', async () => {
-    sessionStorage.setItem('token', 'test-session-token')
+    sessionStorage.setItem(
+      'token',
+      'header.eyJyb2xlIjoiQWRtaW5pc3RyYWRvckNvbmN1cnNvcyJ9.signature',
+    )
     const router = createAppRouter(false)
     await router.navigate('/admin/contests/new')
     render(
@@ -28,8 +31,34 @@ describe('application routes', () => {
     expect(
       await screen.findByRole('heading', { name: 'Crear concurso' }),
     ).toBeInTheDocument()
-    expect(screen.getByText('Overview')).toBeInTheDocument()
+    expect(screen.getAllByText('Panel Administrativo')).toHaveLength(2)
     expect(screen.getByText('Nuevo concurso')).toBeInTheDocument()
+    sessionStorage.removeItem('token')
+  })
+
+  it('renders the existing student route inside UserLayout', async () => {
+    sessionStorage.setItem(
+      'token',
+      'header.eyJuYW1lIjoiQWRhIiwicm9sZSI6IlVzdWFyaW8ifQ.signature',
+    )
+    const router = createAppRouter(false)
+    await router.navigate('/student')
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>,
+    )
+
+    expect(
+      await screen.findByRole('heading', { name: 'Área de usuario' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('navigation', { name: 'Navegación de usuario' }),
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Abrir menú de usuario' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Clasificación global')).not.toBeInTheDocument()
     sessionStorage.removeItem('token')
   })
 

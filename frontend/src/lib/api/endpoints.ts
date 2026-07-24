@@ -5,8 +5,11 @@ export const endpoints = {
     register: 'Auth/register',
   },
   contests: {
-    list: 'Concursos/mis-creados',
+    adminList: 'Concursos/mis-creados',
+    adminSummary: 'Concursos/mis-resumen',
     create: 'Concursos/crear',
+    userStats: 'ParticipanteConcursos/stats-contest',
+    userSubmissions: 'Envios/mis-envios',
     dashboard: (codigo: string) => `Concursos/dashboard/${codigo}`,
   },
 } as const
