@@ -28,4 +28,9 @@
   --z-dropdown: 40;
   --z-modal: 50;
   --z-toast: 60;
+  --private-card:#ea580c;
+  --public-card:#64748b;
+  --active-card:#15803d;
+  --soon-card: #1d4ed8;
+  --finished-card: #475569;
 }

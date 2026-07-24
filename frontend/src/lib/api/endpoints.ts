@@ -10,5 +10,6 @@ export const endpoints = {
     create: 'Concursos/crear',
     userStats: 'ParticipanteConcursos/stats-contest',
     userSubmissions: 'Envios/mis-envios',
+    userListCompetition:'Concursos'
   },
 } as const

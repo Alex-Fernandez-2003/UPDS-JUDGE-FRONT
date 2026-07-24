@@ -1,21 +1,24 @@
 import { Button } from '@/components/common'
 import { SearchInput, Select } from '@/components/forms'
 import { ADMIN_CONTEST_FILTERS } from '../constants'
-import type { FiltroEstadoConcurso } from '../types'
+import type { FiltroEstadoConcurso, ModalidadConcurso } from '../types'
 
 export type ContestsFiltersValue = {
   busqueda: string
   filtro: FiltroEstadoConcurso
+  modalidad?: ModalidadConcurso | ''
 }
 
 export function ContestsFiltersBar({
   value,
   onChange,
   onClear,
+  showModalidad = false,
 }: {
   value: ContestsFiltersValue
   onChange: (next: ContestsFiltersValue) => void
   onClear: () => void
+  showModalidad?: boolean
 }) {
   return (
     <div className="flex flex-wrap items-center gap-4">
@@ -46,6 +49,24 @@ export function ContestsFiltersBar({
           </option>
         ))}
       </Select>
+
+      {showModalidad ? (
+        <Select
+          className="flex min-w-[150px]"
+          aria-label="Filtrar por modalidad"
+          value={value.modalidad ?? ''}
+          onChange={(event) =>
+            onChange({
+              ...value,
+              modalidad: event.target.value as ModalidadConcurso | '',
+            })
+          }
+        >
+          <option value="">Todas las modalidades</option>
+          <option value="Publico">Público</option>
+          <option value="Privado">Privado</option>
+        </Select>
+      ) : null}
 
       <Button
         type="button"

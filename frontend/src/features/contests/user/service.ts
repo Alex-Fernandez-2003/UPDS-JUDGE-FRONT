@@ -1,5 +1,9 @@
 import { endpoints, httpClient } from '@/lib/api'
 import type {
+  ListConcursosParams,
+  ListConcursosResponse,
+} from '@/features/contests/types'
+import type {
   UserContestStats,
   UserSubmissionsParams,
   UserSubmissionsResponse,
@@ -15,5 +19,15 @@ export const listUserSubmissions = (params: UserSubmissionsParams) => {
   }
   return httpClient.get<UserSubmissionsResponse>(
     `${endpoints.contests.userSubmissions}?${query.toString()}`,
+  )
+}
+
+export const listPublicConcursos = (params: ListConcursosParams) => {
+  const query = new URLSearchParams()
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') query.set(key, String(value))
+  }
+  return httpClient.get<ListConcursosResponse>(
+    `${endpoints.contests.userListCompetition}?${query.toString()}`,
   )
 }

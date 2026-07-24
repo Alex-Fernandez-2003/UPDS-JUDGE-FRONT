@@ -6,7 +6,10 @@ import { deriveIdentity } from '@/lib/auth/identity'
 import { cn } from '@/lib/utils/cn'
 import { routes } from '@/routes/constants'
 
-const userNavigation = [{ label: 'Inicio', path: routes.studentHome }]
+const userNavigation = [
+  { label: 'Inicio', path: routes.studentHome },
+  { label: 'Concursos', path: routes.studentListCompetitions },
+]
 
 export function UserLayout({ children }: PropsWithChildren) {
   const identity = deriveIdentity(sessionStorage.getItem('token'))

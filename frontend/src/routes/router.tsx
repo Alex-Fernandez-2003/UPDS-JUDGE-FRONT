@@ -15,6 +15,9 @@ import ProtectedRoute from '@/routes/ProtectedRoute'
 import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 
+
+import UserContestsPage from '@/features/contests/user/pages/UserContestsPage'
+
 const Forbidden = () => (
   <main className="p-8">
     <h1>Acceso denegado</h1>
@@ -43,6 +46,18 @@ export const createAppRouter = (development = isDevelopment) => {
           <RoleRoute allowedRoles={[roles.user]}>
             <UserLayout>
               <UserLandingPage />
+            </UserLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.studentListCompetitions,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <UserLayout>
+              <UserContestsPage></UserContestsPage>
             </UserLayout>
           </RoleRoute>
         </ProtectedRoute>
