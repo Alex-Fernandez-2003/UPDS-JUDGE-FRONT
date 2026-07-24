@@ -1,441 +1,448 @@
-# UJ-11 — Lista de concursos filtrados
+# UJ-11 — Lista de concursos filtrados para el usuario
 
-## Estado de esta entrega parcial
+## Proyecto
 
-Este change **no completa UJ-11** ni implementa la lista de concursos. La entrega incorpora al dashboard del usuario estadísticas rápidas y una tabla de los cinco envíos recientes.
+**UPDS JUDGE**
 
-## Contrato confirmado
+## Historia de usuario
 
-- `GET /api/ParticipanteConcursos/stats-contest` alimenta estadísticas independientes.
-- `GET /api/Envios/mis-envios` recibe `resultado`, `concursoCodigo`, `inciso`, `pagina` y `tamanoPagina`; el dashboard consulta `pagina=1` y `tamanoPagina=5`.
-- `consumoTiempo` se presenta en milisegundos (`ms`) sin conversión de escala.
-- `consumoMemoria` se presenta en megabytes (`MB`) sin conversión de escala.
-- El backend devuelve métricas no anulables (`float` e `int`), aunque la capa visual muestra `—` ante datos inválidos defensivamente.
-- El DTO actual no entrega un campo Archivo: la columna visual de referencia se omite y queda pendiente de un contrato backend futuro.
-- El backend crea envíos con veredicto `Pendiente`; se visualiza como `EVALUANDO`.
+Como usuario, quiero ver una lista de concursos filtrados por "En curso",
+"Próximo" y "Finalizado".
 
-## Dashboard de usuario
+## Integrantes
 
-La sección de envíos recientes representa el historial general del usuario, no un único concurso. Incluye ID, concurso, lenguaje, problema, veredicto, tiempo, memoria y fecha. `Actualizar` vuelve a consultar solo los envíos recientes, conserva los datos previos durante el refetch cuando TanStack Query puede hacerlo y evita una segunda activación mientras actualiza.
+- Alex Saúl Fernández Valdez
+- Daniel Arnold Torrez Zarate
 
-No se muestra un botón de filtros decorativo ni controles de paginación sin comportamiento. La metadata se calcula con `total`, `pagina`, `tamanoPagina` y la cantidad real recibida.
+## Estado
 
-## Trabajo futuro separado
+**Implementación integrada; validación end-to-end pendiente.**
 
-1. **Dashboard actual:** estadísticas y cinco envíos recientes, sin filtros visuales ni navegación de páginas.
-2. **Historial completo futuro:** ruta dedicada, filtros funcionales y paginación interactiva reutilizando los parámetros ya soportados.
-3. **UJ-11 principal:** lista de concursos con filtros En curso, Próximo y Finalizado; permanece fuera de este change y no consume `GET /api/Concursos` aquí.
+La lista de concursos, el dashboard del usuario, las estadísticas rápidas y los
+envíos recientes están integrados en el código actual. Aún se requiere validar
+el flujo autenticado con backend real, la experiencia responsive y las
+evidencias manuales.
 
-## Evidencia sugerida
+## Changes asociados
 
-- Dashboard de usuario con estadísticas y tabla de envíos recientes.
-- Valores `2000 ms`, `1024 MB`, `0 ms` y `0 MB`.
-- Estado de métricas ausentes como `—`.
-- Refresh de envíos sin recarga de página.
-- Última página parcial y estado vacío mediante datos de prueba.
+- `uj11-partial-user-dashboard-stats-submissions-integration`
 
+No se identificó otro change existente de OpenSpec dedicado exclusivamente a
+la lista de concursos de UJ-11.
 
+## Contexto
 
+La UJ-11 reúne dos aportes que quedaron integrados en una única experiencia de
+usuario: la consulta filtrada de concursos y el dashboard con estadísticas y
+los cinco envíos más recientes. La referencia visual solo orienta jerarquía y
+distribución; no agrega ranking, puntos, clasificaciones, entrenamientos ni
+campos que no estén respaldados por el contrato.
 
-# UJ-11-Parte2-Implementación de la vista de concursos de usuario
+## Alcance implementado
 
-## Objetivo
+### Lista de concursos
 
-Se implementó la vista pública de concursos para los usuarios del sistema, permitiendo consultar concursos disponibles, aplicar filtros, visualizar información relevante del concurso y mejorar la experiencia de usuario mediante una interfaz más intuitiva y consistente.
+`UserContestsPage` consume `GET /api/Concursos` y presenta los concursos en
+cards mediante `UserContestsGrid` y `ContestCard`.
 
----
+- filtros de estado para todos, activos, próximos y finalizados;
+- filtro de modalidad `Publico` / `Privado`;
+- búsqueda debounced de 350 ms;
+- paginación de diez resultados por página;
+- acción para actualizar el listado;
+- estados de carga y vacío en la grilla;
+- cards con estado temporal, modalidad, fechas y datos del concurso;
+- contador y barra de progreso para concursos activos.
 
-# Cambios realizados
+La historia usa los conceptos **En curso**, **Próximo** y **Finalizado**. En el
+selector actual los valores contractuales son `activos`, `proximos` y
+`finalizados`; el estado de una card se muestra como `Activo`, `Proximo` o
+`Finalizado`.
 
-## 1. Consumo del endpoint público de concursos
+Los controles visuales de `Inscribirse`, `Acceder` y `Ver detalles` existen en
+la card, pero sus callbacks no realizan todavía navegación ni llamadas API.
+Por ese motivo no se documentan como inscripción o detalle funcionales.
 
-Se agregó el endpoint público `Concursos` en:
+### Estadísticas rápidas
 
+`UserContestStatsSection` consulta de forma independiente:
+
+```http
+GET /api/ParticipanteConcursos/stats-contest
 ```
-frontend/src/lib/api/endpoints.ts
+
+Muestra cuatro métricas, skeleton durante carga, ceros cuando no hay datos y
+un `Alert` si la consulta falla:
+
+| Campo                   | Descripción                                       |
+| ----------------------- | ------------------------------------------------- |
+| `concursosParticipados` | Concursos distintos considerados por el endpoint. |
+| `problemasResueltos`    | Problemas con resultado aceptado.                 |
+| `problemasPendientes`   | Problemas enviados todavía no resueltos.          |
+| `precisionPorcentaje`   | Precisión calculada por backend.                  |
+
+El frontend no recalcula estas métricas; solo muestra la respuesta. La
+precisión se presenta con sufijo `%`.
+
+### Envíos recientes
+
+`RecentSubmissionsSection` consulta:
+
+```http
+GET /api/Envios/mis-envios
 ```
 
-para consumir:
+El dashboard solicita exclusivamente la primera página con
+`pagina=1` y `tamanoPagina=5`. Muestra una tabla de ID, concurso, lenguaje,
+problema, veredicto, tiempo, memoria y fecha; además calcula la metadata con
+los valores reales de la respuesta.
 
+La sección conserva loading, vacío, error y botón **Actualizar**. Ese botón
+vuelve a ejecutar solamente la query de envíos recientes, evita dobles
+activaciones mientras actualiza y no recarga la página.
+
+### Dashboard del usuario
+
+`UserDashboardPage`, bajo `features/contests/user/pages`, integra:
+
+- mensaje de bienvenida mediante `UserWelcome`;
+- lista filtrada de concursos;
+- estadísticas rápidas;
+- envíos recientes.
+
+La página se renderiza dentro de `UserLayout`, por lo que conserva logo,
+navegación, menú de usuario y logout existentes.
+
+## Arquitectura frontend
+
+```text
+frontend/src/features/contests/user/
+├── components/
+│   ├── ContestCard.tsx
+│   ├── UserContestsGrid.tsx
+│   └── UserWelcome.tsx
+├── pages/
+│   ├── UserContestsPage.tsx
+│   ├── UserDashboardPage.test.tsx
+│   └── UserDashboardPage.tsx
+├── RecentSubmissionsSection.tsx
+├── RecentSubmissionsTable.tsx
+├── UserContestStatsSection.tsx
+├── hooks.ts
+├── index.ts
+├── mapper.ts
+├── service.ts
+├── types.ts
+└── user-dashboard.test.tsx
 ```
+
+Flujo principal:
+
+```text
+UserDashboardPage
+├── UserContestsPage
+│   └── usePublicConcursosList → listPublicConcursos → HttpClient → GET /api/Concursos
+├── UserContestStatsSection
+│   └── useUserContestStats → getUserContestStats → HttpClient → stats-contest
+└── RecentSubmissionsSection
+    └── useUserSubmissions → listUserSubmissions → HttpClient → mis-envios
+```
+
+## Contratos backend
+
+### Concursos
+
+```http
 GET /api/Concursos
 ```
 
----
+Parámetros usados por frontend:
 
-## 2. Extensión de los parámetros de búsqueda
+| Parámetro      | Uso                                                        |
+| -------------- | ---------------------------------------------------------- |
+| `filtro`       | `activos`, `proximos`, `finalizados` o ausente para todos. |
+| `modalidad`    | `Publico` o `Privado` cuando se selecciona modalidad.      |
+| `busqueda`     | Texto de búsqueda ya debounceado.                          |
+| `pagina`       | Página solicitada.                                         |
+| `tamanoPagina` | Tamaño de página; la pantalla usa 10.                      |
 
-Se extendió la interfaz:
+Correspondencia de presentación:
 
-```
-frontend/src/features/contests/types.ts
-```
+| Etiqueta o concepto | Valor contractual / estado mostrado     |
+| ------------------- | --------------------------------------- |
+| En curso            | filtro `activos`; card `Activo`         |
+| Próximo             | filtro `proximos`; card `Proximo`       |
+| Finalizado          | filtro `finalizados`; card `Finalizado` |
+| Público             | `Publico`                               |
+| Privado             | `Privado`                               |
 
-agregando el parámetro:
+La respuesta utilizada contiene metadata (`total`, `pagina`, `tamanoPagina`) y
+una colección `concursos`. Las cards usan, entre otros, código, nombre,
+descripción, modalidad, estado temporal, fechas, duración, tiempo restante e
+indicador de inscripción recibido por el DTO de lista.
 
-```ts
-modalidad
-```
+### Estadísticas
 
-permitiendo filtrar concursos por:
+El contrato de estadísticas se describe en la tabla de métricas anterior. Los
+valores son producidos por `stats-contest`; el frontend no los deriva a partir
+de envíos ni concursos.
 
-- Público
-- Privado
+### Envíos
 
----
-
-## 3. Servicio para obtener concursos públicos
-
-Se creó el servicio:
-
-```
-frontend/src/features/contests/user/service.ts
-```
-
-con la función:
-
-```ts
-listPublicConcursos()
-```
-
-encargada de consumir el endpoint público de concursos.
-
----
-
-## 4. Hook para la consulta de concursos
-
-Se agregó el hook:
-
-```
-frontend/src/features/contests/hooks.ts
+```http
+GET /api/Envios/mis-envios
 ```
 
-```ts
-usePublicConcursosList()
+Parámetros soportados:
+
+```text
+resultado
+concursoCodigo
+inciso
+pagina
+tamanoPagina
 ```
 
-para encapsular la consulta, manejo de estados y actualización automática mediante React Query.
+Campos consumidos por el DTO:
 
----
-
-## 5. Reutilización de la barra de filtros
-
-Se modificó el componente:
-
-```
-frontend/src/features/contests/admin/components/ContestsFiltersBar.tsx
-```
-
-permitiendo reutilizarlo tanto para administración como para la vista pública.
-
-Se añadieron filtros por:
-
-- Estado
-- Modalidad
-- Código del concurso
-
----
-
-## 6. Acceso desde el Landing del usuario
-
-Se actualizó:
-
-```
-frontend/src/features/auth/pages/UserLandingPage.tsx
+```text
+idEnvio
+concursoCodigo
+problemaTitulo
+inciso
+lenguaje
+veredicto
+consumoTiempo
+consumoMemoria
+fechaEnvio
 ```
 
-agregando un acceso directo hacia la lista de concursos disponibles.
+Unidades confirmadas:
 
----
-
-## 7. Redirección después del login
-
-Se modificó:
-
-```
-frontend/src/lib/auth/session.ts
+```text
+consumoTiempo   → milisegundos → ms
+consumoMemoria  → megabytes    → MB
 ```
 
-para que los estudiantes autenticados ingresen directamente a:
+Los valores finitos conservan su escala original. Un cero real se muestra como
+`0 ms` o `0 MB`; un dato ausente o no finito se muestra como `—`. El contrato
+actual no entrega un campo Archivo, por lo que no se implementa esa columna.
 
+### Veredictos
+
+| Valor backend           | Etiqueta visible        |
+| ----------------------- | ----------------------- |
+| `Accepted`              | ACEPTADO                |
+| `Wrong Answer`          | RESPUESTA INCORRECTA    |
+| `Time Limit Exceeded`   | TIEMPO LÍMITE EXCEDIDO  |
+| `Memory Limit Exceeded` | MEMORIA LÍMITE EXCEDIDA |
+| `Compilation Error`     | ERROR DE COMPILACIÓN    |
+| `Runtime Error`         | ERROR DE EJECUCIÓN      |
+| `Pendiente`             | EVALUANDO               |
+
+`EVALUANDO` está respaldado por el estado backend `Pendiente`. Los valores
+no reconocidos conservan un fallback neutral; la implementación actual no
+mapea abreviaturas como `AC`, `WA`, `TLE`, `MLE`, `CE` o `RE` de forma separada.
+
+## Integración final del dashboard del usuario
+
+```text
+User Layout
+└── Página principal del usuario
+    ├── Mensaje de bienvenida
+    └── Contenido principal
+        ├── Lista de concursos
+        ├── Envíos recientes
+        └── Estadísticas rápidas
 ```
+
+### Escritorio
+
+```text
+Bienvenida arriba
+
+Columna izquierda:
+- concursos;
+- envíos recientes.
+
+Columna derecha:
+- estadísticas rápidas.
+```
+
+La grilla usa una proporción aproximada de dos partes para contenido principal
+y una para estadísticas; el `aside` de estadísticas inicia alineado con la
+lista de concursos.
+
+### Tablet y móvil
+
+En tablet la columna de estadísticas se mantiene lateral si el ancho lo
+permite. En móvil se usa una columna única con el orden real: bienvenida,
+lista de concursos, estadísticas rápidas y envíos recientes. No se oculta
+ninguna sección ni se agregan elementos de la referencia no implementados.
+
+## Refinamiento visual final del dashboard
+
+El dashboard utiliza un contenedor amplio centrado y una grilla de escritorio
+aproximada 75 % / 25 %: concursos, filtros y envíos recientes quedan en la
+columna izquierda; las estadísticas rápidas ocupan el `aside` derecho. En
+móvil la composición conserva una sola columna y el orden lógico de lectura.
+
+Los filtros existentes conservan su comportamiento y se aprovechan en una fila
+horizontal cuando el ancho de escritorio lo permite; en tablet y móvil pueden
+envolver sin desbordarse. Las cuatro estadísticas se presentan verticalmente,
+una tarjeta por fila.
+
+La tabla de envíos conserva datos, mappers, unidades, badges y scroll
+horizontal. Su orden visual definitivo es: `ID`, `CONCURSO`, `PROBLEMA`,
+`LENGUAJE`, `VEREDICTO`, `TIEMPO`, `MEMORIA`, `FECHA`. No se agregó Archivo ni
+una segunda fecha.
+
+## Routing y autenticación
+
+La ruta canónica del usuario es:
+
+```text
 /student/concursos
 ```
 
----
+El flujo mantiene:
 
-## 8. Creación de la página de concursos
-
-Se creó:
-
-```
-frontend/src/features/contests/user/pages/UserContestsPage.tsx
-```
-
-incluyendo:
-
-- Breadcrumbs.
-- Barra de filtros.
-- Paginación.
-- Botón para actualizar la lista.
-- Consulta paginada de concursos.
-
----
-
-## 9. Creación del componente de tarjetas
-
-Se creó el componente:
-
-```
-frontend/src/features/contests/user/components/UserContestsGrid.tsx
+```text
+login con rol Usuario
+→ getInitialRoute
+→ /student/concursos
+→ UserDashboardPage
 ```
 
-encargado de mostrar cada concurso mediante tarjetas responsivas.
+La ruta está protegida por `ProtectedRoute`, requiere el rol `Usuario` mediante
+`RoleRoute` y se renderiza dentro de `UserLayout`.
 
----
+| Situación                                        | Resultado actual               |
+| ------------------------------------------------ | ------------------------------ |
+| Sin token en ruta de usuario                     | `/login`                       |
+| Usuario autenticado                              | `/student/concursos`           |
+| Administrador sin rol Usuario en ruta de usuario | `/forbidden`                   |
+| Administrador + Usuario                          | prioridad a `/admin/dashboard` |
 
-## 10. Registro de la ruta protegida
+La antigua página temporal
+`frontend/src/features/auth/Pages/UserLandingPage.tsx` fue eliminada. La ruta
+histórica `/student` redirige con `replace` a `/student/concursos`.
 
-Se registró en:
+## Componentes compartidos reutilizados
 
-```
-frontend/src/routes/router.tsx
-```
+La implementación reutiliza componentes existentes y sus estilos base; las
+piezas que admiten `className` conservan esa extensibilidad para composición:
 
-la ruta:
+- `Card`, `Button`, `Badge`, `Alert`, `Skeleton` y `ProgressBar`;
+- `DataTable`;
+- `Breadcrumbs` y `Pagination`;
+- `ContestsFiltersBar` compartida con la funcionalidad administrativa.
 
-```ts
-routes.studentListCompetitions
-```
+## Pruebas y validaciones
 
-para permitir el acceso únicamente a usuarios autenticados.
+La última validación registrada para el estado integrado informó 17 archivos
+de test y 84 tests aprobados. Esta consolidación documental no vuelve a ejecutar
+comandos ni modifica pruebas.
 
----
+Cobertura observada en los tests existentes:
 
-# Mejoras realizadas en las tarjetas de concursos
+- formateadores de tiempo y memoria, incluyendo cero, ausencias y valores no
+  finitos;
+- mapper de veredictos y metadata de paginación;
+- parámetros del servicio de envíos y prevención de doble refresh;
+- composición del dashboard: bienvenida con nombre y fallback, orden de
+  secciones y región lateral de estadísticas;
+- routing protegido, acceso sin token, redirect de Usuario y denegación para
+  administrador sin rol `Usuario`;
+- regresiones administrativas presentes en las pruebas de rutas y concursos
+  existentes.
 
-Posteriormente se realizaron diversas mejoras funcionales y visuales sobre el componente `ContestCard` para brindar una mejor experiencia al usuario.
+Resultados de la última validación registrada:
 
----
+| Validación         | Resultado registrado                                                    |
+| ------------------ | ----------------------------------------------------------------------- |
+| `format:check`     | Falló por formato preexistente en 4 archivos ajenos a esta integración. |
+| `lint`             | Pasó con 15 warnings existentes.                                        |
+| `typecheck`        | Falló con 12 errores preexistentes.                                     |
+| `test:run`         | Pasó: 17 archivos, 84 tests.                                            |
+| `build`            | Falló por los mismos errores de tipos preexistentes.                    |
+| `dev`              | Inició y respondió en un puerto temporal.                               |
+| `git diff --check` | Pasó en la última validación registrada.                                |
 
-## 11. Contador regresivo del concurso
+No se registró una validación manual end-to-end con backend real ni una revisión
+manual de los breakpoints como completadas.
 
-Se implementó un contador en tiempo real para concursos activos.
+## Archivos principales
 
-El contador disminuye automáticamente cada segundo utilizando un `useEffect`.
+- `frontend/src/features/contests/user/pages/UserDashboardPage.tsx`
+- `frontend/src/features/contests/user/pages/UserContestsPage.tsx`
+- `frontend/src/features/contests/user/components/UserWelcome.tsx`
+- `frontend/src/features/contests/user/components/UserContestsGrid.tsx`
+- `frontend/src/features/contests/user/components/ContestCard.tsx`
+- `frontend/src/features/contests/user/RecentSubmissionsSection.tsx`
+- `frontend/src/features/contests/user/UserContestStatsSection.tsx`
+- `frontend/src/features/contests/user/hooks.ts`
+- `frontend/src/features/contests/user/service.ts`
+- `frontend/src/features/contests/user/mapper.ts`
+- `frontend/src/routes/router.tsx`
+- `frontend/src/lib/auth/session.ts`
 
-```tsx
-const [remaining, setRemaining] = useState(
-    contest.segundosRestantes ?? 0
-)
-```
+## Pendientes
 
-El tiempo restante se actualiza automáticamente mientras el concurso permanece activo.
+- Validar login, datos y acciones con backend real autenticado.
+- Realizar revisión manual desktop, tablet y móvil, incluyendo navegación,
+  accesibilidad de filtros y scroll de la tabla.
+- Incorporar evidencias manuales.
+- Implementar inscripción/acceso y navegación de detalle cuando se definan y
+  conecten los contratos correspondientes.
+- Crear una ruta de historial completo de envíos con filtros funcionales y
+  paginación interactiva, fuera del resumen de dashboard.
+- Agregar una columna Archivo solo cuando el backend la incluya en el DTO real.
+- Resolver los problemas globales preexistentes de formato y tipos que bloquean
+  `format:check`, `typecheck` y `build`.
 
----
+## Resultado de la colaboración
 
-## 12. Barra de progreso del tiempo
+La UJ-11 fue desarrollada de forma conjunta por Alex Saúl Fernández Valdez y
+Daniel Arnold Torrez Zarate. La implementación integra la lista filtrada de
+concursos con los componentes del dashboard del usuario, incluyendo
+estadísticas rápidas, envíos recientes y routing posterior al inicio de
+sesión.
 
-Se incorporó una barra de progreso utilizando el componente:
+## Evidencias
 
-```tsx
-<ProgressBar />
-```
+> Estado: Pendiente de incorporación manual.
 
-La barra representa el porcentaje del tiempo transcurrido.
+### 1. Dashboard integrado del usuario
 
-Su comportamiento es el siguiente:
-
-- Al iniciar el concurso la barra comienza vacía.
-- Conforme disminuye el tiempo restante, la barra aumenta.
-- Al finalizar el concurso la barra alcanza el 100%.
-
-El porcentaje se calcula mediante:
-
-```tsx
-((TiempoTotal - TiempoRestante) / TiempoTotal) * 100
-```
-
-La barra únicamente se muestra cuando el concurso está en estado **Activo**.
-
----
-
-## 13. Flujo de inscripción
-
-Se implementó el proceso de inscripción directamente desde la tarjeta del concurso.
-
-### Concursos públicos
-
-Cuando el usuario no está inscrito y el concurso aún no comienza, se muestra:
-
-```
-Inscribirse
-```
-
----
-
-### Concursos privados
-
-Cuando el usuario selecciona **Inscribirse**, la tarjeta reemplaza el botón por un formulario de acceso.
-
-Se agregó un estado local para controlar este comportamiento.
-
-```tsx
-showPasswordInput
-```
-
-Mostrando:
-
-- Campo de contraseña.
-- Botón **Acceder**.
+![Captura del Dashboard](../capturas/uj11-dashboard-user.png)
 
 ---
 
-## 14. Restricción de inscripción
+### 2. Filtro Estado
 
-Se modificó la lógica de inscripción para que únicamente sea posible cuando el concurso está en estado:
-
-```
-Próximo
-```
-
-No es posible inscribirse cuando:
-
-- Activo
-- Finalizado
-
-La condición quedó encapsulada mediante:
-
-```tsx
-const puedeInscribirse =
-    !contest.yaInscrito &&
-    contest.estadoTiempo === 'Proximo'
-```
+![Captura del Filtro de estado](../capturas/uj11-state-filter.png)
 
 ---
 
-## 15. Reubicación del botón de inscripción
+### 3. Filtro Modalidad
 
-Inicialmente el botón aparecía junto a la modalidad del concurso.
-
-Posteriormente se reubicó debajo de la descripción para mejorar la distribución del contenido.
-
-Beneficios obtenidos:
-
-- Mayor legibilidad.
-- Mejor alineación.
-- Tarjetas visualmente homogéneas.
+![Captura del filtro de modalidad](../capturas/uj11-modality-filter.png)
 
 ---
 
-## 16. Uniformidad en las tarjetas
+### 4. Envíos recientes
 
-Se modificó la estructura utilizando Flexbox.
-
-```tsx
-<Card className="flex h-full flex-col p-6">
-```
-
-y
-
-```tsx
-<div className="flex h-full flex-col gap-4">
-```
-
-permitiendo que todas las tarjetas mantengan la misma altura.
-
-Asimismo, el bloque inferior quedó anclado mediante:
-
-```tsx
-mt-auto
-```
+![Captura de la tabla de envíos](../capturas/uj11-table.png)
 
 ---
 
-## 17. Altura uniforme del panel informativo
+### 5. Estadísticas rápidas
 
-Se asignó una altura mínima al panel que muestra:
-
-- Inicio del concurso.
-- Tiempo restante.
-- Información de finalización.
-
-Con ello se evita que las tarjetas cambien de tamaño según el contenido mostrado.
+![Captura de las estadísticas rápidas](../capturas/uj11-stadistics-card.png)
 
 ---
 
+### 6. Responsive
 
-## 18. Personalización visual del estado
-
-Se reemplazó el uso del componente `Badge` por un diseño personalizado para representar visualmente el estado del concurso.
-
-Se agrego en el token.css 5 variables de colores que son las siguientes:
-  --private-card:#ea580c; Globe
-  --public-card:#64748b; Lock
-  --active-card:#15803d; Verde
-  --soon-card: #1d4ed8; Azul
-  --finished-card: #475569; Gris
-
-Se definieron los siguientes estilos:
-
-| Estado | Color |
-|---------|--------|
-| Activo | Verde |
-| Próximo | Azul |
-| Finalizado | Gris |
-
-Cada estado posee un color distintivo que facilita su identificación.
-
----
-
-## 19. Identificación de la modalidad
-
-Se incorporaron iconos utilizando **lucide-react**.
-
-### Público
-
-- Icono 🌍 (`Globe`)
-- Color gris
-
-### Privado
-
-- Icono 🔒 (`Lock`)
-- Color naranja
-
-Esto permite identificar rápidamente la modalidad del concurso sin depender únicamente del texto.
-
----
-
-## 20. Indicador visual de concurso activo
-
-Como mejora estética se añadió un indicador animado para concursos activos.
-
-El indicador utiliza un pequeño punto con efecto de pulso, proporcionando una sensación visual de que el concurso se encuentra en ejecución.
-
----
-
-# Pruebas
-
-
-# Resultado obtenido
-
-Con estas mejoras la vista de concursos ofrece una experiencia más intuitiva y consistente.
-
-Se consiguió:
-
-- Consumo del endpoint público de concursos.
-- Consulta paginada de concursos.
-- Filtros por estado, modalidad y búsqueda.
-- Navegación desde el landing del usuario.
-- Redirección automática después del login.
-- Tarjetas responsivas para la visualización de concursos.
-- Contador regresivo en tiempo real para concursos activos.
-- Barra de progreso del tiempo restante.
-- Inscripción diferenciada para concursos públicos y privados.
-- Acceso mediante contraseña para concursos privados.
-- Restricción de inscripción únicamente para concursos próximos.
-- Tarjetas con alturas uniformes y distribución consistente.
-- Identificación visual mediante colores para el estado del concurso.
-- Identificación mediante iconos y colores para la modalidad.
-- Indicador animado para concursos activos.
-- Interfaz más moderna y alineada con plataformas de programación competitiva como Codeforces, AtCoder y DOMjudge.
+![Captura del responsive](../capturas/uj11-responsive.png)
