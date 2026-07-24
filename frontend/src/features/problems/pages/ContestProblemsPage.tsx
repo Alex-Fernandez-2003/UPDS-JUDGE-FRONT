@@ -13,8 +13,8 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
-import type { ContestDashboard, DashboardProblem } from '../types'
-import { DataTable, type TableColumn } from '@/components/tables'
+import type { ContestDashboard } from '../types'
+import { ProblemsTable } from '../components/ProblemsTable'
 import {
   Badge,
   Button,
@@ -69,32 +69,6 @@ export default function ContestProblemsPage() {
   const [isRulesModalOpen, setIsRulesModalOpen] = useState(false)
   const [downloadPdfState, setDownloadPdfState] =
     useState<DownloadState>('idle')
-
-  const columns: TableColumn<DashboardProblem>[] = [
-    { key: 'inciso', header: 'TAG' },
-    { key: 'titulo', header: 'PROBLEMA' },
-    { key: 'intentos', header: 'INTENTOS' },
-    { key: 'memoria', header: 'MEMORIA' },
-    { key: 'tiempo', header: 'TIEMPO' },
-    {
-      key: 'estado',
-      header: 'ESTADO',
-      render: (problem) => {
-        switch (problem.estado) {
-          case 'Aceptado':
-            return <Badge tone="success">Accepted</Badge>
-          case 'Respuesta incorrecta':
-            return <Badge tone="danger">Wrong Answer</Badge>
-          case 'Sin intentar':
-            return <Badge tone="neutral">Unattempted</Badge>
-          case 'TLE':
-            return <Badge tone="warning">Time Limit Exceeded</Badge>
-          default:
-            return null
-        }
-      },
-    },
-  ]
 
   useEffect(() => {
     if (!codigo) {
@@ -348,9 +322,8 @@ export default function ContestProblemsPage() {
               </Button>
             </div>
 
-            <DataTable
-              columns={columns}
-              rows={problems}
+            <ProblemsTable
+              problems={problems}
               emptyText="Este concurso todavía no tiene problemas."
             />
           </Surface>
@@ -371,7 +344,7 @@ export default function ContestProblemsPage() {
         )}
       </main>
 
-      {/* RULES MODAL (antes componente aparte) */}
+      {/* RULES MODAL */}
       {isRulesModalOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
@@ -382,7 +355,6 @@ export default function ContestProblemsPage() {
             id="rules-modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
               <div className="flex items-center gap-3">
                 <Avatar name="RC" />
@@ -402,7 +374,6 @@ export default function ContestProblemsPage() {
               </IconButton>
             </div>
 
-            {/* Body */}
             <div className="p-6">
               <Alert
                 tone="danger"
@@ -421,7 +392,6 @@ export default function ContestProblemsPage() {
               </Alert>
             </div>
 
-            {/* Footer */}
             <div className="p-4 border-t border-[var(--border)] flex justify-end bg-[var(--surface-muted)]">
               <Button
                 variant="primary"
