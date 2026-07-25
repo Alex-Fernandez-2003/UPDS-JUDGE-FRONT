@@ -7,6 +7,7 @@ import type {
   ImgHTMLAttributes,
   PropsWithChildren,
 } from 'react'
+import { forwardRef } from 'react'
 import { AppLogo } from '@/components/branding/AppLogo'
 import { cn } from '@/lib/utils/cn'
 
@@ -38,36 +39,42 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     leftIcon?: React.ReactNode
     rightIcon?: React.ReactNode
   }
-export function Button({
-  className,
-  variant,
-  size,
-  fullWidth,
-  loading,
-  leftIcon,
-  rightIcon,
-  children,
-  disabled,
-  type = 'button',
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(buttonStyles({ variant, size, fullWidth }), className)}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading ? (
-        <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-      ) : (
-        leftIcon
-      )}
-      {children}
-      {!loading && rightIcon}
-    </button>
-  )
-}
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(
+    {
+      className,
+      variant,
+      size,
+      fullWidth,
+      loading,
+      leftIcon,
+      rightIcon,
+      children,
+      disabled,
+      type = 'button',
+      ...props
+    },
+    ref,
+  ) {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={cn(buttonStyles({ variant, size, fullWidth }), className)}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+        ) : (
+          leftIcon
+        )}
+        {children}
+        {!loading && rightIcon}
+      </button>
+    )
+  },
+)
 export function IconButton({
   label,
   children,
@@ -95,13 +102,24 @@ export function LinkButton({
   variant,
   size,
   fullWidth,
+  leftIcon,
+  rightIcon,
+  children,
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & ActionProps) {
+}: AnchorHTMLAttributes<HTMLAnchorElement> &
+  ActionProps & {
+    leftIcon?: React.ReactNode
+    rightIcon?: React.ReactNode
+  }) {
   return (
     <a
       className={cn(buttonStyles({ variant, size, fullWidth }), className)}
       {...props}
-    />
+    >
+      {leftIcon}
+      {children}
+      {rightIcon}
+    </a>
   )
 }
 export function BrandMark({
@@ -294,7 +312,6 @@ export function EmptyState({
     action?: React.ReactNode
   }
 >) {
-  
   return (
     <div
       className={cn(
