@@ -15,7 +15,7 @@ export function VerdictBadge({ verdict }: Props) {
   switch (verdict) {
     case 'Accepted':
       return (
-        <Badge tone="success" className="gap-1">
+        <Badge tone="success" className="gap-1 font-bold">
           <CheckCircle2 className="size-3" />
           ACCEPTED
         </Badge>
@@ -23,7 +23,7 @@ export function VerdictBadge({ verdict }: Props) {
 
     case 'Wrong Answer':
       return (
-        <Badge tone="danger" className="gap-1">
+        <Badge tone="danger" className="gap-1 font-bold">
           <XCircle className="size-3" />
           WRONG ANSWER
         </Badge>
@@ -31,7 +31,7 @@ export function VerdictBadge({ verdict }: Props) {
 
     case 'Time Limit Exceeded':
       return (
-        <Badge tone="warning" className="gap-1">
+        <Badge tone="warning" className="gap-1 font-bold">
           <Hourglass className="size-3" />
           TIME LIMIT EXCEEDED
         </Badge>
@@ -41,7 +41,7 @@ export function VerdictBadge({ verdict }: Props) {
     case 'Runtime Error':
     case 'Memory Limit Exceeded':
       return (
-        <Badge tone="danger" className="gap-1">
+        <Badge tone="danger" className="gap-1 font-bold">
           <AlertTriangle className="size-3" />
           {verdict.toUpperCase()}
         </Badge>
