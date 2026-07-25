@@ -15,6 +15,7 @@ import ProtectedRoute from '@/routes/ProtectedRoute'
 import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
+import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
 
 const UserDashboard = () => (
   <UserDashboardPage
@@ -60,15 +61,25 @@ export const createAppRouter = (development = isDevelopment) => {
       ),
     },
     {
-    path: '/student/contest/:contestCode/submissions',
-    element: (
-      <ProtectedRoute>
-        <RoleRoute allowedRoles={[roles.user]}>
-          <SubmissionsPage />
-        </RoleRoute>
-      </ProtectedRoute>
-    ),
-  },
+      path: '/student/contests/:contestCode/problems',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <ContestProblemsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/student/contests/:contestCode/submissions',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <SubmissionsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
     { path: forbiddenRoute, element: <Forbidden /> },
     {
       path: routes.legacyDashboard,
