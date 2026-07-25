@@ -16,7 +16,7 @@ export function UserLayout({ children }: PropsWithChildren) {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <header className="border-b border-[var(--border)] bg-white">
         <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-5">
           <AppLogo alt="UPDS Judge" variant="default" />
@@ -57,7 +57,7 @@ export function UserLayout({ children }: PropsWithChildren) {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl p-5">{children}</main>
+      <main className="w-full min-w-0 flex-1 p-5">{children}</main>
     </div>
   )
 }
