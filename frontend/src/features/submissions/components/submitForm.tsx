@@ -4,11 +4,11 @@ import { Code2, Upload, Send } from 'lucide-react'
 import type { CrearEnvioDto } from '../Types/sumbitTypes'
 import { validateSubmitSolution } from '../schemas/sumbitSolution'
 import { submissionsService } from '../Types/sumbitService' 
+import { SubmissionsFilter, type ProblemOption } from './submissionsFilter'
 
 import {
   FormField,
   Select,
-  Checkbox,
   FileDropzone,
 } from '@/components/forms'
 
@@ -19,12 +19,10 @@ interface SubmitFormProps {
   contestCode: string
   onSubmit: (payload: CrearEnvioDto) => Promise<void>
   isSubmitting?: boolean
-  // Usamos la misma interfaz que el filtro
-  problems?: { inciso: string; titulo?: string }[] 
+  problems?: ProblemOption[]
 }
 
-// CORRECCIÓN 1: Se actualizó la estructura para que coincida con la nueva interfaz de problems
-const DEFAULT_PROBLEMS = [
+const DEFAULT_PROBLEMS: ProblemOption[] = [
   { inciso: 'A', titulo: 'Matriz dispersa' },
   { inciso: 'B', titulo: 'Secuencia creciente' },
   { inciso: 'C', titulo: 'Caminos mínimos' },
@@ -52,7 +50,6 @@ export function SubmitForm({
   const [idLenguaje, setIdLenguaje] = useState<number>(1)
   const [mode, setMode] = useState<'upload' | 'paste'>('upload')
   const [selectedFile, setSelectedFile] = useState<File | undefined>()
-  const [confirmedHonesty, setConfirmedHonesty] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const [codeByLanguage, setCodeByLanguage] =
@@ -81,7 +78,6 @@ export function SubmitForm({
       mode,
       file: selectedFile,
       sourceCode: currentCode,
-      confirmedHonesty,
     })
 
     if (!validation.isValid) {
@@ -89,17 +85,19 @@ export function SubmitForm({
       return
     }
 
-    setErrors({})
+    setErrors({}) // Limpiamos errores previos
 
     try {
       let codigoFuenteFinal = ''
       
+      // 2. Extraer código como texto puro (String)
       if (mode === 'upload' && selectedFile) {
         codigoFuenteFinal = await submissionsService.readFileAsText(selectedFile)
       } else {
         codigoFuenteFinal = currentCode
       }
 
+      // 3. Armar el DTO para el backend
       const payload: CrearEnvioDto = {
         codigoConcurso: contestCode,
         incisoProblema,
@@ -107,15 +105,17 @@ export function SubmitForm({
         codigoFuente: codigoFuenteFinal,
       }
 
+      // 4. Enviar a la API
       await onSubmit(payload)
       
-      // Opcional: Limpiar archivo tras éxito
+      // 5. Limpiar archivo tras éxito
       if (mode === 'upload') {
         setSelectedFile(undefined)
       }
       
     } catch (error) {
-      setErrors({ form: 'Error al procesar el archivo de código.' })
+      console.error(error)
+      setErrors({ form: 'Error al procesar el archivo o contactar al servidor.' })
     }
   }
 
@@ -146,15 +146,15 @@ export function SubmitForm({
         )}
 
         <div className="grid gap-4 md:grid-cols-2">
+          {/* Selector de Problema reutilizando SubmissionsFilter */}
           <FormField label="Problema" error={errors.incisoProblema}>
-            <Select value={incisoProblema} onChange={(e) => setIncisoProblema(e.target.value)}>
-              <option value="">Selecciona un problema</option>
-              {problems.map((p) => (
-                <option key={p.inciso} value={p.inciso}>
-                  {p.inciso} {p.titulo ? `— ${p.titulo}` : ''}
-                </option>
-              ))}
-            </Select>
+            <SubmissionsFilter
+              value={incisoProblema}
+              onChange={(val) => setIncisoProblema(val)}
+              problems={problems}
+              placeholder="Selecciona un problema"
+              showIcon={false}
+            />
           </FormField>
 
           <FormField label="Lenguaje" error={errors.idLenguaje}>
@@ -210,7 +210,6 @@ export function SubmitForm({
                 onChange={(file) => setSelectedFile(file)} 
               />
             </FormField>
-            {/* Opcional: Feedback visual del archivo seleccionado */}
             {selectedFile && (
               <p className="text-sm text-slate-600 italic px-1">
                 Archivo seleccionado: <span className="font-semibold">{selectedFile.name}</span>
@@ -238,6 +237,7 @@ export function SubmitForm({
         )}
 
         <Divider />
+
         <Button
           type="submit"
           fullWidth

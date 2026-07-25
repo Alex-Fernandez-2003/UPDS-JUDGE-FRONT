@@ -13,14 +13,13 @@ interface Props {
   currentPage: number
   totalPages: number
   selectedProblem: string
-  availableProblems: { inciso: string; titulo: string }[]
+  problemCount: number // Cantidad de problemas configurados en el concurso
   loading?: boolean
   onProblemChange: (inciso: string) => void
   onPageChange: (page: number) => void
   onRefresh: () => void
 }
 
-// Definición de columnas fuera del componente para mejor rendimiento
 const columns = [
   {
     key: 'fechaEnvio',
@@ -95,12 +94,22 @@ export function SubmissionsTable({
   currentPage,
   totalPages,
   selectedProblem,
-  availableProblems,
+  problemCount,
   loading = false,
   onProblemChange,
   onPageChange,
   onRefresh,
 }: Props) {
+
+  // Generamos simplemente: [{ inciso: 'A', titulo: 'Problema A' }, { inciso: 'B', titulo: 'Problema B' }, ...]
+  const generatedProblems = Array.from({ length: problemCount }, (_, i) => {
+    const letter = String.fromCharCode(65 + i)
+    return {
+      inciso: letter,
+      titulo: `Problema ${letter}`,
+    }
+  })
+
   return (
     <Card className="space-y-4">
       {/* Header de la Tabla */}
@@ -118,7 +127,7 @@ export function SubmissionsTable({
           <SubmissionsFilter
             value={selectedProblem}
             onChange={onProblemChange}
-            problems={availableProblems}
+            problems={generatedProblems}
           />
 
           <Button
@@ -133,25 +142,25 @@ export function SubmissionsTable({
         </div>
       </div>
 
-      {/* Reutilización del DataTable genérico */}
       <DataTable
         columns={columns}
         rows={submissions}
         loading={loading}
         emptyText="No tienes envíos registrados."
         classNames={{
-          container: 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm',
-          table: 'min-w-full border-collapse text-sm',
-          thead: 'bg-slate-50/80',
-          tbody: 'divide-y divide-slate-100',
-          row: 'transition-colors duration-150 hover:bg-slate-50/70',
-          loadingCell: 'px-4 py-6',
-          emptyCell: 'px-6 py-12',
-          skeleton: 'h-8 w-full rounded-xl',
+          container: 'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs',
+          table: 'min-w-full text-left text-sm',
+          thead: 'bg-slate-50/80 border-b border-slate-200',
+          headerCell: 'px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-500',
+          tbody: 'bg-white',
+          row: 'border-b border-slate-100/70 transition-colors duration-150 hover:bg-slate-50/60 last:border-b-0',
+          cell: 'px-5 py-4 text-sm text-slate-700 align-middle',
+          loadingCell: 'px-5 py-6',
+          emptyCell: 'px-6 py-12 text-center',
+          skeleton: 'h-8 w-full rounded-xl bg-slate-100',
         }}
       />
 
-      {/* Pie con Paginación */}
       <div className="flex flex-col gap-3 border-t border-[var(--border)] pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-[var(--text-secondary)]">
           Mostrando <span className="font-medium text-[var(--text-primary)]">{submissions.length}</span> de <span className="font-medium text-[var(--text-primary)]">{total}</span> envíos
