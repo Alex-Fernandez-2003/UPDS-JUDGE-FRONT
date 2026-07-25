@@ -195,9 +195,9 @@ De esta manera, la vista no reimplementa estilos propios y hereda automáticamen
 
 ## Evidencia
 
-| Evidencia | Descripción                                        |
-| --------- | -------------------------------------------------- |
-| Captura 1 | Panel "Set de Problemas" con listado de incisos    |
+| Evidencia | Descripción                                     |
+| --------- | ----------------------------------------------- |
+| Captura 1 | Panel "Set de Problemas" con listado de incisos |
 
 ### 1. Listado de incisos
 
@@ -213,6 +213,10 @@ De esta manera, la vista no reimplementa estilos propios y hereda automáticamen
 | El botón "Ver PDF" no expone credenciales ni tokens de acceso en el cliente.                                              |
 | El enlace a Google Drive se abre con `rel="noopener noreferrer"`, evitando que la pestaña nueva acceda a `window.opener`. |
 | No se genera ni descarga ningún archivo local en el navegador del usuario.                                                |
+
+## Estado de integración transversal
+
+En el workspace integrado no existe `features/problems/` pese a que esta historia documenta `ContestProblemsPage`, `ProblemsTable` y su servicio. Por ello no se recreó una segunda implementación ni se compuso una ruta de problemas sin contrato verificable. La ruta de participación disponible es `/student/contests/:contestCode/submissions`; la composición de incisos y PDF queda pendiente de integrar los archivos reales de UJ-13 y confirmar el endpoint de dashboard.
 
 ## Integraciones pendientes
 

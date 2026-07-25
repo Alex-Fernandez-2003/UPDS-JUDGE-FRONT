@@ -387,6 +387,18 @@ manual de los breakpoints como completadas.
 - `frontend/src/routes/router.tsx`
 - `frontend/src/lib/auth/session.ts`
 
+## Integración UJ-12 y navegación
+
+Las acciones de las cards ya no dependen de condiciones dispersas en JSX. `getContestUserAction` centraliza inscripción pública/privada, acceso activo, consulta finalizada y bloqueos. La inscripción se realiza mediante el modal y `POST /api/ParticipanteConcursos/unirse`; al completarse invalida solo la lista pública, sin recargar la página ni perder filtros locales.
+
+La navegación permitida usa la ruta canónica de envíos del concurso:
+
+```text
+/student/contests/:contestCode/submissions
+```
+
+El formulario de envíos existente sigue siendo la pantalla de detalle disponible. La composición con UJ-13 continúa bloqueada porque `features/problems` no está integrado en el workspace.
+
 ## Pendientes
 
 - Validar login, datos y acciones con backend real autenticado.
@@ -446,3 +458,7 @@ sesión.
 ### 6. Responsive
 
 ![Captura del responsive](../capturas/uj11-responsive.png)
+
+## Final flexible recent-submissions table
+
+`RecentSubmissionsTable` now uses a flexible full-width container and a `w-full table-fixed` table while retaining a 900px minimum width for local mobile horizontal scrolling. The responsive visual check remains a non-blocking manual evidence item.

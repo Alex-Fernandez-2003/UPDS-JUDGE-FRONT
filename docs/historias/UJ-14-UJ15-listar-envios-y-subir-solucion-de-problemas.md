@@ -1,7 +1,16 @@
 # HU-14 y HU-15 — Enviar solución y recibir veredicto de evaluación
 
-
 # Estado
+
+## Integración transversal
+
+La ruta canónica conectada desde la lista de concursos es:
+
+```text
+/student/contests/:contestCode/submissions
+```
+
+La pantalla reconstruye el código desde el parámetro de ruta, por lo que no depende de `location.state`. La política de acceso de la lista permite navegación solamente a concursos activos inscritos o finalizados consultables. La composición final con UJ-13 y los modos read-only/blocked dentro de esta pantalla permanece pendiente: el módulo de problemas documentado no está presente en el workspace y falta un contrato de detalle unificado.
 
 La implementación cubre el flujo completo que realiza un participante durante un concurso de programación. El estudiante puede seleccionar un problema, escoger un lenguaje de programación compatible, escribir o cargar su solución, enviarla al servidor para su evaluación mediante Judge0 y visualizar posteriormente el resultado obtenido dentro del historial de envíos.
 
@@ -18,7 +27,6 @@ Las historias de usuario **HU-14** y **HU-15** fueron implementadas conjuntament
 La primera historia permite preparar y enviar una solución al sistema de evaluación, mientras que la segunda comienza inmediatamente cuando el backend procesa dicha solución y devuelve el veredicto correspondiente.
 
 Desde la perspectiva del participante ambas acciones conforman una única experiencia de usuario, por lo que comparten componentes, modelos, servicios, validaciones y comunicación con el backend.
-
 
 # Historias de Usuario
 
@@ -247,7 +255,7 @@ if __name__ == "__main__":
     solve()
 ```
 
-### C#
+### C #
 
 ```csharp
 using System;
@@ -264,7 +272,6 @@ class Program
 PrismJS únicamente colorea el código mostrado al usuario.
 
 No interpreta, ejecuta ni modifica el contenido del programa.
-
 
 ## FileDropzone
 
@@ -432,8 +439,8 @@ Posteriormente la aplicación realiza una nueva consulta al endpoint de historia
 
 2. **Captura y Unificación de Código (`SubmitForm`)**
    Existen dos modalidades de ingreso que convergen en una única variable de texto plano (`codigoFuente`):
-   * **Archivo:** Se sube mediante `FileDropzone` y el navegador lee su contenido usando `FileReader`.
-   * **Editor:** Se escribe directamente en el `CodeEditor` (con resaltado de sintaxis visual mediante PrismJS).
+   - **Archivo:** Se sube mediante `FileDropzone` y el navegador lee su contenido usando `FileReader`.
+   - **Editor:** Se escribe directamente en el `CodeEditor` (con resaltado de sintaxis visual mediante PrismJS).
 
 3. **Validación Local**
    Mediante `validateSubmitSolution`, el frontend verifica la presencia del problema, lenguaje, código fuente y la aceptación de la declaración de honestidad antes de enviar cualquier petición.
@@ -446,10 +453,11 @@ Posteriormente la aplicación realiza una nueva consulta al endpoint de historia
 
 6. **Actualización de Interfaz en Tiempo Real**
    Tras la respuesta exitosa del servidor:
-   * Se re-consulta el historial sin recargar la página.
-   * `SubmissionsTable` muestra la nueva fila en el historial.
-   * `VerdictBadge` asigna el estilo visual según el resultado (Accepted, WA, TLE, etc.).
-   * `SubmissionsStats` recalcula los contadores globales automáticamente.
+   - Se re-consulta el historial sin recargar la página.
+   - `SubmissionsTable` muestra la nueva fila en el historial.
+   - `VerdictBadge` asigna el estilo visual según el resultado (Accepted, WA, TLE, etc.).
+   - `SubmissionsStats` recalcula los contadores globales automáticamente.
+
 # Respuesta exitosa
 
 Cuando el backend procesa correctamente la solicitud de envío, el frontend actualiza automáticamente la interfaz para reflejar el nuevo estado del participante.
@@ -466,7 +474,6 @@ Las acciones realizadas son las siguientes:
 - El veredicto es representado mediante el componente **VerdictBadge**.
 
 Cuando el usuario utiliza la modalidad **Subir archivo**, el archivo físico nunca permanece almacenado dentro de la aplicación después de ser convertido a texto plano.
-
 
 # Manejo de errores
 
@@ -538,7 +545,6 @@ Authorization: Bearer <jwt>
 
 De esta manera todas las solicitudes realizadas al backend se encuentran protegidas sin que cada componente tenga que gestionar manualmente el token.
 
-
 ## Archivos principales
 
 - `frontend/src/features/submissions/Pages/SubmissionsPage.tsx`
@@ -579,7 +585,6 @@ Durante el desarrollo de las historias de usuario se emplearon las siguientes te
 | PostgreSQL | Base de datos principal. |
 
 # Evidencias
-
 
 ### 1. Editor de código
 
