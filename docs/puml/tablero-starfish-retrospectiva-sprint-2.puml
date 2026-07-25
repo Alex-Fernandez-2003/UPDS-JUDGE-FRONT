@@ -1,0 +1,25 @@
+@startuml
+' Sprint 2 retrospective board — UPDS JUDGE
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam rectangle {
+  RoundCorner 12
+  BorderColor #1E3A8A
+  FontColor #172554
+}
+
+rectangle "<b>Keep Doing</b>\n--\n• Maintain routes, roles and backend contracts\n• Reuse components with compatible responsibilities\n• Distinguish confirmed, agreed and implemented work\n• Preserve reproducible validation" as Keep #DBEAFE
+rectangle "<b>Less Of</b>\n--\n• Coupling user content to UserLayout\n• Repeating contest headers and navigation\n• Treating npm audit --force as architecture\n• Deferring dependency-tree analysis" as Less #FEF3C7
+rectangle "<b>More Of</b>\n--\n• Separate screen content from layout\n• Test enrollment, redirects and permissions\n• Inspect effective npm dependency trees\n• Use real contest data across routes" as More #DCFCE7
+rectangle "<b>Stop Doing</b>\n--\n• Duplicating user pages for admin layouts\n• Nesting UserLayout inside AdminLayout\n• Displaying static contest data as real\n• Forcing dependency upgrades without validation" as Stop #FEE2E2
+rectangle "<b>Start Doing</b>\n--\n• Admin user-access section for contests\n• Private finished-contest password enrollment\n• Controlled remediation of high vulnerabilities\n• Reusable contest context and route navigation" as Start #F3E8FF
+
+rectangle "<size:20><b>UPDS JUDGE</b></size>\n<size:16>Sprint 2 — Starfish retrospective</size>" as Center #E0E7FF
+
+Keep -[hidden]- Less
+More -[hidden]- Stop
+Keep -[hidden]- Center
+Center -[hidden]- Stop
+More -[hidden]- Start
+
+@enduml
