@@ -10,11 +10,15 @@ export const endpoints = {
     create: 'Concursos/crear',
     userStats: 'ParticipanteConcursos/stats-contest',
     userSubmissions: 'Envios/mis-envios',
-    userListCompetition:'Concursos'
+    userListCompetition: 'Concursos',
+    join: 'ParticipanteConcursos/unirse',
+    dashboard: (contestCode: string) =>
+      `Concursos/dashboard/${encodeURIComponent(contestCode)}`,
   },
   submissions: {
     // Genera la ruta: /envios/concurso/div4med (ajusta /envios según tu Controller)
-    listByContest: (concursoCodigo: string) => `/envios/concurso/${concursoCodigo}`,
+    listByContest: (concursoCodigo: string) =>
+      `/envios/concurso/${concursoCodigo}`,
     create: '/envios',
   },
 } as const

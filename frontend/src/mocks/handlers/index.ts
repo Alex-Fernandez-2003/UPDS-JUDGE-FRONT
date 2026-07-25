@@ -46,6 +46,23 @@ export const handlers: RequestHandler[] = [
   http.get('/api/Concursos/mis-resumen', () =>
     HttpResponse.json({ activos: 0, proximos: 0, finalizados: 0 }),
   ),
+  http.post('/api/ParticipanteConcursos/unirse', async ({ request }) => {
+    const payload: unknown = await request.json()
+    if (
+      typeof payload !== 'object' ||
+      payload === null ||
+      !('codigo' in payload) ||
+      typeof payload.codigo !== 'string'
+    )
+      return HttpResponse.json(
+        { mensaje: 'Código obligatorio.' },
+        { status: 400 },
+      )
+    return HttpResponse.json({
+      mensaje: 'Inscripción registrada.',
+      codConcurso: payload.codigo,
+    })
+  }),
   http.get('/api/ParticipanteConcursos/stats-contest', () =>
     HttpResponse.json({
       concursosParticipados: 2,
