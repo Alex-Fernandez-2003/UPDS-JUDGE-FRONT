@@ -30,16 +30,17 @@ export function VerdictBadge({ verdict }: Props) {
       )
 
     case 'Time Limit Exceeded':
+    case 'Memory Limit Exceeded':
+
       return (
         <Badge tone="warning" className="gap-1 font-bold">
           <Hourglass className="size-3" />
-          TIME LIMIT EXCEEDED
+          {verdict.toUpperCase()}
         </Badge>
       )
 
     case 'Compilation Error':
     case 'Runtime Error':
-    case 'Memory Limit Exceeded':
       return (
         <Badge tone="danger" className="gap-1 font-bold">
           <AlertTriangle className="size-3" />

@@ -30,47 +30,43 @@ const wrapper = ({ children }: PropsWithChildren) => (
 )
 
 describe('submission formatters and mapper', () => {
-  it('preserves confirmed ms and MB units, zeroes, and missing values', () => {
+  it('preserves confirmed ms and KB units, zeroes, and missing values', () => {
     expect(formatExecutionTime(48)).toBe('48 ms')
     expect(formatExecutionTime(2000)).toBe('2000 ms')
     expect(formatExecutionTime(0)).toBe('0 ms')
     expect(formatExecutionTime(null)).toBe('—')
     expect(formatExecutionTime(Number.NaN)).toBe('—')
-    expect(formatMemoryUsage(8.1)).toBe('8.1 MB')
-    expect(formatMemoryUsage(1024)).toBe('1024 MB')
-    expect(formatMemoryUsage(0)).toBe('0 MB')
+    expect(formatMemoryUsage(8.1)).toBe('8.1 KB')
+    expect(formatMemoryUsage(1024)).toBe('1024 KB')
+    expect(formatMemoryUsage(0)).toBe('0 KB')
     expect(formatMemoryUsage(undefined)).toBe('—')
     expect(formatMemoryUsage(Infinity)).toBe('—')
   })
 
   it('maps known verdicts, pending backend status, and a neutral fallback', () => {
     expect(mapSubmissionVerdict('Accepted')).toEqual({
-      label: 'ACEPTADO',
+      label: 'ACCEPTED',
       tone: 'success',
     })
     expect(mapSubmissionVerdict('Wrong Answer')).toEqual({
-      label: 'RESPUESTA INCORRECTA',
+      label: 'WRONG ANSWER',
       tone: 'danger',
     })
     expect(mapSubmissionVerdict('Time Limit Exceeded')).toEqual({
-      label: 'TIEMPO LÍMITE EXCEDIDO',
+      label: 'TIME LIMIT EXCEEDED',
       tone: 'warning',
     })
     expect(mapSubmissionVerdict('Memory Limit Exceeded')).toEqual({
-      label: 'MEMORIA LÍMITE EXCEDIDA',
-      tone: 'warning',
+      label: 'MEMORY LIMIT EXCEEDED',
+      tone: 'danger',
     })
     expect(mapSubmissionVerdict('Compilation Error')).toEqual({
-      label: 'ERROR DE COMPILACIÓN',
+      label: 'COMPILATION ERROR',
       tone: 'danger',
     })
     expect(mapSubmissionVerdict('Runtime Error')).toEqual({
-      label: 'ERROR DE EJECUCIÓN',
+      label: 'RUNTIME ERROR',
       tone: 'danger',
-    })
-    expect(mapSubmissionVerdict('Pendiente')).toEqual({
-      label: 'EVALUANDO',
-      tone: 'info',
     })
     expect(mapSubmissionVerdict('Other')).toEqual({
       label: 'Other',

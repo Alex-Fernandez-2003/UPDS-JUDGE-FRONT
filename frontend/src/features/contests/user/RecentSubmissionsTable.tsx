@@ -46,7 +46,6 @@ export function RecentSubmissionsTable({
             skeleton: 'h-8 w-full rounded-xl bg-slate-100',
           }}
           columns={[
-            { key: 'id', header: 'ID' },
             { key: 'contestCode', header: 'CONCURSO' },
             {
               key: 'problemLabel', header: 'PROBLEMA', render: (row) => (

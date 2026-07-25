@@ -13,7 +13,7 @@ export const formatExecutionTime = (value: number | null | undefined) =>
 
 export const formatMemoryUsage = (value: number | null | undefined) =>
   typeof value === 'number' && Number.isFinite(value)
-    ? `${value} MB`
+    ? `${value} KB`
     : unavailable
 
 export const formatSubmissionDate = (value: string) => {
@@ -21,25 +21,24 @@ export const formatSubmissionDate = (value: string) => {
   return Number.isNaN(date.getTime())
     ? unavailable
     : new Intl.DateTimeFormat('es-BO', {
-        dateStyle: 'short',
-        timeStyle: 'short',
-      }).format(date)
+      dateStyle: 'short',
+      timeStyle: 'short',
+    }).format(date)
 }
 
 export const mapSubmissionVerdict = (
   verdict: string,
 ): { label: string; tone: VerdictTone } => {
   const values: Record<string, { label: string; tone: VerdictTone }> = {
-    Accepted: { label: 'ACEPTADO', tone: 'success' },
-    'Wrong Answer': { label: 'RESPUESTA INCORRECTA', tone: 'danger' },
-    'Time Limit Exceeded': { label: 'TIEMPO LÍMITE EXCEDIDO', tone: 'warning' },
+    Accepted: { label: 'ACCEPTED', tone: 'success' },
+    'Wrong Answer': { label: 'WRONG ANSWER', tone: 'danger' },
+    'Time Limit Exceeded': { label: 'TIME LIMIT EXCEEDED', tone: 'warning' },
     'Memory Limit Exceeded': {
-      label: 'MEMORIA LÍMITE EXCEDIDA',
+      label: 'MEMORY LIMIT EXCEEDED',
       tone: 'warning',
     },
-    'Compilation Error': { label: 'ERROR DE COMPILACIÓN', tone: 'danger' },
-    'Runtime Error': { label: 'ERROR DE EJECUCIÓN', tone: 'danger' },
-    Pendiente: { label: 'EVALUANDO', tone: 'info' },
+    'Compilation Error': { label: 'COMPILATION ERROR', tone: 'danger' },
+    'Runtime Error': { label: 'RUNTIME ERROR', tone: 'danger' },
   }
   return values[verdict] ?? { label: verdict || unavailable, tone: 'neutral' }
 }
