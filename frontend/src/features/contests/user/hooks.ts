@@ -1,6 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
-import { getUserContestStats, listUserSubmissions } from './service'
-import type { UserSubmissionsParams } from './types'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  getUserContestStats,
+  joinContest,
+  listUserSubmissions,
+} from './service'
+import type { JoinContestRequest, UserSubmissionsParams } from './types'
 
 export const userContestKeys = {
   all: ['user-contests'] as const,
@@ -19,6 +23,16 @@ export const userContestKeys = {
 
 export const useUserContestStats = () =>
   useQuery({ queryKey: userContestKeys.stats(), queryFn: getUserContestStats })
+
+export const useJoinContest = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ['user-contests', 'join'],
+    mutationFn: (request: JoinContestRequest) => joinContest(request),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['concursos', 'public-list'] }),
+  })
+}
 
 export const useUserSubmissions = (params: UserSubmissionsParams) =>
   useQuery({

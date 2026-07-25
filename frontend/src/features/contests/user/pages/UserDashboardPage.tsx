@@ -9,9 +9,9 @@ type UserDashboardPageProps = {
 
 export default function UserDashboardPage({ name }: UserDashboardPageProps) {
   return (
-    <div className="mx-auto w-full space-y-6 lg:relative lg:left-1/2 lg:w-screen lg:max-w-screen-2xl lg:-translate-x-1/2 lg:px-8">
+    <div className="w-full min-w-0 space-y-6 px-4 sm:px-6 lg:px-8">
       <UserWelcome name={name} />
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(16rem,1fr)]">
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_18rem]">
         <main className="min-w-0 space-y-6">
           <UserContestsPage />
           <RecentSubmissionsSection />

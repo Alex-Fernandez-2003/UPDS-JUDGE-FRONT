@@ -1,3 +1,13 @@
+export type JoinContestRequest = {
+  codigo: string
+  contrasena: string | null
+}
+
+export type JoinContestResponse = {
+  mensaje: string
+  codConcurso: string
+}
+
 export type UserContestStats = {
   concursosParticipados: number
   problemasResueltos: number

@@ -1,7 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Button, Card, LinkButton } from '@/components/common'
 import { Breadcrumbs, Pagination } from '@/components/navigation'
-import { ContestsFiltersBar } from '../../admin/components/ContestsFiltersBar'
+import {
+  UserContestFilters,
+  type UserContestFiltersValue,
+} from '../components/UserContestFilters'
 import { UserContestsGrid } from '@/features/contests/user/components/UserContestsGrid'
 import {
   useDebouncedValue,
@@ -12,9 +15,9 @@ import { routes } from '@/routes/constants'
 
 const PAGE_SIZE = 10
 
-const initialFilters = {
+const initialFilters: UserContestFiltersValue = {
   busqueda: '',
-  filtro: 'todos' as const,
+  filtro: 'todos',
   modalidad: '',
 }
 
@@ -25,7 +28,7 @@ export default function UserContestsPage() {
 
   const queryParams: ListConcursosParams = useMemo(
     () => ({
-      filtro: filters.filtro === 'todos' ? undefined : filters.filtro,
+      filtro: filters.filtro,
       modalidad: filters.modalidad || undefined,
       busqueda: debouncedBusqueda || undefined,
       pagina: page,
@@ -34,14 +37,14 @@ export default function UserContestsPage() {
     [filters.filtro, filters.modalidad, debouncedBusqueda, page],
   )
 
-  const { data, isLoading, isFetching, error, refetch } =
+  const { data, isLoading, isFetching, refetch } =
     usePublicConcursosList(queryParams)
 
   const totalPages = data
     ? Math.max(1, Math.ceil(data.total / data.tamanoPagina))
     : 1
 
-  const updateFilters = (next: typeof initialFilters) => {
+  const updateFilters = (next: UserContestFiltersValue) => {
     setFilters(next)
     setPage(1)
   }
@@ -63,13 +66,15 @@ export default function UserContestsPage() {
 
       <Card>
         <div className="space-y-4">
-          <ContestsFiltersBar
+          <UserContestFilters
             value={filters}
-            showModalidad
             onChange={updateFilters}
             onClear={() => updateFilters(initialFilters)}
           />
-          <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-[var(--text-secondary)]">
+          <div
+            data-testid="contest-filters-summary-row"
+            className="flex flex-col gap-2 text-xs text-[var(--text-secondary)] md:flex-row md:flex-wrap md:items-center md:justify-between"
+          >
             <span>
               ESTADO:{' '}
               {filters.filtro === 'todos'
