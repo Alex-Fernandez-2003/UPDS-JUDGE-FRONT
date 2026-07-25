@@ -11,7 +11,7 @@ export interface SubmitFormValidationInput {
   mode: 'upload' | 'paste'
   file?: File
   sourceCode?: string
-  confirmedHonesty: boolean
+  // Eliminamos 'confirmedHonesty'
 }
 
 // Mapeo de idLenguaje a extensiones permitidas (1: C++, 2: Python, 3: C#)
@@ -36,12 +36,7 @@ export function validateSubmitSolution(
     errors.idLenguaje = 'Debes seleccionar un lenguaje de programación.'
   }
 
-  // 3. Validar honestidad académica
-  if (!input.confirmedHonesty) {
-    errors.honesty = 'Debes confirmar la honestidad académica.'
-  }
-
-  // 4. Validar según el modo seleccionado (subir archivo o pegar código)
+  // 3. Validar según el modo seleccionado (subir archivo o pegar código)
   if (input.mode === 'upload') {
     if (!input.file || !(input.file instanceof File)) {
       errors.file = 'Debes seleccionar un archivo fuente.'
@@ -57,6 +52,7 @@ export function validateSubmitSolution(
       }
     }
   } else {
+    // Modo pegar código
     if (!input.sourceCode || !input.sourceCode.trim()) {
       errors.sourceCode = 'Debes ingresar el código fuente de tu solución.'
     }
