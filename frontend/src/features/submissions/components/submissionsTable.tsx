@@ -82,7 +82,7 @@ const columns = [
     headerClassName:
       'w-[120px] text-center text-xs font-bold uppercase text-slate-500',
     cellClassName:
-      'px-4 py-4 text-center font-semibold text-slate-700 whitespace-nowrap',
+      'px-4 py-4 text-center font-bold text-slate-700 whitespace-nowrap',
     render: (row: SubmissionItem) => `${row.consumoTiempo} ms`,
   },
   {
@@ -91,7 +91,7 @@ const columns = [
     headerClassName:
       'w-[120px] text-center text-xs font-bold uppercase text-slate-500',
     cellClassName:
-      'px-4 py-4 text-center font-semibold text-slate-700 whitespace-nowrap',
+      'px-4 py-4 text-center font-bold text-slate-700 whitespace-nowrap',
     render: (row: SubmissionItem) => `${row.consumoMemoria} KB`,
   },
 ]
