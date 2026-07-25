@@ -7,7 +7,8 @@ import type {
   ImgHTMLAttributes,
   PropsWithChildren,
 } from 'react'
-import reactMark from '@/assets/react.svg'
+import { forwardRef } from 'react'
+import { AppLogo } from '@/components/branding/AppLogo'
 import { cn } from '@/lib/utils/cn'
 
 const buttonStyles = cva(
@@ -38,36 +39,42 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
     leftIcon?: React.ReactNode
     rightIcon?: React.ReactNode
   }
-export function Button({
-  className,
-  variant,
-  size,
-  fullWidth,
-  loading,
-  leftIcon,
-  rightIcon,
-  children,
-  disabled,
-  type = 'button',
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(buttonStyles({ variant, size, fullWidth }), className)}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading ? (
-        <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
-      ) : (
-        leftIcon
-      )}
-      {children}
-      {!loading && rightIcon}
-    </button>
-  )
-}
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  function Button(
+    {
+      className,
+      variant,
+      size,
+      fullWidth,
+      loading,
+      leftIcon,
+      rightIcon,
+      children,
+      disabled,
+      type = 'button',
+      ...props
+    },
+    ref,
+  ) {
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={cn(buttonStyles({ variant, size, fullWidth }), className)}
+        disabled={disabled || loading}
+        {...props}
+      >
+        {loading ? (
+          <LoaderCircle className="size-4 animate-spin" aria-hidden="true" />
+        ) : (
+          leftIcon
+        )}
+        {children}
+        {!loading && rightIcon}
+      </button>
+    )
+  },
+)
 export function IconButton({
   label,
   children,
@@ -95,35 +102,34 @@ export function LinkButton({
   variant,
   size,
   fullWidth,
+  leftIcon,
+  rightIcon,
+  children,
   ...props
-}: AnchorHTMLAttributes<HTMLAnchorElement> & ActionProps) {
+}: AnchorHTMLAttributes<HTMLAnchorElement> &
+  ActionProps & {
+    leftIcon?: React.ReactNode
+    rightIcon?: React.ReactNode
+  }) {
   return (
     <a
       className={cn(buttonStyles({ variant, size, fullWidth }), className)}
       {...props}
-    />
+    >
+      {leftIcon}
+      {children}
+      {rightIcon}
+    </a>
   )
 }
 export function BrandMark({
-  src = reactMark,
-  alt = 'UPDS Judge placeholder brand mark',
+  alt = 'UPDS Judge',
   size = 'md',
-  className,
   ...props
-}: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt'> & {
-  src?: string
-  alt?: string
+}: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: 'sm' | 'md' | 'lg'
 }) {
-  const sizes = { sm: 'size-7', md: 'size-10', lg: 'size-14' }
-  return (
-    <img
-      src={src}
-      alt={alt}
-      className={cn(sizes[size], className)}
-      {...props}
-    />
-  )
+  return <AppLogo alt={alt} size={size} {...props} />
 }
 export function Surface({
   className,
@@ -212,11 +218,16 @@ export function Badge({
     />
   )
 }
-export function StatusDot({ tone = 'neutral' }: { tone?: keyof typeof tones }) {
+export function StatusDot({
+  tone = 'neutral',
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement> & { tone?: keyof typeof tones }) {
   return (
     <span
       aria-label={`${tone} status`}
-      className={cn('inline-block size-2 rounded-full', tones[tone])}
+      className={cn('inline-block size-2 rounded-full', tones[tone], className)}
+      {...props}
     />
   )
 }
@@ -233,19 +244,26 @@ export function Alert({
     />
   )
 }
-export function Spinner({ label = 'Loading' }: { label?: string }) {
+export function Spinner({
+  label = 'Loading',
+  className,
+  ...props
+}: React.ComponentProps<typeof LoaderCircle> & { label?: string }) {
   return (
     <LoaderCircle
       role="status"
       aria-label={label}
-      className="size-5 animate-spin"
+      className={cn('size-5 animate-spin', className)}
+      {...props}
     />
   )
 }
 export function ProgressBar({
   value,
   label = 'Progress',
-}: {
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & {
   value: number
   label?: string
 }) {
@@ -257,7 +275,11 @@ export function ProgressBar({
       aria-valuemin={0}
       aria-valuemax={100}
       aria-valuenow={safeValue}
-      className="h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]"
+      className={cn(
+        'h-2 overflow-hidden rounded-full bg-[var(--surface-muted)]',
+        className,
+      )}
+      {...props}
     >
       <div
         className="h-full bg-[var(--primary)]"
@@ -281,13 +303,23 @@ export function EmptyState({
   title,
   description,
   action,
-}: PropsWithChildren<{
-  title: string
-  description?: string
-  action?: React.ReactNode
-}>) {
+  className,
+  ...props
+}: PropsWithChildren<
+  HTMLAttributes<HTMLDivElement> & {
+    title: string
+    description?: string
+    action?: React.ReactNode
+  }
+>) {
   return (
-    <div className="rounded-lg border border-dashed border-[var(--border)] p-8 text-center">
+    <div
+      className={cn(
+        'rounded-lg border border-dashed border-[var(--border)] p-8 text-center',
+        className,
+      )}
+      {...props}
+    >
       <h2 className="font-semibold">{title}</h2>
       {description && (
         <p className="mt-1 text-sm text-[var(--text-secondary)]">
