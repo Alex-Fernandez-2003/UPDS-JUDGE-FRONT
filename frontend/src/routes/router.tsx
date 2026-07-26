@@ -24,6 +24,11 @@ import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
 import UserHistoryPage from '@/features/history/Pages/historyPage'
 
+
+import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
+
+
+
 const UserDashboard = () => (
   <UserDashboardPage
     name={deriveIdentity(sessionStorage.getItem('token'))?.name}
@@ -128,6 +133,20 @@ export const createAppRouter = (development = isDevelopment) => {
         </ProtectedRoute>
       ),
     },
+
+    {
+      path: routes.adminRoleList,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.rolesAdmin]}>
+            <AdminLayout>
+              <AdminRolesPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+
     {
       path: routes.adminUserContests,
       element: (

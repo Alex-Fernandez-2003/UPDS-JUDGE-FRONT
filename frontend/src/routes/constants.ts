@@ -21,4 +21,9 @@ export const routes = {
   editContest: (codigo: string) =>
     `/admin/contests/${encodeURIComponent(codigo)}/edit`,
   devUi: '/dev/ui',
+
+
+  adminRoleList: '/admin/roles',
+
+
 } as const
