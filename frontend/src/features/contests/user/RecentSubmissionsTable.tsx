@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/common'
 import { DataTable } from '@/components/tables'
+import { routes } from '@/routes/constants'
 import type { RecentSubmissionRow } from './types'
 
 type Props = {
@@ -34,22 +36,36 @@ export function RecentSubmissionsTable({
           emptyText="Todavía no tenés envíos recientes."
           classNames={{
             container:
-              'overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-xs',
-            table: 'min-w-[900px] text-sm',
-            thead: 'border-b border-slate-200 bg-slate-50/80',
+              'overflow-x-auto rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-sm)]',
+            table: 'w-full text-sm border-collapse',
+            thead: 'border-b border-[var(--border)] bg-[var(--surface-muted)]',
             headerCell:
-              'px-5 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-slate-500',
-            row: 'border-b border-slate-100/70 transition-colors hover:bg-slate-50/60 last:border-b-0',
-            cell: 'px-5 py-4 align-middle text-center text-slate-700',
+              'px-5 py-3.5 text-center text-xs font-bold uppercase tracking-wider text-[var(--brand)]',
+            row: 'border-b border-[var(--border)] transition-colors hover:bg-[var(--background)]/50 last:border-b-0',
+            cell: 'px-5 py-4 align-middle text-center text-[var(--text-primary)]',
             loadingCell: 'px-5 py-6',
-            emptyCell: 'px-6 py-12 text-center',
-            skeleton: 'h-8 w-full rounded-xl bg-slate-100',
+            emptyCell: 'px-6 py-12 text-center text-[var(--text-secondary)]',
+            skeleton: 'h-8 w-full rounded-xl bg-[var(--surface-muted)]',
           }}
           columns={[
-            { key: 'contestCode', header: 'CONCURSO' },
             {
-              key: 'problemLabel', header: 'PROBLEMA', render: (row) => (
-                <span className="inline-flex max-w-full items-center justify-center px-4 py-2 text-center text-xs font-bold">
+              key: 'contestCode',
+                header: 'CONCURSO',
+                render: (row) => (
+                  <Link
+                  to={routes.studentContestProblems(row.contestCode)}
+                  className="inline-flex items-center gap-1 font-bold text-[var(--primary)] underline-offset-4 hover:underline hover:text-[var(--brand)] transition-colors"
+                  title={`Ir al concurso ${row.contestCode}`}
+                >
+                  {row.contestCode}
+                </Link>
+                ),
+            },
+            {
+              key: 'problemLabel',
+              header: 'PROBLEMA',
+              render: (row) => (
+                <span className="inline-flex max-w-full items-center justify-center px-4 py-2 text-center text-xs font-bold text-[var(--text-primary)]">
                   {row.problemLabel}
                 </span>
               ),
@@ -58,7 +74,7 @@ export function RecentSubmissionsTable({
               key: 'language',
               header: 'LENGUAJE',
               render: (row) => (
-                <span className="inline-flex max-w-full items-center justify-center rounded-full bg-slate-100 px-4 py-2 text-center text-xs font-bold text-slate-700">
+                <span className="inline-flex max-w-full items-center justify-center rounded-full bg-[var(--surface-muted)] px-4 py-2 text-center text-xs font-bold text-[var(--text-secondary)]">
                   {row.language}
                 </span>
               ),
@@ -67,19 +83,46 @@ export function RecentSubmissionsTable({
               key: 'verdictLabel',
               header: 'VEREDICTO',
               render: (row) => (
-                <Badge tone={row.verdictTone} className="justify-center font-bold">
+                <Badge
+                  tone={row.verdictTone}
+                  className="justify-center font-bold"
+                >
                   {row.verdictLabel}
                 </Badge>
               ),
             },
-            { key: 'timeLabel', header: 'TIEMPO' },
-            { key: 'memoryLabel', header: 'MEMORIA' },
-            { key: 'submittedAtLabel', header: 'FECHA' },
+            {
+              key: 'timeLabel',
+              header: 'TIEMPO',
+              render: (row) => (
+                <span className="font-mono text-xs text-[var(--text-secondary)]">
+                  {row.timeLabel}
+                </span>
+              ),
+            },
+            {
+              key: 'memoryLabel',
+              header: 'MEMORIA',
+              render: (row) => (
+                <span className="font-mono text-xs text-[var(--text-secondary)]">
+                  {row.memoryLabel}
+                </span>
+              ),
+            },
+            {
+              key: 'submittedAtLabel',
+              header: 'FECHA',
+              render: (row) => (
+                <span className="text-xs text-[var(--text-secondary)]">
+                  {row.submittedAtLabel}
+                </span>
+              ),
+            },
           ]}
         />
       </div>
       {page && totalPages && range && (
-        <footer className="flex flex-col gap-3 px-4 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <footer className="flex flex-col gap-3 px-4 py-4 text-sm text-[var(--text-secondary)] sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>{range}</span>
           <div className="flex items-center gap-2">
             <button
@@ -87,19 +130,19 @@ export function RecentSubmissionsTable({
               aria-label="Página anterior"
               disabled={page === 1}
               onClick={onPreviousPage}
-              className="inline-flex size-9 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent cursor-pointer"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
             >
               <ChevronLeft className="size-4" />
             </button>
-            <span>
-              Page {page} of {totalPages}
+            <span className="font-medium text-[var(--text-primary)]">
+              Página {page} de {totalPages}
             </span>
             <button
               type="button"
               aria-label="Página siguiente"
               disabled={page === totalPages}
               onClick={onNextPage}
-              className="cursor-pointer inline-flex size-9 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+              className="inline-flex size-9 cursor-pointer items-center justify-center rounded-md text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
             >
               <ChevronRight className="size-4" />
             </button>

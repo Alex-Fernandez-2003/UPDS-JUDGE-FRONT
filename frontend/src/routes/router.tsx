@@ -16,6 +16,7 @@ import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
+import UserHistoryPage from '@/features/history/Pages/historyPage'
 
 const UserDashboard = () => (
   <UserDashboardPage
@@ -55,6 +56,18 @@ export const createAppRouter = (development = isDevelopment) => {
           <RoleRoute allowedRoles={[roles.user]}>
             <UserLayout>
               <UserDashboard />
+            </UserLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.userHistory,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <UserLayout>
+              <UserHistoryPage />
             </UserLayout>
           </RoleRoute>
         </ProtectedRoute>
