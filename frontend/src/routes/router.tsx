@@ -21,11 +21,7 @@ import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
-
-
-import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
-
-
+import UserHistoryPage from '@/features/history/Pages/historyPage'
 
 const UserDashboard = () => (
   <UserDashboardPage
@@ -65,6 +61,18 @@ export const createAppRouter = (development = isDevelopment) => {
           <RoleRoute allowedRoles={[roles.user]}>
             <UserLayout>
               <UserDashboard />
+            </UserLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.userHistory,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <UserLayout>
+              <UserHistoryPage />
             </UserLayout>
           </RoleRoute>
         </ProtectedRoute>
@@ -115,20 +123,6 @@ export const createAppRouter = (development = isDevelopment) => {
         </ProtectedRoute>
       ),
     },
-
-    {
-      path: routes.adminRoleList,
-      element: (
-        <ProtectedRoute>
-          <RoleRoute allowedRoles={[roles.rolesAdmin]}>
-            <AdminLayout>
-              <AdminRolesPage />
-            </AdminLayout>
-          </RoleRoute>
-        </ProtectedRoute>
-      ),
-    },
-
     {
       path: routes.adminUserContests,
       element: (

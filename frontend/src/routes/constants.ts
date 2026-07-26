@@ -3,6 +3,7 @@ export const routes = {
   register: '/register',
   studentHome: '/student',
   studentListCompetitions: '/student/concursos',
+  userHistory: '/student/history',
   studentContestProblems: (contestCode: string) =>
     `/student/contests/${encodeURIComponent(contestCode)}/problems`,
   studentContestSubmissions: (contestCode: string) =>
@@ -18,9 +19,4 @@ export const routes = {
   contests: '/admin/contests',
   newContest: '/admin/contests/new',
   devUi: '/dev/ui',
-
-
-  adminRoleList: '/admin/roles',
-
-
 } as const

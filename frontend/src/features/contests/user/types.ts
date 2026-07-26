@@ -45,7 +45,7 @@ export type UserSubmissionsResponse = {
 export type VerdictTone = 'success' | 'danger' | 'warning' | 'info' | 'neutral'
 
 export type RecentSubmissionRow = {
-  id: number
+  id?: number
   contestCode: string
   problemLabel: string
   language: string
