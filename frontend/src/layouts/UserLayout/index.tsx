@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router'
 import { AppLogo } from '@/components/branding/AppLogo'
 import { UserMenu } from '@/components/navigation/UserMenu'
 import { deriveIdentity } from '@/lib/auth/identity'

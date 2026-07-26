@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import type { HTMLAttributes } from 'react'
 import { IconButton } from '@/components/common'
 import { cn } from '@/lib/utils/cn'
