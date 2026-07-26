@@ -8,6 +8,9 @@ export const endpoints = {
     adminList: 'Concursos/mis-creados',
     adminSummary: 'Concursos/mis-resumen',
     create: 'Concursos/crear',
+    update: (codigo: string) => `Concursos/${encodeURIComponent(codigo)}`,
+    getForEdit: (codigo: string) =>
+      `Concursos/editar/${encodeURIComponent(codigo)}`,
     userStats: 'ParticipanteConcursos/stats-contest',
     userSubmissions: 'Envios/mis-envios',
     userListCompetition: 'Concursos',

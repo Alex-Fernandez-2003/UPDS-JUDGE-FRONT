@@ -1,5 +1,5 @@
 import { endpoints, httpClient } from '@/lib/api'
-import { createContestFormData } from './mapper'
+import { createContestFormData, updateContestFormData } from './mapper'
 import type {
   ConcursosAdminResumen,
   CreateContestFormValues,
@@ -8,10 +8,42 @@ import type {
   ListConcursosResponse,
 } from './types'
 
+export interface ProblemaParaEditar {
+  inciso: string
+  titulo: string
+  tiempo: number
+  memoria: number
+  cantidadCasosPrueba: number
+}
+
+export interface ConcursoParaEditar {
+  codigo: string
+  nombre: string
+  descripcion: string
+  fechaInicio: string
+  duracionMinutos: number
+  esPrivado: boolean
+  urlSetProblemas: string
+  minutosCongelamiento: number
+  listaProblemas: ProblemaParaEditar[]
+}
+
 export const createContest = (values: CreateContestFormValues) =>
   httpClient.post<CreateContestResponse>(
     endpoints.contests.create,
     createContestFormData(values),
+  )
+
+export const getContestForEdit = (codigo: string) =>
+  httpClient.get<ConcursoParaEditar>(endpoints.contests.getForEdit(codigo))
+
+export const updateContest = (
+  codigo: string,
+  values: Omit<CreateContestFormValues, 'codigo'>,
+) =>
+  httpClient.put<CreateContestResponse>(
+    endpoints.contests.update(codigo),
+    updateContestFormData(values),
   )
 
 export const listConcursos = (params: ListConcursosParams) => {
