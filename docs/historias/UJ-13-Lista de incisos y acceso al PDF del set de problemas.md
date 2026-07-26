@@ -237,3 +237,7 @@ En el workspace integrado no existe `features/problems/` pese a que esta histori
 ## Conclusión
 
 UJ-13 cuenta con una implementación funcional que permite a un usuario dentro de un concurso ver el listado de incisos del set de problemas con su estado individual, y acceder al PDF real del enunciado alojado en Google Drive mediante un enlace directo, sin descargar ni generar archivos locales.
+
+## Seguimiento Sprint 2
+
+`ContestProblemsPage` consume el encabezado reutilizable de contexto del concurso. Las métricas de fecha fin, hora fin, participantes, problemas resueltos e intentos permanecen fuera del encabezado. `Ver PDF` permanece exclusivamente dentro de `ProblemsTable`.
