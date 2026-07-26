@@ -1,5 +1,4 @@
-import { Pencil } from 'lucide-react'
-import { Badge, Button } from '@/components/common'
+import { Badge } from '@/components/common'
 import { DataTable, type TableColumn } from '@/components/tables'
 import {
   estadoTiempoLabel,
@@ -10,87 +9,63 @@ import {
 } from '../format'
 import type { ConcursoListItem } from '../types'
 
-function buildColumns(
-  onEdit: (row: ConcursoListItem) => void,
-): TableColumn<ConcursoListItem>[] {
-  return [
-    {
-      key: 'nombre',
-      header: 'Concurso',
-      render: (row) => (
-        <div>
-          <p className="font-semibold text-[var(--text-primary)]">
-            {row.nombre}
-          </p>
-          <p className="text-xs text-[var(--text-secondary)]">{row.codigo}</p>
-        </div>
-      ),
-    },
-    {
-      key: 'estadoTiempo',
-      header: 'Estado',
-      render: (row) => (
-        <Badge tone={estadoTiempoTone[row.estadoTiempo]}>
-          {estadoTiempoLabel[row.estadoTiempo]}
-        </Badge>
-      ),
-    },
-    {
-      key: 'fechaInicio',
-      header: 'Inicio',
-      render: (row) => formatFechaHora(row.fechaInicio),
-    },
-    {
-      key: 'duracionMinutos',
-      header: 'Duración',
-      render: (row) => formatDuracion(row.duracionMinutos),
-    },
-    { key: 'cantidadProblemas', header: 'Problemas' },
-    { key: 'cantidadParticipantes', header: 'Participantes' },
-    {
-      key: 'modalidad',
-      header: 'Visibilidad',
-      render: (row) => <Badge>{modalidadLabel[row.modalidad]}</Badge>,
-    },
-    {
-      key: 'codigo',
-      header: 'Código Concurso',
-      render: (row) => (
-        <span className="font-mono text-sm text-[var(--text-secondary)]">
-          {row.codigo}
-        </span>
-      ),
-    },
-    {
-      key: 'acciones',
-      header: '',
-      render: (row) => (
-        <Button
-          variant="primary"
-          size="sm"
-          leftIcon={<Pencil className="size-4" />}
-          onClick={() => onEdit(row)}
-        >
-          Editar
-        </Button>
-      ),
-    },
-  ]
-}
+const columns: TableColumn<ConcursoListItem>[] = [
+  {
+    key: 'nombre',
+    header: 'Concurso',
+    render: (row) => (
+      <div>
+        <p className="font-semibold text-[var(--text-primary)]">{row.nombre}</p>
+        <p className="text-xs text-[var(--text-secondary)]">{row.codigo}</p>
+      </div>
+    ),
+  },
+  {
+    key: 'estadoTiempo',
+    header: 'Estado',
+    render: (row) => (
+      <Badge tone={estadoTiempoTone[row.estadoTiempo]}>
+        {estadoTiempoLabel[row.estadoTiempo]}
+      </Badge>
+    ),
+  },
+  {
+    key: 'fechaInicio',
+    header: 'Inicio',
+    render: (row) => formatFechaHora(row.fechaInicio),
+  },
+  {
+    key: 'duracionMinutos',
+    header: 'Duración',
+    render: (row) => formatDuracion(row.duracionMinutos),
+  },
+  { key: 'cantidadProblemas', header: 'Problemas' },
+  { key: 'cantidadParticipantes', header: 'Participantes' },
+  {
+    key: 'modalidad',
+    header: 'Visibilidad',
+    render: (row) => <Badge>{modalidadLabel[row.modalidad]}</Badge>,
+  },
+  {
+    key: 'codigo',
+    header: 'Código Concurso',
+    render: (row) => (
+      <span className="font-mono text-sm text-[var(--text-secondary)]">
+        {row.codigo}
+      </span>
+    ),
+  },
+]
 
 export function ContestsAdminTable({
   rows,
   loading,
   error,
-  onEdit,
 }: {
   rows: ConcursoListItem[]
   loading?: boolean
   error?: string
-  onEdit: (row: ConcursoListItem) => void
 }) {
-  const columns = buildColumns(onEdit)
-
   return (
     <DataTable
       columns={columns}
