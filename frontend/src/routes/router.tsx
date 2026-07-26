@@ -21,7 +21,15 @@ import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
+<<<<<<< HEAD
 import UserHistoryPage from '@/features/history/Pages/historyPage'
+=======
+
+
+import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
+
+//comentando
+>>>>>>> feature/hu07
 
 const UserDashboard = () => (
   <UserDashboardPage

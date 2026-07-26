@@ -20,3 +20,4 @@ export const routes = {
   newContest: '/admin/contests/new',
   devUi: '/dev/ui',
 } as const
+//comentando

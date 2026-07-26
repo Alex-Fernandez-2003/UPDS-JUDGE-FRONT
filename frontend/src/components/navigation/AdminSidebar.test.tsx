@@ -5,7 +5,7 @@ import { AdminSidebar } from './AdminSidebar'
 
 const admin = { roles: ['AdministradorConcursos'] }
 const user = { roles: ['Usuario'] }
-
+//comentando
 describe('AdminSidebar', () => {
   it('shows the user-access contests group only to administrators', () => {
     const { rerender } = render(

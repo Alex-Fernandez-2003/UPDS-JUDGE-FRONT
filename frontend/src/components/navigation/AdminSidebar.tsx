@@ -14,7 +14,7 @@ type NavigationItem = {
   visible: (identity?: Identity) => boolean
   keywords: string[]
 }
-
+//comentando
 export const adminNavigation: NavigationItem[] = [
   {
     label: 'Resumen',
