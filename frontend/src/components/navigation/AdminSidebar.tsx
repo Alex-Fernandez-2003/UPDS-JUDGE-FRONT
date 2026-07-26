@@ -1,9 +1,19 @@
-import { LayoutDashboard, PlusCircle, Trophy, UserRound } from 'lucide-react'
+import {
+  LayoutDashboard,
+  PlusCircle,
+  ShieldCheck,
+  Trophy,
+  UserRound,
+} from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 import { BrandMark } from '@/components/common'
 import type { Identity } from '@/lib/auth/identity'
-import { isAdministrator, isContestsAdmin } from '@/lib/auth/identity'
+import {
+  isAdministrator,
+  isContestsAdmin,
+  isRolesAdmin,
+} from '@/lib/auth/identity'
 import { cn } from '@/lib/utils/cn'
 import { routes } from '@/routes/constants'
 
@@ -36,6 +46,13 @@ export const adminNavigation: NavigationItem[] = [
     icon: PlusCircle,
     visible: isContestsAdmin,
     keywords: ['nuevo'],
+  },
+  {
+    label: 'Asignar roles',
+    path: routes.adminRoleList,
+    icon: ShieldCheck,
+    visible: isRolesAdmin,
+    keywords: ['roles', 'permisos'],
   },
 ]
 

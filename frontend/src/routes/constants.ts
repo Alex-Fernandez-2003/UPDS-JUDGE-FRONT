@@ -18,4 +18,9 @@ export const routes = {
   contests: '/admin/contests',
   newContest: '/admin/contests/new',
   devUi: '/dev/ui',
+
+
+  adminRoleList: '/admin/roles',
+
+
 } as const

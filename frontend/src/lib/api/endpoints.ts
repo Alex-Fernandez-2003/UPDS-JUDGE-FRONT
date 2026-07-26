@@ -21,4 +21,10 @@ export const endpoints = {
       `/envios/concurso/${concursoCodigo}`,
     create: '/envios',
   },
+  roles: {
+    list: 'Roles',
+    users: 'Roles/usuarios',
+    assign: 'Roles/agregar',
+    remove: 'Roles/quitar',
+  },
 } as const

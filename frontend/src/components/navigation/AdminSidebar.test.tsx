@@ -4,9 +4,22 @@ import { describe, expect, it } from 'vitest'
 import { AdminSidebar } from './AdminSidebar'
 
 const admin = { roles: ['AdministradorConcursos'] }
+const rolesAdmin = { roles: ['AdministradorRoles'] }
 const user = { roles: ['Usuario'] }
 
 describe('AdminSidebar', () => {
+  it('shows the roles administration entry for roles admins', () => {
+    render(
+      <MemoryRouter>
+        <AdminSidebar identity={rolesAdmin} />
+      </MemoryRouter>,
+    )
+
+    expect(
+      screen.getByRole('link', { name: /asignar roles/i }),
+    ).toHaveAttribute('href', '/admin/roles')
+  })
+
   it('shows the user-access contests group only to administrators', () => {
     const { rerender } = render(
       <MemoryRouter>
