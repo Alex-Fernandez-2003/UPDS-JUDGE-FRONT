@@ -9,6 +9,7 @@ interface AdminRoleBadgeProps {
   onRemove?: () => void
 }
 
+//comentando
 export function AdminRoleBadge({ role, onRemove }: AdminRoleBadgeProps) {
   return (
     <Badge

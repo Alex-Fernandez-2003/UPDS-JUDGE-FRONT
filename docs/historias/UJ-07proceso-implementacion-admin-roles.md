@@ -59,5 +59,5 @@ El flujo quedó completamente integrado y funcional:
 
 - El usuario con rol de administrador puede ingresar directamente a la pantalla a través del sidebar administrativo o ingresando a la ruta protegida.
 - Es posible listar, buscar (con *debounce*) y filtrar a los usuarios paginados de forma fluida.
-- La asignación y eliminación de roles funcionan de manera reactiva, ofreciendo feedback inmediato y actualizando la tabla sin necesidad de recargar manualmente la página.
+- La asignación y eliminación de roles funcionan de manera reactiva, ofreciendo feedback inmediato y actualizando la tabla sin necesidad de recargar manualmente la página..
 

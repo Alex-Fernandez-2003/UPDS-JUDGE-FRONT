@@ -21,3 +21,4 @@ export function getInitialRoute(token?: string | null): string {
 export function clearSession() {
   sessionStorage.removeItem(tokenStorageKey)
 }
+//comentando

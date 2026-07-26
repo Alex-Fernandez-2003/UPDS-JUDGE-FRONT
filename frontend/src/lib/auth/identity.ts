@@ -3,7 +3,7 @@ export const roleClaimKeys = [
   'roles',
   'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
 ] as const
-
+//comentando
 export const roles = {
   contestsAdmin: 'AdministradorConcursos',
   rolesAdmin: 'AdministradorRoles',

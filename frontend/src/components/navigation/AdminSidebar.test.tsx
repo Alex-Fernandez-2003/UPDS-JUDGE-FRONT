@@ -6,7 +6,7 @@ import { AdminSidebar } from './AdminSidebar'
 const admin = { roles: ['AdministradorConcursos'] }
 const rolesAdmin = { roles: ['AdministradorRoles'] }
 const user = { roles: ['Usuario'] }
-
+//comentando
 describe('AdminSidebar', () => {
   it('shows the roles administration entry for roles admins', () => {
     render(

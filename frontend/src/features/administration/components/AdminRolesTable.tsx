@@ -11,7 +11,7 @@ interface AdminRolesTableProps {
   error?: string
   onRemoveRole: (correo: string, idRol: number) => void
 }
-
+//comentando
 export function AdminRolesTable({
   rows,
   roles,

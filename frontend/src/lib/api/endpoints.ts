@@ -1,4 +1,5 @@
 /** Relative to the configured /api base URL. */
+//comentando
 export const endpoints = {
   auth: {
     login: 'Auth/login',
