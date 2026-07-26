@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { Spinner } from '@/components/common'
 import { isDevelopment } from '@/config/env'
 import LoginPage from '@/features/auth/Pages/LoginPage'
@@ -7,6 +7,11 @@ import RegisterPage from '@/features/auth/Pages/RegisterPage'
 import { CreateContestPage } from '@/features/contests/admin/CreateContestPage'
 import { UserDashboardPage } from '@/features/contests/user'
 import AdminContestsPage from '@/features/contests/admin/pages/AdminContestsPage'
+import {
+  AdminUserContestProblemsPage,
+  AdminUserContestsPage,
+  AdminUserContestSubmissionsPage,
+} from '@/features/contests/admin/pages/AdminUserContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { UserLayout } from '@/layouts/UserLayout'
 import { deriveIdentity, roles } from '@/lib/auth/identity'
@@ -101,6 +106,36 @@ export const createAppRouter = (development = isDevelopment) => {
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.contestsAdmin]}>
             <AdminContestsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.adminUserContests,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/user-access/contests/:contestCode/problems',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestProblemsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/user-access/contests/:contestCode/submissions',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestSubmissionsPage />
           </RoleRoute>
         </ProtectedRoute>
       ),

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
@@ -58,7 +58,7 @@ describe('submission formatters and mapper', () => {
     })
     expect(mapSubmissionVerdict('Memory Limit Exceeded')).toEqual({
       label: 'MEMORY LIMIT EXCEEDED',
-      tone: 'danger',
+      tone: 'warning',
     })
     expect(mapSubmissionVerdict('Compilation Error')).toEqual({
       label: 'COMPILATION ERROR',
@@ -103,13 +103,26 @@ describe('submission formatters and mapper', () => {
 })
 
 describe('recent submissions', () => {
-  it('uses the definitive visual column order with one date and no file column', () => {
-    render(<RecentSubmissionsTable rows={[]} />)
+  it('uses the definitive visual columns without exposing the internal submission ID', () => {
+    render(
+      <RecentSubmissionsTable
+        rows={[
+          {
+            id: 42,
+            contestCode: 'DIV4-2026',
+            problemLabel: 'A · Sumas',
+            language: 'TypeScript',
+            verdictLabel: 'MEMORY LIMIT EXCEEDED',
+            verdictTone: 'warning',
+            timeLabel: '48 ms',
+            memoryLabel: '1024 KB',
+            submittedAtLabel: '25/7/2026, 12:00',
+          },
+        ]}
+      />,
+    )
 
-    expect(
-      screen.getAllByRole('columnheader').map((header) => header.textContent),
-    ).toEqual([
-      'ID',
+    const expectedHeaders = [
       'CONCURSO',
       'PROBLEMA',
       'LENGUAJE',
@@ -117,10 +130,33 @@ describe('recent submissions', () => {
       'TIEMPO',
       'MEMORIA',
       'FECHA',
-    ])
+    ]
+    const table = screen.getByRole('table')
+    const headers = screen.getAllByRole('columnheader')
+    const row = screen.getAllByRole('row')[1]
+    const cells = within(row).getAllByRole('cell')
+    const verdict = screen.getByText('MEMORY LIMIT EXCEEDED')
+
+    expect(table).toBeInTheDocument()
+    expect(headers.map((header) => header.textContent)).toEqual(expectedHeaders)
+    expect(
+      screen.queryByRole('columnheader', { name: /^ID$/i }),
+    ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('columnheader', { name: 'Archivo' }),
     ).not.toBeInTheDocument()
+    expect(cells).toHaveLength(headers.length)
+    expect(cells.map((cell) => cell.textContent)).toEqual([
+      'DIV4-2026',
+      'A · Sumas',
+      'TypeScript',
+      'MEMORY LIMIT EXCEEDED',
+      '48 ms',
+      '1024 KB',
+      '25/7/2026, 12:00',
+    ])
+    expect(within(row).queryByText(/^42$/)).not.toBeInTheDocument()
+    expect(verdict).toHaveClass('bg-amber-100', 'text-amber-800')
   })
 
   it('uses all supported query parameters', async () => {

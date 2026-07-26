@@ -1,28 +1,16 @@
 import { useEffect, useState } from 'react'
+import { Calendar, Check, Clock, RotateCcw, Users } from 'lucide-react'
+import { useParams } from 'react-router'
+import { Alert, Card, Divider, Spinner } from '@/components/common'
 import {
-  Calendar,
-  Check,
-  Clock,
-  Code2,
-  FileCode2,
-  RotateCcw,
-  Users,
-} from 'lucide-react'
-import { NavLink, useParams } from 'react-router-dom'
-import { Alert, Badge, Card, Divider, Spinner } from '@/components/common'
-import { estadoTiempoTone } from '@/features/contests/admin/format'
-import type { EstadoTiempoConcurso } from '@/features/contests/admin/types'
+  ContestContextHeader,
+  type ContestContextNavigationItem,
+} from '@/features/contests/components/ContestContextHeader'
 import { UserLayout } from '@/layouts/UserLayout'
 import { routes } from '@/routes/constants'
 import { ProblemsTable } from '../components/ProblemsTable'
 import { getContestDashboard } from '../service'
 import type { ContestDashboard } from '../types'
-
-const contestStatusLabels: Record<EstadoTiempoConcurso, string> = {
-  Proximo: 'PRÓXIMO',
-  Activo: 'EN CURSO',
-  Finalizado: 'FINALIZADO',
-}
 
 const contestDateFormatter = new Intl.DateTimeFormat('es-BO', {
   day: '2-digit',
@@ -35,103 +23,52 @@ const contestTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   minute: '2-digit',
 })
 
-const parseContestDate = (iso: string) => {
-  const date = new Date(iso)
-  return Number.isNaN(date.getTime()) ? null : date
-}
-
 const formatContestDate = (iso: string) => {
-  const date = parseContestDate(iso)
-  return date ? contestDateFormatter.format(date) : '—'
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? '—' : contestDateFormatter.format(date)
 }
 
 const formatContestTime = (iso: string) => {
-  const date = parseContestDate(iso)
-  return date ? contestTimeFormatter.format(date) : '—'
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? '—' : contestTimeFormatter.format(date)
 }
 
-const getContestStatusPresentation = (estadoTiempo: string) => {
-  if (estadoTiempo in contestStatusLabels) {
-    const status = estadoTiempo as EstadoTiempoConcurso
-    return {
-      label: contestStatusLabels[status],
-      tone: estadoTiempoTone[status],
-    }
-  }
-
-  return { label: estadoTiempo, tone: 'neutral' as const }
-}
-
-export default function ContestProblemsPage() {
-  const { contestCode } = useParams<{ contestCode: string }>()
+export function ContestProblemsContent({
+  contestCode,
+  navigationItems,
+}: {
+  contestCode?: string
+  navigationItems: ContestContextNavigationItem[]
+}) {
   const [dashboard, setDashboard] = useState<ContestDashboard | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [loadError, setLoadError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!contestCode) {
-      setDashboard(null)
-      setLoadError('El código del concurso es obligatorio.')
-      setIsLoading(false)
+      setError('El código del concurso es obligatorio.')
       return
     }
-
     let active = true
     setDashboard(null)
-    setLoadError(null)
-    setIsLoading(true)
-
+    setError(null)
     void getContestDashboard(contestCode)
-      .then((result) => {
-        if (active) setDashboard(result ?? null)
+      .then((result) => active && setDashboard(result ?? null))
+      .catch((requestError: unknown) => {
+        if (active)
+          setError(
+            requestError instanceof Error
+              ? requestError.message
+              : 'No se pudo cargar el dashboard del concurso.',
+          )
       })
-      .catch((error: unknown) => {
-        if (!active) return
-        setLoadError(
-          error instanceof Error
-            ? error.message
-            : 'No se pudo cargar el dashboard del concurso.',
-        )
-      })
-      .finally(() => {
-        if (active) setIsLoading(false)
-      })
-
     return () => {
       active = false
     }
   }, [contestCode])
 
-  return (
-    <UserLayout>
-      <main className="w-full min-w-0 space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-        {isLoading && (
-          <div className="flex min-h-40 items-center justify-center gap-2 text-sm font-medium text-[var(--text-secondary)]">
-            <Spinner label="Cargando concurso" />
-            Cargando concurso...
-          </div>
-        )}
+  if (error) return <Alert tone="danger">{error}</Alert>
+  if (!dashboard) return <Spinner label="Cargando concurso" />
 
-        {!isLoading && (loadError || !dashboard) && (
-          <Alert tone="danger">
-            {loadError ?? 'No se encontró el concurso.'}
-          </Alert>
-        )}
-
-        {!isLoading && dashboard && (
-          <ContestDashboardContent dashboard={dashboard} />
-        )}
-      </main>
-    </UserLayout>
-  )
-}
-
-function ContestDashboardContent({
-  dashboard,
-}: {
-  dashboard: ContestDashboard
-}) {
-  const status = getContestStatusPresentation(dashboard.estadoTiempo)
   const infoItems = [
     {
       label: 'Fecha fin',
@@ -151,24 +88,19 @@ function ContestDashboardContent({
   ]
 
   return (
-    <>
+    <div className="w-full min-w-0 space-y-6">
+      <ContestContextHeader
+        contest={{
+          code: dashboard.codigo,
+          name: dashboard.nombre,
+          status: dashboard.estadoTiempo,
+          endsAt: dashboard.fechaFin,
+        }}
+        activeSection="problems"
+        navigationItems={navigationItems}
+      />
       <Card id="contest-header">
-        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <div className="mb-2 flex flex-wrap items-center gap-2.5">
-              <Badge tone={status.tone}>{status.label}</Badge>
-              <span className="text-xs text-[var(--text-secondary)]">
-                {dashboard.codigo}
-              </span>
-            </div>
-            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">
-              {dashboard.nombre}
-            </h1>
-          </div>
-        </div>
-
-        <Divider className="my-6" />
-
+        <Divider className="mb-6" />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {infoItems.map(({ label, value, icon: Icon }) => (
             <div key={label} className="flex items-center gap-3">
@@ -186,8 +118,7 @@ function ContestDashboardContent({
           ))}
         </div>
       </Card>
-
-      <div id="quick-metrics" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2" id="quick-metrics">
         <Card className="flex items-center gap-4">
           <Check
             className="size-5 shrink-0 text-[var(--primary)]"
@@ -205,7 +136,6 @@ function ContestDashboardContent({
             </div>
           </div>
         </Card>
-
         <Card className="flex items-center gap-4">
           <RotateCcw
             className="size-5 shrink-0 text-[var(--text-secondary)]"
@@ -221,35 +151,39 @@ function ContestDashboardContent({
           </div>
         </Card>
       </div>
-
-      <nav
-        aria-label="Navegación del concurso"
-        className="flex items-center gap-2 overflow-x-auto border-b border-[var(--border)]"
-      >
-        <NavLink
-          to={routes.studentContestProblems(dashboard.codigo)}
-          className="flex shrink-0 items-center gap-2 border-b-2 border-[var(--primary)] px-5 py-3 text-sm font-bold text-[var(--primary)]"
-          aria-current="page"
-        >
-          <Code2 className="size-4" aria-hidden="true" />
-          <span>Problemas</span>
-          <Badge tone="neutral">{dashboard.totalProblemas}</Badge>
-        </NavLink>
-        <NavLink
-          to={routes.studentContestSubmissions(dashboard.codigo)}
-          className="flex shrink-0 items-center gap-2 border-b-2 border-transparent px-5 py-3 text-sm font-bold text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-[var(--focus)]"
-        >
-          <FileCode2 className="size-4" aria-hidden="true" />
-          <span>Mis envíos</span>
-        </NavLink>
-      </nav>
-
       <section id="problems-panel" className="w-full min-w-0">
         <ProblemsTable
           problems={dashboard.problemas}
           pdfUrl={dashboard.urlSetProblemas}
         />
       </section>
-    </>
+    </div>
+  )
+}
+
+export default function ContestProblemsPage() {
+  const { contestCode: code } = useParams<{ contestCode: string }>()
+  const navigationItems: ContestContextNavigationItem[] = [
+    {
+      id: 'problems',
+      label: 'Problemas',
+      to: routes.studentContestProblems(code ?? ''),
+    },
+    {
+      id: 'submissions',
+      label: 'Mis envíos',
+      to: routes.studentContestSubmissions(code ?? ''),
+    },
+  ]
+
+  return (
+    <UserLayout>
+      <main className="w-full min-w-0 px-4 py-6 sm:px-6 lg:px-8">
+        <ContestProblemsContent
+          contestCode={code}
+          navigationItems={navigationItems}
+        />
+      </main>
+    </UserLayout>
   )
 }

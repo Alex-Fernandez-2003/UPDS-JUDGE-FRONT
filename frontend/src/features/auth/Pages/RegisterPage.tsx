@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import AuthTemplate from '@/features/auth/templates/AuthTemplate'
 import RegisterForm from '@/features/auth/Components/RegisterForm'
 
