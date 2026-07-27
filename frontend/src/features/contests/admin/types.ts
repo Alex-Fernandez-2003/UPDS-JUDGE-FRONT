@@ -4,6 +4,32 @@ export type ContestProblemForm = {
   memoria: number
 }
 
+export type EditableContestProblemForm = ContestProblemForm & {
+  inciso: string
+  cantidadCasosPrueba: number
+  colorGlobo: string
+}
+
+export type EditContestFormValues = Omit<
+  CreateContestFormValues,
+  'codigo' | 'listaProblemas'
+> & {
+  codigo: string
+  listaProblemas: EditableContestProblemForm[]
+}
+
+export type EditableContestDto = {
+  codigo: string
+  nombre: string
+  descripcion: string
+  fechaInicio: string
+  duracionMinutos: number
+  esPrivado: boolean
+  urlSetProblemas: string
+  minutosCongelamiento: number
+  listaProblemas: EditableContestProblemForm[]
+}
+
 export type CreateContestFormValues = {
   nombre: string
   descripcion: string
@@ -28,6 +54,12 @@ export type FiltroEstadoConcurso =
   'todos' | 'activos' | 'proximos' | 'finalizados'
 export type ModalidadConcurso = 'Publico' | 'Privado'
 
+export type ConcursoListProblem = {
+  inciso: string
+  titulo: string
+  colorGlobo: string
+}
+
 export type ConcursoListItem = {
   idConcurso: number
   nombre: string
@@ -46,6 +78,8 @@ export type ConcursoListItem = {
   segundosRestantes: number | null
   miPuesto: number | null
   miProblemasResueltos: number | null
+  /** Active problems returned by the administrative list for the balloon modal. */
+  problemas?: ConcursoListProblem[]
 }
 
 export type ListConcursosParams = {

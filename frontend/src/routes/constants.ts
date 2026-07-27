@@ -18,6 +18,9 @@ export const routes = {
   legacyDashboard: '/dashboard',
   contests: '/admin/contests',
   newContest: '/admin/contests/new',
+  editContest: (contestCode: string) =>
+    `/admin/contests/${encodeURIComponent(contestCode)}/edit`,
+  adminRoleList: '/admin/roles',
   devUi: '/dev/ui',
 } as const
 //comentando

@@ -5,6 +5,7 @@ import { isDevelopment } from '@/config/env'
 import LoginPage from '@/features/auth/Pages/LoginPage'
 import RegisterPage from '@/features/auth/Pages/RegisterPage'
 import { CreateContestPage } from '@/features/contests/admin/CreateContestPage'
+import { EditContestPage } from '@/features/contests/admin/EditContestPage'
 import { UserDashboardPage } from '@/features/contests/user'
 import AdminContestsPage from '@/features/contests/admin/pages/AdminContestsPage'
 import {
@@ -21,15 +22,8 @@ import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
-<<<<<<< HEAD
 import UserHistoryPage from '@/features/history/Pages/historyPage'
-=======
-
-
 import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
-
-//comentando
->>>>>>> feature/hu07
 
 const UserDashboard = () => (
   <UserDashboardPage
@@ -162,12 +156,36 @@ export const createAppRouter = (development = isDevelopment) => {
       ),
     },
     {
+      path: routes.adminRoleList,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.rolesAdmin]}>
+            <AdminLayout>
+              <AdminRolesPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: routes.newContest,
       element: (
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.contestsAdmin]}>
             <AdminLayout>
               <CreateContestPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/contests/:contestCode/edit',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.contestsAdmin]}>
+            <AdminLayout>
+              <EditContestPage />
             </AdminLayout>
           </RoleRoute>
         </ProtectedRoute>

@@ -5,10 +5,20 @@ export const endpoints = {
     login: 'Auth/login',
     register: 'Auth/register',
   },
+  roles: {
+    list: 'Roles',
+    users: 'Roles/usuarios',
+    assign: 'Roles/agregar',
+    remove: 'Roles/quitar',
+  },
   contests: {
     adminList: 'Concursos/mis-creados',
     adminSummary: 'Concursos/mis-resumen',
     create: 'Concursos/crear',
+    edit: (contestCode: string) =>
+      `Concursos/editar/${encodeURIComponent(contestCode)}`,
+    update: (contestCode: string) =>
+      `Concursos/${encodeURIComponent(contestCode)}`,
     userStats: 'ParticipanteConcursos/stats-contest',
     userSubmissions: 'Envios/mis-envios',
     userListCompetition: 'Concursos',

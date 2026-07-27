@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router'
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import type { PropsWithChildren } from 'react'
@@ -105,21 +106,23 @@ describe('submission formatters and mapper', () => {
 describe('recent submissions', () => {
   it('uses the definitive visual columns without exposing the internal submission ID', () => {
     render(
-      <RecentSubmissionsTable
-        rows={[
-          {
-            id: 42,
-            contestCode: 'DIV4-2026',
-            problemLabel: 'A · Sumas',
-            language: 'TypeScript',
-            verdictLabel: 'MEMORY LIMIT EXCEEDED',
-            verdictTone: 'warning',
-            timeLabel: '48 ms',
-            memoryLabel: '1024 KB',
-            submittedAtLabel: '25/7/2026, 12:00',
-          },
-        ]}
-      />,
+      <MemoryRouter>
+        <RecentSubmissionsTable
+          rows={[
+            {
+              id: 42,
+              contestCode: 'DIV4-2026',
+              problemLabel: 'A · Sumas',
+              language: 'TypeScript',
+              verdictLabel: 'MEMORY LIMIT EXCEEDED',
+              verdictTone: 'warning',
+              timeLabel: '48 ms',
+              memoryLabel: '1024 KB',
+              submittedAtLabel: '25/7/2026, 12:00',
+            },
+          ]}
+        />
+      </MemoryRouter>,
     )
 
     const expectedHeaders = [

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Badge } from '@/components/common'
 import { DataTable } from '@/components/tables'
@@ -50,16 +50,16 @@ export function RecentSubmissionsTable({
           columns={[
             {
               key: 'contestCode',
-                header: 'CONCURSO',
-                render: (row) => (
-                  <Link
+              header: 'CONCURSO',
+              render: (row) => (
+                <Link
                   to={routes.studentContestProblems(row.contestCode)}
                   className="inline-flex items-center gap-1 font-bold text-[var(--primary)] underline-offset-4 hover:underline hover:text-[var(--brand)] transition-colors"
                   title={`Ir al concurso ${row.contestCode}`}
                 >
                   {row.contestCode}
                 </Link>
-                ),
+              ),
             },
             {
               key: 'problemLabel',

@@ -356,6 +356,129 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/Concursos/{codigo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    codigo: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "multipart/form-data": {
+                        nombre?: string;
+                        descripcion?: string;
+                        /** Format: date-time */
+                        fechaInicio?: string;
+                        /** Format: int32 */
+                        duracionMinutos?: number;
+                        contrasena?: string;
+                        urlSetProblemas?: string;
+                        /** Format: int32 */
+                        minutosCongelamiento?: number;
+                        listaProblemas?: components["schemas"]["ActualizarProblemaDto"][];
+                        /** Format: binary */
+                        archivoZip?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Concursos/editar/{codigo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    codigo: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/Concursos/{codigoConcurso}/ranking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    codigoConcurso: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/Envios/mis-envios": {
         parameters: {
             query?: never;
@@ -698,15 +821,25 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        ActualizarProblemaDto: {
+            inciso?: string;
+            titulo?: string | null;
+            /** Format: float */
+            tiempo?: number;
+            /** Format: int32 */
+            memoria?: number;
+            colorGlobo?: string | null;
+        };
         CambiarRolDto: {
             correo?: string | null;
             /** Format: int32 */
             idRol?: number;
         };
         CrearEnvioDto: {
-            codigo?: string | null;
-            inciso?: string;
-            extension?: string | null;
+            codigoConcurso?: string | null;
+            incisoProblema?: string;
+            /** Format: int32 */
+            idLenguaje?: number;
             codigoFuente?: string | null;
             contrasena?: string | null;
         };

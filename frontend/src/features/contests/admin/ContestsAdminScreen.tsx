@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router'
 import { Alert, Button, Card, LinkButton } from '@/components/common'
 import { Pagination } from '@/components/navigation'
 import { ApiError } from '@/lib/api'
@@ -29,6 +30,7 @@ const errorMessage = (error: unknown) =>
     : 'No se pudieron cargar los concursos. Intentá de nuevo.'
 
 export function ContestsAdminScreen() {
+  const navigate = useNavigate()
   const [filters, setFilters] = useState(initialFilters)
   const [page, setPage] = useState(1)
   const debouncedBusqueda = useDebouncedValue(filters.busqueda)
@@ -105,6 +107,9 @@ export function ContestsAdminScreen() {
               <ContestsAdminTable
                 rows={list.data?.concursos ?? []}
                 loading={list.isLoading || list.isFetching}
+                onEdit={(contestCode) =>
+                  navigate(routes.editContest(contestCode))
+                }
               />
               <div className="flex items-center justify-between">
                 <p className="text-sm text-[var(--text-secondary)]">
