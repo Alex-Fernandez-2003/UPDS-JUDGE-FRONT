@@ -16,7 +16,7 @@ const resultOptions = [
   { value: 'RE', label: 'Runtime Error' },
 ]
 
-export default function UserHistoryPage() {
+export function UserHistoryContent() {
   const [contestCode, setContestCode] = useState('')
   const [result, setResult] = useState('')
   const [page, setPage] = useState(1)
@@ -139,4 +139,8 @@ export default function UserHistoryPage() {
       </div>
     </div>
   )
+}
+
+export default function UserHistoryPage() {
+  return <UserHistoryContent />
 }

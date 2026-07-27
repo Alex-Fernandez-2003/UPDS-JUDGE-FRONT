@@ -8,8 +8,11 @@ export const routes = {
     `/student/contests/${encodeURIComponent(contestCode)}/problems`,
   studentContestSubmissions: (contestCode: string) =>
     `/student/contests/${encodeURIComponent(contestCode)}/submissions`,
+  studentContestRanking: (contestCode: string) =>
+    `/student/contests/${encodeURIComponent(contestCode)}/ranking`,
   submissions: '/submissions',
   adminUserContests: '/admin/user-access/contests',
+  adminUserSubmissions: '/admin/user-access/submissions',
   adminUserContestProblems: (contestCode: string) =>
     `/admin/user-access/contests/${encodeURIComponent(contestCode)}/problems`,
   adminUserContestSubmissions: (contestCode: string) =>

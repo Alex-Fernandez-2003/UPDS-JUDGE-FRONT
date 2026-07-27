@@ -25,6 +25,8 @@ export const endpoints = {
     join: 'ParticipanteConcursos/unirse',
     dashboard: (contestCode: string) =>
       `Concursos/dashboard/${encodeURIComponent(contestCode)}`,
+    ranking: (contestCode: string) =>
+      `Concursos/${encodeURIComponent(contestCode)}/ranking`,
   },
   submissions: {
     // Genera la ruta: /envios/concurso/div4med (ajusta /envios según tu Controller)

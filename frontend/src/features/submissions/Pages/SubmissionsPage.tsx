@@ -165,6 +165,11 @@ export default function SubmissionsPage() {
       label: 'Mis envíos',
       to: routes.studentContestSubmissions(contestCode ?? ''),
     },
+    {
+      id: 'ranking',
+      label: 'Ranking',
+      to: routes.studentContestRanking(contestCode ?? ''),
+    },
   ]
   return (
     <UserLayout>

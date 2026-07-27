@@ -23,6 +23,8 @@ import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
 import UserHistoryPage from '@/features/history/Pages/historyPage'
+import { AdminUserSubmissionsPage } from '@/features/history/Pages/AdminUserSubmissionsPage'
+import RankingPage from '@/features/ranking/RankingPage'
 import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
 
 const UserDashboard = () => (
@@ -100,6 +102,16 @@ export const createAppRouter = (development = isDevelopment) => {
         </ProtectedRoute>
       ),
     },
+    {
+      path: '/student/contests/:contestCode/ranking',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <RankingPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
     { path: forbiddenRoute, element: <Forbidden /> },
     {
       path: routes.legacyDashboard,
@@ -131,6 +143,18 @@ export const createAppRouter = (development = isDevelopment) => {
         <ProtectedRoute>
           <RoleRoute allowedRoles={adminRoles}>
             <AdminUserContestsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.adminUserSubmissions,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminLayout>
+              <AdminUserSubmissionsPage />
+            </AdminLayout>
           </RoleRoute>
         </ProtectedRoute>
       ),

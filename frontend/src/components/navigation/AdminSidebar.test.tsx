@@ -16,11 +16,14 @@ describe('AdminSidebar', () => {
     )
     const userAccess = screen.getByRole('region', { name: 'Acceso de Usuario' })
     expect(userAccess).toBeInTheDocument()
-    expect(userAccess.querySelector('a')).toHaveTextContent('Concursos')
-    expect(userAccess.querySelector('a')).toHaveAttribute(
-      'href',
-      '/admin/user-access/contests',
+    const contestsLink = userAccess.querySelector(
+      'a[href="/admin/user-access/contests"]',
     )
+    const submissionsLink = userAccess.querySelector(
+      'a[href="/admin/user-access/submissions"]',
+    )
+    expect(contestsLink).toHaveTextContent('Concursos')
+    expect(submissionsLink).toHaveTextContent('Mis Envíos')
 
     rerender(
       <MemoryRouter>

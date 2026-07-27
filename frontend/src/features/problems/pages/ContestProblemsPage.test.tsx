@@ -99,7 +99,10 @@ describe('ContestProblemsPage', () => {
     )
     expect(screen.getAllByRole('link', { name: 'Ver PDF' })).toHaveLength(1)
 
-    expect(screen.queryByText('Ranking')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ranking' })).toHaveAttribute(
+      'href',
+      '/student/contests/div4-2026/ranking',
+    )
     expect(screen.queryByText('Marcador Congelado')).not.toBeInTheDocument()
     expect(
       screen.queryByText('Ver reglas del concurso'),

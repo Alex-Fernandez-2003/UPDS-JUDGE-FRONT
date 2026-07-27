@@ -1,10 +1,10 @@
-import { Clock, Code2, FileCode2 } from 'lucide-react'
+import { Clock, Code2, FileCode2, Trophy } from 'lucide-react'
 import { NavLink } from 'react-router'
 import { Badge, Card } from '@/components/common'
 import { estadoTiempoTone } from '@/features/contests/admin/format'
 import type { EstadoTiempoConcurso } from '@/features/contests/admin/types'
 
-export type ContestContextSection = 'problems' | 'submissions'
+export type ContestContextSection = 'problems' | 'submissions' | 'ranking'
 
 export type ContestContextNavigationItem = {
   id: ContestContextSection
@@ -63,6 +63,7 @@ export const formatContestDuration = (
 const navIcons = {
   problems: Code2,
   submissions: FileCode2,
+  ranking: Trophy,
 }
 
 export function ContestContextHeader({

@@ -174,6 +174,11 @@ export default function ContestProblemsPage() {
       label: 'Mis envíos',
       to: routes.studentContestSubmissions(code ?? ''),
     },
+    {
+      id: 'ranking',
+      label: 'Ranking',
+      to: routes.studentContestRanking(code ?? ''),
+    },
   ]
 
   return (

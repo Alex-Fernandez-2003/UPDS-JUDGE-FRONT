@@ -1,4 +1,10 @@
-import { LayoutDashboard, PlusCircle, Trophy, UserRound } from 'lucide-react'
+import {
+  FileText,
+  LayoutDashboard,
+  PlusCircle,
+  Trophy,
+  UserRound,
+} from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 import { BrandMark } from '@/components/common'
@@ -57,6 +63,13 @@ export const adminUserAccessNavigation: NavigationItem[] = [
     icon: UserRound,
     visible: isAdministrator,
     keywords: ['usuario', 'competencias'],
+  },
+  {
+    label: 'Mis Envíos',
+    path: routes.adminUserSubmissions,
+    icon: FileText,
+    visible: isAdministrator,
+    keywords: ['usuario', 'envios', 'historial'],
   },
 ]
 
