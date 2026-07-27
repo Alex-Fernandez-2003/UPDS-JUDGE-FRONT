@@ -167,6 +167,7 @@ La navegación del historial utiliza las rutas centralizadas de la aplicación.
 Desde la tabla es posible acceder nuevamente al concurso correspondiente utilizando el código del concurso mostrado en cada fila.
 
 Toda la navegación es gestionada mediante **React Router**, permitiendo una experiencia consistente sin recargar la aplicación.
+
 # Archivos principales
 
 - `frontend/src/features/history/Pages/historyPage.tsx`
@@ -198,7 +199,6 @@ Toda la navegación es gestionada mediante **React Router**, permitiendo una exp
 ![Veredictos](../../docs/capturas/UJ-20-veredictos.png)
 
 ---
-
 
 # Confirmaciones de seguridad
 
@@ -238,3 +238,21 @@ La **UJ-20** implementa el módulo encargado de visualizar el historial de enví
 La solución permite consultar la información de manera paginada, aplicar filtros, visualizar los veredictos obtenidos y revisar las métricas de ejecución devueltas por Judge0. La arquitectura separa claramente la lógica de negocio (`historyService`), los modelos (`historyTypes`) y los componentes de interfaz (`RecentSubmissionsTable` y `Pagination`), favoreciendo la reutilización y el mantenimiento del código.
 
 La integración con el backend se realiza mediante un contrato REST tipado y autenticado con JWT, garantizando que únicamente se consulten los envíos pertenecientes al usuario autenticado. Con ello, el historial constituye una herramienta útil para que el estudiante pueda realizar un seguimiento continuo de su desempeño durante los concursos de programación.
+
+## Integración del change
+
+La ruta final `/student/history` está protegida y se renderiza bajo `UserLayout`.
+La navegación principal expone **Mis envíos**, diferenciada de los envíos dentro
+de un concurso. `UserHistoryPage` conserva la tabla existente y ahora conecta
+los filtros contractuales `concursoCodigo` y `resultado`, con página reiniciada
+a 1 al cambiarlos, limpieza y query key parametrizada.
+
+El endpoint centralizado es `GET /api/Envios/mis-envios`; usa paginación
+server-side con `pagina` y `tamanoPagina=20`. Los veredictos, unidades, badges,
+scroll horizontal y la ausencia de columna ID se mantienen mediante el mapper y
+la tabla existente. UJ-20 no se expone en `Acceso de Usuario` administrativo:
+el spec no aporta evidencia para ese contexto.
+
+Las pruebas verifican serialización de filtros y query key. Lint, typecheck,
+suite y build fueron ejecutados. No existen capturas UJ-20 nuevas en
+`docs/capturas/`; la validación visual manual permanece pendiente.

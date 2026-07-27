@@ -20,11 +20,11 @@ Implementar y conectar el flujo completo para la administración de roles, permi
    - **`AdminRoleBadge.tsx`**: Se centralizaron los tonos de los badges usando la configuración de `format.ts`, manteniendo el botón interactivo con el icono `X` para desasignar el rol.
    - **`AdminRoleAssignCard.tsx`**: Se transformó en un componente controlado, sincronizando sus props (`correo`, `selectedRoleId`, `onCorreoChange`, `onRoleChange`, `onAssign`) directamente con el estado de la vista padre.
    - **`AdminRolesFiltersBar.tsx`**: Se mantuvo la barra con soporte para filtro por término de búsqueda y por selector de rol, incluyendo la acción de limpiar filtros.
-   - **`AdminRolesTable.tsx`**: Se corrigió el error de *scope* al mover la constante `columns` dentro del componente, se ajustó el handler `onRemoveRole` para enviar el `idRol` (numérico) en lugar del nombre del rol y se actualizaron los tipos a `UserRoleItem` y `RoleItem`.
+   - **`AdminRolesTable.tsx`**: Se corrigió el error de _scope_ al mover la constante `columns` dentro del componente, se ajustó el handler `onRemoveRole` para enviar el `idRol` (numérico) en lugar del nombre del rol y se actualizaron los tipos a `UserRoleItem` y `RoleItem`.
 
 4. **Implementar la vista principal (`AdminRolesPage.tsx`)**
    - Se gestionaron los estados para la asignación de roles y la visualización de mensajes de feedback al usuario (`Alert`).
-   - Se integró la búsqueda optimizada mediante *debounce* junto a la paginación.
+   - Se integró la búsqueda optimizada mediante _debounce_ junto a la paginación.
    - Se configuró la invalidación de caché con React Query para refrescar la lista de usuarios automáticamente tras asignar o remover un rol.
 
 5. **Configurar la capa de servicios, hooks y comunicación con la API**
@@ -53,11 +53,64 @@ Implementar y conectar el flujo completo para la administración de roles, permi
 
 ---
 
+## Evidencias
+
+### 1. Navegacion del SideBard
+
+![Navegacion del SideBard](../capturas/HU-07-SideBar-Navegacion-AsignarRoless.png)
+
+---
+
+### 2. Dashboard del Administrador de Roles
+
+![Dashboard del Administrador de Roles](../capturas/HU-07-Dashboard-AsignarRoless.png)
+
+---
+
+### 3. Menu desplegable para Asignar Roles
+
+![Menu desplegable para Asignar Roles](../capturas/HU-07-Menu-AsignarRoles.png)
+
+---
+
+### 4. Filtros de Busqueda por Rol
+
+![Filtros de Busqueda por Rol](../capturas/HU-07-Filtros-Busqueda-AsignarRoless.png)
+
+---
+
+### 5.1 Busqueda por Filtro
+
+![Busqueda por Filtro](../capturas/HU-07-Busqueda-Por-Filtro.png)
+
+---
+
+### 5.2. Busqueda por Buscador
+
+![Busqueda por Buscador](../capturas/HU-07-Busqueda-Por-Input.png)
+
+---
+
+### 6. Asignacion de Rol al Usuario
+
+![Asignacion de Rol al Usuario](../capturas/HU-07-Asignacion-Rol-Usuario-p1.png)
+
+---
+
+![Asignacion de Rol al Usuario p2](../capturas/HU-07-Asignacion-Rol-Usuario-p2.png)
+
+---
+
+### 7. Remover Rol al Usuario
+
+![Remover Rol al Usuario](../capturas/HU-07-Remove-Rol-Usuario.png)
+
+---
+
 ## Resultado
 
 El flujo quedó completamente integrado y funcional:
 
 - El usuario con rol de administrador puede ingresar directamente a la pantalla a través del sidebar administrativo o ingresando a la ruta protegida.
-- Es posible listar, buscar (con *debounce*) y filtrar a los usuarios paginados de forma fluida.
+- Es posible listar, buscar (con _debounce_) y filtrar a los usuarios paginados de forma fluida.
 - La asignación y eliminación de roles funcionan de manera reactiva, ofreciendo feedback inmediato y actualizando la tabla sin necesidad de recargar manualmente la página..
-
