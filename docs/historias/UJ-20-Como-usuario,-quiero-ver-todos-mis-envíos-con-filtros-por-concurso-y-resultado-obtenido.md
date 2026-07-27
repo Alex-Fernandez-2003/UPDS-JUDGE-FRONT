@@ -254,3 +254,9 @@ el spec no aporta evidencia para ese contexto.
 Las pruebas verifican serialización de filtros y query key. Lint, typecheck,
 suite y build fueron ejecutados. No existen capturas UJ-20 nuevas en
 `docs/capturas/`; la validación visual manual permanece pendiente.
+
+## Integración en Acceso de Usuario administrativo
+
+`routes.adminUserSubmissions` resuelve `/admin/user-access/submissions`. El sidebar administrativo muestra **Mis Envíos** después de **Concursos** y la ruta protegida reutiliza `UserHistoryContent` dentro de `AdminLayout`; no anida `UserLayout`.
+
+El administrador consulta sus propios envíos dentro del flujo de Acceso de Usuario. No es una pantalla para inspeccionar envíos de otros usuarios. Se preservan el endpoint, query key, filtros por concurso y resultado, tabla y paginación del contenido compartido.

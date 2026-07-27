@@ -999,3 +999,13 @@
   - PR 6: paginación y cards informativas.
   - PR 7: MSW, regresión, documentación y validación final.
   - Todos los PRs deben pertenecer al mismo change OpenSpec.
+
+## Implementation status — 2026-07-27
+
+- [x] Baseline, OpenSpec source documents, existing header, routing, color mapper, ranking controller and visual-reference availability were inspected.
+- [x] Ranking backend contract was extended with active enrolled participants, top-level problems, snapshot metrics, timing metadata and deterministic most-solved problem.
+- [x] User ranking route, contextual navigation, single-query polling, frozen notice, countdown, summary cards, semantic table, balloon cells, local five-row pagination and lower information cards were implemented.
+- [x] Unit coverage was added for pagination and countdown helpers.
+- [x] UJ-18 documentation and intentionally unchecked manual evidence placeholders were added.
+- [x] OpenAPI regeneration completed after explicit authorization to stop only the preexisting locking backend process.
+- [ ] Browser-authenticated/manual evidence remains intentionally pending.
