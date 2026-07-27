@@ -170,7 +170,7 @@ export default function RankingPage() {
           </Card>
           <Card>
             <b>Problema más resuelto</b>
-            <p>
+            <p className="text-2xl font-black">
               {data.problemaMasResuelto
                 ? `${data.problemaMasResuelto.inciso} · ${data.problemaMasResuelto.cantidadAceptaciones}`
                 : '—'}

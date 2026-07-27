@@ -4,8 +4,8 @@
   height="320"
   viewBox="0 0 64 104"
   style="
-    --color1: #ff7b91;
-    --color2: #b9365d;
+    --color1: var(--balloon-color, #ff7b91);
+    --color2: var(--balloon-shade, var(--balloon-color, #b9365d));
   "
   role="img"
   aria-label="Globo"
