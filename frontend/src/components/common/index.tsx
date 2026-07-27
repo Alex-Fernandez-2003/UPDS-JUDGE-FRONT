@@ -75,15 +75,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     )
   },
 )
-export function IconButton({
-  label,
-  children,
-  className,
-  type = 'button',
-  ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
+export const IconButton = forwardRef<
+  HTMLButtonElement,
+  ButtonHTMLAttributes<HTMLButtonElement> & { label: string }
+>(function IconButton(
+  { label, children, className, type = 'button', ...props },
+  ref,
+) {
   return (
     <button
+      ref={ref}
       type={type}
       aria-label={label}
       className={cn(
@@ -96,7 +97,7 @@ export function IconButton({
       {children}
     </button>
   )
-}
+})
 export function LinkButton({
   className,
   variant,

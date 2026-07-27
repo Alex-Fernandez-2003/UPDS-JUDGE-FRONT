@@ -3,7 +3,11 @@ import { useMemo, useState } from 'react'
 import { NavLink, useLocation } from 'react-router'
 import { BrandMark } from '@/components/common'
 import type { Identity } from '@/lib/auth/identity'
-import { isAdministrator, isContestsAdmin } from '@/lib/auth/identity'
+import {
+  isAdministrator,
+  isContestsAdmin,
+  isRolesAdmin,
+} from '@/lib/auth/identity'
 import { cn } from '@/lib/utils/cn'
 import { routes } from '@/routes/constants'
 
@@ -36,6 +40,13 @@ export const adminNavigation: NavigationItem[] = [
     icon: PlusCircle,
     visible: isContestsAdmin,
     keywords: ['nuevo'],
+  },
+  {
+    label: 'Administración de Roles',
+    path: routes.adminRoleList,
+    icon: UserRound,
+    visible: isRolesAdmin,
+    keywords: ['roles', 'usuarios', 'permisos'],
   },
 ]
 

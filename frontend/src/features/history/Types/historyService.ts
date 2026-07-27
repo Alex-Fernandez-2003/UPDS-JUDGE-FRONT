@@ -1,5 +1,5 @@
-import { httpClient } from '@/lib/api/http-client' 
-import type { HistoryParams, HistoryResponse } from '../Types/historyTypes'
+import { endpoints, httpClient } from '@/lib/api'
+import type { HistoryParams, HistoryResponse } from './historyTypes'
 
 export const historyService = {
   getMisEnvios: async (params?: HistoryParams): Promise<HistoryResponse> => {
@@ -14,7 +14,9 @@ export const historyService = {
     }
 
     const queryString = queryParams.toString()
-    const path = queryString ? `envios/mis-envios?${queryString}` : 'api/envios/mis-envios'
+    const path = queryString
+      ? `${endpoints.contests.userSubmissions}?${queryString}`
+      : endpoints.contests.userSubmissions
 
     const response = await httpClient.get<HistoryResponse>(path)
 

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ContestDashboard } from '../types'
@@ -88,10 +88,11 @@ describe('ContestProblemsPage', () => {
       '/student/contests/div4-2026/problems',
     )
     expect(problemsLink).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'Mis envíos' })).toHaveAttribute(
-      'href',
-      '/student/contests/div4-2026/submissions',
-    )
+    expect(
+      within(
+        screen.getByRole('navigation', { name: 'Navegación del concurso' }),
+      ).getByRole('link', { name: 'Mis envíos' }),
+    ).toHaveAttribute('href', '/student/contests/div4-2026/submissions')
     expect(screen.getByRole('link', { name: 'Ver PDF' })).toHaveAttribute(
       'href',
       dashboard.urlSetProblemas,

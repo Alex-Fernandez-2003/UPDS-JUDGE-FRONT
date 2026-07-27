@@ -9,6 +9,7 @@ import { routes } from '@/routes/constants'
 const userNavigation = [
   { label: 'Inicio', path: routes.studentHome },
   { label: 'Concursos', path: routes.studentListCompetitions },
+  { label: 'Mis envíos', path: routes.userHistory },
 ]
 
 export function UserLayout({ children }: PropsWithChildren) {

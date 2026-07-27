@@ -1,5 +1,3 @@
-
-
 import { useState, useMemo } from 'react'
 import { Alert, Button, Card } from '@/components/common'
 import { Breadcrumbs, Pagination } from '@/components/navigation'
@@ -35,7 +33,7 @@ export default function AdminRolesPage() {
   const [messageTone, setMessageTone] = useState<'success' | 'danger'>(
     'success',
   )
-//comentando
+  //comentando
   const debouncedBusqueda = useDebouncedValue(filters.busqueda)
 
   // ==========================
@@ -102,9 +100,11 @@ export default function AdminRolesPage() {
       setSelectedRoleId('')
 
       usersQuery.refetch()
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage(
-        error?.response?.data?.mensaje ?? 'No fue posible asignar el rol.',
+        error instanceof Error
+          ? error.message
+          : 'No fue posible asignar el rol.',
       )
       setMessageTone('danger')
     }
@@ -121,9 +121,11 @@ export default function AdminRolesPage() {
       setMessageTone('success')
 
       usersQuery.refetch()
-    } catch (error: any) {
+    } catch (error: unknown) {
       setMessage(
-        error?.response?.data?.mensaje ?? 'No fue posible quitar el rol.',
+        error instanceof Error
+          ? error.message
+          : 'No fue posible quitar el rol.',
       )
       setMessageTone('danger')
     }

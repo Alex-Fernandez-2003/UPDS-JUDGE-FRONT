@@ -1,5 +1,3 @@
-
-
 import { Badge } from '@/components/common'
 import { X } from 'lucide-react'
 import { roleTone } from '../../administration/format'
@@ -23,9 +21,10 @@ export function AdminRoleBadge({ role, onRemove }: AdminRoleBadgeProps) {
           type="button"
           onClick={onRemove}
           className="ml-1 rounded-full hover:bg-black/10 transition-colors"
+          aria-label={`Quitar rol ${role}`}
           title={`Quitar rol ${role}`}
         >
-          <X className="size-3" />
+          <X className="size-3 cursor-pointer" />
         </button>
       )}
     </Badge>

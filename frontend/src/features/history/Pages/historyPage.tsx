@@ -1,89 +1,61 @@
-import { useCallback, useEffect, useState } from 'react'
-import { Alert } from '@/components/common'
-import { RecentSubmissionsTable } from '../../contests/user/RecentSubmissionsTable'
-import type { RecentSubmissionRow } from '../../contests/user/types'
-import { historyService } from '../Types/historyService'
-import type { HistoryItem } from '../Types/historyTypes'
+import { useMemo, useState } from 'react'
+import { Alert, Button } from '@/components/common'
+import { Input, Select } from '@/components/forms'
+import { RecentSubmissionsTable } from '@/features/contests/user/RecentSubmissionsTable'
+import { mapSubmissionRow } from '@/features/contests/user/mapper'
+import { useUserHistory } from '../Types/historyHooks'
 
-// Función helper para mapear los veredictos a los tonos de color de Badge
-function getVerdictTone(veredicto: string): 'success' | 'danger' | 'warning' | 'neutral' {
-  const v = veredicto.toUpperCase()
-  if (v.includes('ACCEPTED') || v === 'AC') return 'success'
-  if (v.includes('WRONG') || v.includes('ERROR') || v === 'WA') return 'danger'
-  if (v.includes('TIME') || v.includes('MEMORY') || v === 'TLE' || v === 'MLE') return 'warning'
-  return 'neutral'
-}
+const pageSize = 20
+const resultOptions = [
+  { value: '', label: 'Todos los resultados' },
+  { value: 'AC', label: 'Accepted' },
+  { value: 'WA', label: 'Wrong Answer' },
+  { value: 'TLE', label: 'Time Limit Exceeded' },
+  { value: 'MLE', label: 'Memory Limit Exceeded' },
+  { value: 'CE', label: 'Compilation Error' },
+  { value: 'RE', label: 'Runtime Error' },
+]
 
 export default function UserHistoryPage() {
-  const [submissions, setSubmissions] = useState<HistoryItem[]>([])
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | undefined>()
-  const [currentPage, setCurrentPage] = useState(1)
-  const pageSize = 20
+  const [contestCode, setContestCode] = useState('')
+  const [result, setResult] = useState('')
+  const [page, setPage] = useState(1)
+  const params = useMemo(
+    () => ({
+      concursoCodigo: contestCode.trim() || undefined,
+      resultado: result || undefined,
+      pagina: page,
+      tamanoPagina: pageSize,
+    }),
+    [contestCode, page, result],
+  )
+  const history = useUserHistory(params)
+  const response = history.data
+  const totalPages = response
+    ? Math.max(1, Math.ceil(response.total / response.tamanoPagina))
+    : 1
+  const range = response
+    ? response.total === 0
+      ? '0 envíos'
+      : `Mostrando ${(response.pagina - 1) * response.tamanoPagina + 1}-${Math.min(response.pagina * response.tamanoPagina, response.total)} de ${response.total} envíos`
+    : undefined
 
-  const fetchHistory = useCallback(async () => {
-    setLoading(true)
-    setError(undefined)
-    try {
-      const response = await historyService.getMisEnvios({
-        pagina: currentPage,
-        tamanoPagina: pageSize,
-      })
-      setSubmissions(response.datos)
-      setTotal(response.total)
-    } catch (err) {
-      console.error('Error al cargar historial:', err)
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Ocurrió un error al obtener el historial de envíos.',
-      )
-    } finally {
-      setLoading(false)
-    }
-  }, [currentPage, pageSize])
-
-  useEffect(() => {
-    fetchHistory()
-  }, [fetchHistory])
-
-  const totalPages = Math.ceil(total / pageSize) || 1
-
-  const fromIndex = total === 0 ? 0 : (currentPage - 1) * pageSize + 1
-  const toIndex = Math.min(currentPage * pageSize, total)
-  const range = `Mostrando ${fromIndex}-${toIndex} de ${total} envíos`
-
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1)
-    }
+  const updateContest = (value: string) => {
+    setContestCode(value)
+    setPage(1)
   }
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1)
-    }
+  const updateResult = (value: string) => {
+    setResult(value)
+    setPage(1)
   }
-
-  // Transformación sin el campo idEnvio
-  const tableRows: RecentSubmissionRow[] = submissions.map((item) => ({
-    contestCode: item.concursoCodigo,
-    problemLabel: `${item.inciso ? `${item.inciso} - ` : ''}${item.problemaTitulo}`,
-    language: item.lenguaje,
-    verdictLabel: item.veredicto,
-    verdictTone: getVerdictTone(item.veredicto),
-    timeLabel: `${item.consumoTiempo} ms`,
-    memoryLabel:
-      item.consumoMemoria >= 1024
-        ? `${(item.consumoMemoria / 1024).toFixed(2)} MB`
-        : `${item.consumoMemoria} KB`,
-    submittedAtLabel: new Date(item.fechaEnvio).toLocaleString(),
-  }))
+  const clearFilters = () => {
+    setContestCode('')
+    setResult('')
+    setPage(1)
+  }
 
   return (
     <div className="w-full min-w-0 space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Cabecera */}
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)] sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1.5">
@@ -91,34 +63,78 @@ export default function UserHistoryPage() {
               Historial de Mis Envíos
             </h1>
             <p className="text-sm font-medium text-[var(--text-secondary)] sm:text-base">
-              Registro global de todas las soluciones enviadas en los concursos activos.
+              Registro global de todas las soluciones enviadas en los concursos
+              activos.
             </p>
           </div>
-
           <div className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] px-5 py-3 shadow-[var(--shadow-sm)]">
             <span className="text-sm font-bold uppercase tracking-wider text-[var(--text-secondary)]">
               Total de envíos:
             </span>
             <span className="text-2xl font-black text-[var(--brand)]">
-              {total}
+              {response?.total ?? 0}
             </span>
           </div>
         </div>
       </div>
 
-      {error && <Alert tone="danger">{error}</Alert>}
+      <div className="flex flex-wrap items-end gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
+        <label className="min-w-52 flex-1 text-sm font-semibold">
+          Concurso
+          <Input
+            value={contestCode}
+            placeholder="Código del concurso"
+            onChange={(event) => updateContest(event.target.value)}
+          />
+        </label>
+        <label className="min-w-52 flex-1 text-sm font-semibold">
+          Resultado obtenido
+          <Select
+            value={result}
+            onChange={(event) => updateResult(event.target.value)}
+          >
+            {resultOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </label>
+        <Button
+          variant="secondary"
+          onClick={clearFilters}
+          disabled={!contestCode && !result}
+        >
+          Limpiar
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => history.refetch()}
+          disabled={history.isFetching}
+        >
+          Actualizar
+        </Button>
+      </div>
 
-      {/* Tabla con Paginación Activa */}
+      {history.error && (
+        <Alert tone="danger">
+          {history.error instanceof Error
+            ? history.error.message
+            : 'No fue posible cargar el historial de envíos.'}
+        </Alert>
+      )}
       <div className="w-full min-w-0 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-[var(--shadow-sm)]">
         <RecentSubmissionsTable
-          rows={tableRows}
-          loading={loading}
-          error={error}
-          page={currentPage}
+          rows={(response?.datos ?? []).map(mapSubmissionRow)}
+          loading={history.isLoading || history.isFetching}
+          error={undefined}
+          page={page}
           totalPages={totalPages}
           range={range}
-          onPreviousPage={handlePreviousPage}
-          onNextPage={handleNextPage}
+          onPreviousPage={() => setPage((current) => Math.max(1, current - 1))}
+          onNextPage={() =>
+            setPage((current) => Math.min(totalPages, current + 1))
+          }
         />
       </div>
     </div>

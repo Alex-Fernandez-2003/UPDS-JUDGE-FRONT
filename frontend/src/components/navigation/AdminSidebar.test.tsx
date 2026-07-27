@@ -5,6 +5,7 @@ import { AdminSidebar } from './AdminSidebar'
 
 const admin = { roles: ['AdministradorConcursos'] }
 const user = { roles: ['Usuario'] }
+const rolesAdmin = { roles: ['AdministradorRoles'] }
 //comentando
 describe('AdminSidebar', () => {
   it('shows the user-access contests group only to administrators', () => {
@@ -28,6 +29,26 @@ describe('AdminSidebar', () => {
     )
     expect(
       screen.queryByRole('region', { name: 'Acceso de Usuario' }),
+    ).not.toBeInTheDocument()
+  })
+
+  it('shows role administration only to AdministradorRoles', () => {
+    const { rerender } = render(
+      <MemoryRouter>
+        <AdminSidebar identity={rolesAdmin} />
+      </MemoryRouter>,
+    )
+    expect(
+      screen.getByRole('link', { name: 'Administración de Roles' }),
+    ).toHaveAttribute('href', '/admin/roles')
+
+    rerender(
+      <MemoryRouter>
+        <AdminSidebar identity={admin} />
+      </MemoryRouter>,
+    )
+    expect(
+      screen.queryByRole('link', { name: 'Administración de Roles' }),
     ).not.toBeInTheDocument()
   })
 })
