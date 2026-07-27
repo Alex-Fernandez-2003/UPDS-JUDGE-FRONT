@@ -22,9 +22,9 @@ La implementación reutiliza componentes comunes de la plataforma para mantener 
 
 # Historia de usuario
 
-| ID | Historia | Prioridad | Estimación |
-|----|----------|-----------|------------|
-| UJ-20 | Como usuario, quiero visualizar el historial de todos mis envíos con filtros y paginación para analizar mi desempeño dentro de los concursos. | Alta | 3 puntos |
+| ID    | Historia                                                                                                                                      | Prioridad | Estimación |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ---------- |
+| UJ-20 | Como usuario, quiero visualizar el historial de todos mis envíos con filtros y paginación para analizar mi desempeño dentro de los concursos. | Alta      | 3 puntos   |
 
 # Alcance implementado
 
@@ -75,13 +75,13 @@ GET /api/envios/mis-envios?resultado=AC&concursoCodigo=upds-div4-001&inciso=A&pa
 
 ### Parámetros soportados
 
-| Parámetro | Tipo | Descripción |
-|-----------|------|-------------|
-| `resultado` | string | Filtra por veredicto (AC, WA, TLE, MLE, CE, RE). |
-| `concursoCodigo` | string | Filtra por el código del concurso. |
-| `inciso` | string | Filtra por el inciso del problema (A, B, C...). |
-| `pagina` | number | Página solicitada. |
-| `tamanoPagina` | number | Cantidad de registros por página (máximo 50). |
+| Parámetro        | Tipo   | Descripción                                      |
+| ---------------- | ------ | ------------------------------------------------ |
+| `resultado`      | string | Filtra por veredicto (AC, WA, TLE, MLE, CE, RE). |
+| `concursoCodigo` | string | Filtra por el código del concurso.               |
+| `inciso`         | string | Filtra por el inciso del problema (A, B, C...).  |
+| `pagina`         | number | Página solicitada.                               |
+| `tamanoPagina`   | number | Cantidad de registros por página (máximo 50).    |
 
 ## Respuesta consumida por el frontend
 
@@ -151,11 +151,11 @@ Antes de renderizar la información se realizan varias transformaciones:
 
 El módulo contempla distintos escenarios durante la consulta del historial.
 
-| Escenario | Comportamiento |
-|-----------|----------------|
-| Error de conexión | Se muestra un mensaje indicando que no fue posible cargar el historial. |
-| Error del servidor | Se presenta el mensaje devuelto por la API. |
-| Usuario sin envíos | La tabla muestra un mensaje indicando que aún no existen registros. |
+| Escenario           | Comportamiento                                                             |
+| ------------------- | -------------------------------------------------------------------------- |
+| Error de conexión   | Se muestra un mensaje indicando que no fue posible cargar el historial.    |
+| Error del servidor  | Se presenta el mensaje devuelto por la API.                                |
+| Usuario sin envíos  | La tabla muestra un mensaje indicando que aún no existen registros.        |
 | Consulta en proceso | Se presentan indicadores de carga hasta recibir la respuesta del servidor. |
 
 Mientras la solicitud permanece activa, la interfaz mantiene el estado de carga para evitar mostrar información incompleta.
@@ -181,12 +181,10 @@ Toda la navegación es gestionada mediante **React Router**, permitiendo una exp
 
 ## Evidencia
 
-| Evidencia | Descripción |
-|-----------|-------------|
+| Evidencia | Descripción                                |
+| --------- | ------------------------------------------ |
 | Captura 1 | Pantalla principal del historial de envíos |
-| Captura 2 | Historial mostrando distintos veredictos |
-| Captura 3 | Funcionamiento de la paginación |
-| Captura 4 | Aplicación de filtros en el historial |
+| Captura 2 | Historial mostrando distintos veredictos   |
 
 ### 1. Pantalla principal del historial de envíos
 
