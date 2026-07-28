@@ -13,6 +13,7 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useParams } from 'react-router'
 import { UserLayout } from '@/layouts/UserLayout'
+import { deriveIdentity } from '@/lib/auth/identity'
 import { routes } from '@/routes/constants'
 import { useContestRanking } from './hooks'
 import { clampPage, formatRemaining, PAGE_SIZE, pageRows } from './utils'
@@ -87,6 +88,11 @@ export default function RankingPage({ admin = false }: { admin?: boolean }) {
   const Layout = admin ? Fragment : UserLayout
   const { contestCode } = useParams<{ contestCode: string }>()
   const query = useContestRanking(contestCode)
+  const currentUserId = Number(
+    deriveIdentity(sessionStorage.getItem('token'))?.userId,
+  )
+  const hasCurrentUserId =
+    Number.isSafeInteger(currentUserId) && currentUserId > 0
   const [page, setPage] = useState(1)
   const data = query.data
   const participantCount = data?.participantes.length ?? 0
@@ -221,7 +227,16 @@ export default function RankingPage({ admin = false }: { admin?: boolean }) {
               {rows.map((row) => (
                 <tr
                   key={`${row.puesto}-${row.nombreUsuario}`}
-                  className="border-t border-[var(--border)]"
+                  aria-label={
+                    hasCurrentUserId && row.idUsuario === currentUserId
+                      ? `Tu posición: ${row.nombreUsuario}`
+                      : undefined
+                  }
+                  className={
+                    hasCurrentUserId && row.idUsuario === currentUserId
+                      ? 'border-t border-[var(--border)] bg-[var(--surface-muted)] hover:bg-slate-200/70'
+                      : 'border-t border-[var(--border)] hover:bg-slate-50/60'
+                  }
                 >
                   <td>{row.puesto}</td>
                   <td>{row.nombreUsuario}</td>

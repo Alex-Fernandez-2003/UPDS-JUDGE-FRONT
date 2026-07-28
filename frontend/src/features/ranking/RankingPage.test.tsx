@@ -19,10 +19,20 @@ const ranking: ContestRanking = {
   fechaFin: '2026-01-01T02:00:00Z',
   duracionMinutos: 120,
   minutosCongelamiento: 30,
-  totalInscritos: 0,
+  totalInscritos: 1,
   totalEnvios: 0,
   problemas: [],
-  participantes: [],
+  participantes: [
+    {
+      idUsuario: 2,
+      puesto: 1,
+      nombreUsuario: 'Ada',
+      problemasResueltos: 0,
+      tiempoTotal: 0,
+      cantidadIntentos: 0,
+      detalle: [],
+    },
+  ],
   problemaMasResuelto: null,
 }
 
@@ -74,6 +84,42 @@ describe('administrative contextual ranking', () => {
       'href',
       '/admin/user-access/contests/demo/ranking',
     )
+    sessionStorage.removeItem('token')
+  })
+
+  it('highlights only the authenticated participant after a rerender', () => {
+    sessionStorage.setItem(
+      'token',
+      'header.eyJpZFVzdWFyaW8iOiIyIiwicm9sZSI6IlVzdWFyaW8ifQ.signature',
+    )
+    useContestRankingMock.mockReturnValue({
+      data: ranking,
+      isLoading: false,
+      error: null,
+    })
+    const view = renderAdminRanking()
+    expect(screen.getByRole('row', { name: 'Tu posición: Ada' })).toHaveClass(
+      'bg-[var(--surface-muted)]',
+    )
+    view.rerender(
+      <MemoryRouter
+        initialEntries={['/admin/user-access/contests/demo/ranking']}
+      >
+        <Routes>
+          <Route
+            path="/admin/user-access/contests/:contestCode/ranking"
+            element={
+              <AdminLayout>
+                <RankingPage admin />
+              </AdminLayout>
+            }
+          />
+        </Routes>
+      </MemoryRouter>,
+    )
+    expect(
+      screen.getByRole('row', { name: 'Tu posición: Ada' }),
+    ).toBeInTheDocument()
     sessionStorage.removeItem('token')
   })
 
