@@ -170,6 +170,18 @@ export const createAppRouter = (development = isDevelopment) => {
       ),
     },
     {
+      path: '/admin/user-access/contests/:contestCode/ranking',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminLayout>
+              <RankingPage admin />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: '/admin/user-access/contests/:contestCode/submissions',
       element: (
         <ProtectedRoute>

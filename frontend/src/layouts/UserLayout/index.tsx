@@ -19,35 +19,37 @@ export function UserLayout({ children }: PropsWithChildren) {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--background)]">
       <header className="border-b border-[var(--border)] bg-white">
-        <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-4 px-5">
-          <AppLogo alt="UPDS Judge" variant="default" />
-          <nav
-            aria-label="Navegación de usuario"
-            className="min-w-0 overflow-x-auto"
-          >
-            <ul className="flex items-center gap-2 whitespace-nowrap">
-              {userNavigation.map((item) => {
-                const active = location.pathname === item.path
-                return (
-                  <li key={item.path}>
-                    <NavLink
-                      to={item.path}
-                      aria-current={active ? 'page' : undefined}
-                      className={cn(
-                        'rounded-md px-3 py-2 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-[var(--focus)]',
-                        active
-                          ? 'bg-[var(--surface-muted)] text-[var(--text-primary)]'
-                          : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
-                      )}
-                    >
-                      {item.label}
-                    </NavLink>
-                  </li>
-                )
-              })}
-            </ul>
-          </nav>
+        <div className="mx-auto flex min-h-16 max-w-6xl items-center gap-4 px-5">
           <div className="flex min-w-0 items-center gap-3">
+            <AppLogo alt="UPDS Judge" variant="default" />
+            <nav
+              aria-label="Navegación de usuario"
+              className="min-w-0 overflow-x-auto"
+            >
+              <ul className="flex items-center gap-2 whitespace-nowrap">
+                {userNavigation.map((item) => {
+                  const active = location.pathname === item.path
+                  return (
+                    <li key={item.path}>
+                      <NavLink
+                        to={item.path}
+                        aria-current={active ? 'page' : undefined}
+                        className={cn(
+                          'inline-flex min-h-10 items-center rounded-md px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-[var(--focus)]',
+                          active
+                            ? 'bg-[var(--surface-muted)] text-[var(--text-primary)]'
+                            : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
+                        )}
+                      >
+                        {item.label}
+                      </NavLink>
+                    </li>
+                  )
+                })}
+              </ul>
+            </nav>
+          </div>
+          <div className="ml-auto flex min-w-0 items-center gap-3">
             <div className="hidden min-w-0 text-right sm:block">
               <p className="truncate text-sm font-semibold">
                 {identity?.name || identity?.email || 'Usuario'}

@@ -108,6 +108,23 @@ describe('foundation components', () => {
     expect(click).toHaveBeenCalledTimes(1)
   })
 
+  it('does not forward the custom error prop to native form controls', () => {
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined)
+    render(
+      <FormField label="Native field">
+        <input />
+      </FormField>,
+    )
+    expect(screen.getByLabelText('Native field')).not.toHaveAttribute('error')
+    expect(consoleError).not.toHaveBeenCalledWith(
+      expect.stringContaining('non-boolean attribute'),
+      expect.anything(),
+    )
+    consoleError.mockRestore()
+  })
+
   it('associates a field and toggles password visibility', async () => {
     const user = userEvent.setup()
     render(

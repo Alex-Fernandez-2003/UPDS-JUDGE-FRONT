@@ -1,14 +1,8 @@
-import { CheckCircle2, ExternalLink, UserRound } from 'lucide-react'
+import { ExternalLink, UserRound } from 'lucide-react'
 import { Badge, Card, LinkButton } from '@/components/common'
 import { DataTable } from '@/components/tables'
+import { problemStatusPresentation } from '../problem-status'
 import type { ContestProblem } from '../types'
-const stateTone = (state: string) => {
-  const n = state.toLowerCase()
-  if (n === 'aceptado') return 'success' as const
-  if (n.includes('incorrecta')) return 'danger' as const
-  if (n.includes('limit')) return 'warning' as const
-  return 'neutral' as const
-}
 export function ProblemsTable({
   problems,
   pdfUrl,
@@ -57,7 +51,7 @@ export function ProblemsTable({
             headerCell:
               'px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-500',
             row: 'border-b border-slate-100/70 hover:bg-slate-50/60 last:border-b-0',
-            cell: 'px-5 py-4 align-middle text-slate-700',
+            cell: 'px-5 py-4 align-middle font-bold text-slate-700',
             emptyCell: 'px-6 py-12 text-center',
           }}
           columns={[
@@ -70,7 +64,7 @@ export function ProblemsTable({
               key: 'titulo',
               header: 'PROBLEMA',
               render: (p) => (
-                <span className="font-medium text-slate-900">
+                <span className="font-bold text-slate-900">
                   {p.titulo || '—'}
                 </span>
               ),
@@ -89,12 +83,14 @@ export function ProblemsTable({
             {
               key: 'estado',
               header: 'ESTADO',
-              render: (p) => (
-                <Badge tone={stateTone(p.estado || '')} className="gap-1">
-                  {p.resuelto && <CheckCircle2 className="size-3" />}
-                  {p.estado || '—'}
-                </Badge>
-              ),
+              render: (p) => {
+                const status = problemStatusPresentation(p.estado)
+                return (
+                  <Badge tone={status.tone} className="font-bold">
+                    {status.label}
+                  </Badge>
+                )
+              },
             },
           ]}
         />

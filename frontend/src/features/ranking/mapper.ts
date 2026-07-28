@@ -23,15 +23,29 @@ const problem = (value: unknown): RankingProblem | null =>
     ? { inciso: text(value.inciso)!, colorGlobo: text(value.colorGlobo)! }
     : null
 
+const mostSolvedProblem = (
+  value: unknown,
+): ContestRanking['problemaMasResuelto'] | undefined => {
+  if (value === null || value === undefined) return null
+  if (!isRecord(value)) return undefined
+  const inciso = text(value.inciso)
+  const colorGlobo = text(value.colorGlobo)
+  const cantidadAceptaciones = number(value.cantidadAceptaciones)
+  return inciso && colorGlobo && cantidadAceptaciones !== null
+    ? { inciso, colorGlobo, cantidadAceptaciones }
+    : undefined
+}
+
 const participant = (value: unknown): RankingParticipant | null => {
   if (!isRecord(value) || !Array.isArray(value.detalle)) return null
+  const idUsuario = number(value.idUsuario)
   const puesto = number(value.puesto)
   const nombreUsuario = text(value.nombreUsuario)
   const problemasResueltos = number(value.problemasResueltos)
   const tiempoTotal = number(value.tiempoTotal)
   const cantidadIntentos = number(value.cantidadIntentos)
   if (
-    [puesto, problemasResueltos, tiempoTotal, cantidadIntentos].some(
+    [idUsuario, puesto, problemasResueltos, tiempoTotal, cantidadIntentos].some(
       (item) => item === null,
     ) ||
     !nombreUsuario
@@ -56,6 +70,7 @@ const participant = (value: unknown): RankingParticipant | null => {
   })
   if (detalle.some((item) => item === null)) return null
   return {
+    idUsuario: idUsuario!,
     puesto: puesto!,
     nombreUsuario,
     problemasResueltos: problemasResueltos!,
@@ -76,6 +91,9 @@ export const normalizeContestRanking = (payload: unknown): ContestRanking => {
   const participants = payload.participantes.map(participant)
   const codigo = text(payload.codigo),
     nombre = text(payload.nombre),
+    duracionMinutos = number(payload.duracionMinutos),
+    minutosCongelamiento = number(payload.minutosCongelamiento),
+    problemaMasResuelto = mostSolvedProblem(payload.problemaMasResuelto),
     estadoTiempo = text(payload.estadoTiempo),
     fechaInicio = text(payload.fechaInicio),
     fechaFin = text(payload.fechaFin)
@@ -86,10 +104,13 @@ export const normalizeContestRanking = (payload: unknown): ContestRanking => {
     !fechaInicio ||
     !fechaFin ||
     typeof payload.congelado !== 'boolean' ||
+    duracionMinutos === null ||
+    minutosCongelamiento === null ||
     number(payload.totalInscritos) === null ||
     number(payload.totalEnvios) === null ||
     problems.some((item) => item === null) ||
-    participants.some((item) => item === null)
+    participants.some((item) => item === null) ||
+    problemaMasResuelto === undefined
   )
     throw new RankingContractError()
   return {
@@ -99,10 +120,12 @@ export const normalizeContestRanking = (payload: unknown): ContestRanking => {
     estadoTiempo,
     fechaInicio,
     fechaFin,
+    duracionMinutos,
+    minutosCongelamiento,
     totalInscritos: number(payload.totalInscritos)!,
     totalEnvios: number(payload.totalEnvios)!,
     problemas: problems,
     participantes: participants,
-    problemaMasResuelto: null,
+    problemaMasResuelto,
   }
 }

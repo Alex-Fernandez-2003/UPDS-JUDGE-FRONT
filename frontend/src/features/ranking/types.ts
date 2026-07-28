@@ -7,6 +7,7 @@ export type RankingDetail = {
   tiempoMinutos: number | null
 }
 export type RankingParticipant = {
+  idUsuario: number
   puesto: number
   nombreUsuario: string
   problemasResueltos: number
@@ -21,6 +22,8 @@ export type ContestRanking = {
   estadoTiempo: string
   fechaInicio: string
   fechaFin: string
+  duracionMinutos: number
+  minutosCongelamiento: number
   totalInscritos: number
   totalEnvios: number
   problemas: RankingProblem[]

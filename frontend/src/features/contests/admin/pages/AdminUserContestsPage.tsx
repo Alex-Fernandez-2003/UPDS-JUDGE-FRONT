@@ -16,6 +16,11 @@ const navigationItems = (contestCode: string) => [
     label: 'Mis envíos',
     to: routes.adminUserContestSubmissions(contestCode),
   },
+  {
+    id: 'ranking' as const,
+    label: 'Ranking',
+    to: routes.adminUserContestRanking(contestCode),
+  },
 ]
 
 export function AdminUserContestsPage() {

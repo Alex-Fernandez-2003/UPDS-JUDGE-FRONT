@@ -17,6 +17,8 @@ export const routes = {
     `/admin/user-access/contests/${encodeURIComponent(contestCode)}/problems`,
   adminUserContestSubmissions: (contestCode: string) =>
     `/admin/user-access/contests/${encodeURIComponent(contestCode)}/submissions`,
+  adminUserContestRanking: (contestCode: string) =>
+    `/admin/user-access/contests/${encodeURIComponent(contestCode)}/ranking`,
   dashboard: '/admin/dashboard',
   legacyDashboard: '/dashboard',
   contests: '/admin/contests',

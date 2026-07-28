@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Alert, Card, Spinner } from '@/components/common'
 import { GlobeIllustration } from '@/components/illustrations/GlobeIllustration'
 import {
@@ -83,7 +83,8 @@ function Countdown({ endsAt }: { endsAt: string }) {
     </span>
   )
 }
-export default function RankingPage() {
+export default function RankingPage({ admin = false }: { admin?: boolean }) {
+  const Layout = admin ? Fragment : UserLayout
   const { contestCode } = useParams<{ contestCode: string }>()
   const query = useContestRanking(contestCode)
   const [page, setPage] = useState(1)
@@ -96,36 +97,42 @@ export default function RankingPage() {
     {
       id: 'problems',
       label: 'Problemas',
-      to: routes.studentContestProblems(contestCode ?? ''),
+      to: admin
+        ? routes.adminUserContestProblems(contestCode ?? '')
+        : routes.studentContestProblems(contestCode ?? ''),
     },
     {
       id: 'submissions',
       label: 'Mis envíos',
-      to: routes.studentContestSubmissions(contestCode ?? ''),
+      to: admin
+        ? routes.adminUserContestSubmissions(contestCode ?? '')
+        : routes.studentContestSubmissions(contestCode ?? ''),
     },
     {
       id: 'ranking',
       label: 'Ranking',
-      to: routes.studentContestRanking(contestCode ?? ''),
+      to: admin
+        ? routes.adminUserContestRanking(contestCode ?? '')
+        : routes.studentContestRanking(contestCode ?? ''),
     },
   ]
   if (!contestCode)
     return (
-      <UserLayout>
+      <Layout>
         <Alert tone="danger">El código del concurso es obligatorio.</Alert>
-      </UserLayout>
+      </Layout>
     )
   if (query.isLoading && !data)
     return (
-      <UserLayout>
+      <Layout>
         <Spinner label="Cargando ranking" />
-      </UserLayout>
+      </Layout>
     )
   const requestError = query.error as { status?: number; message?: string }
   const error = requestError?.status
   if (!data)
     return (
-      <UserLayout>
+      <Layout>
         <Alert tone="danger">
           {error === 400
             ? 'El concurso todavía no ha iniciado.'
@@ -135,14 +142,14 @@ export default function RankingPage() {
                 ? 'No se encontró el concurso.'
                 : (requestError?.message ?? 'No se pudo cargar el ranking.')}
         </Alert>
-      </UserLayout>
+      </Layout>
     )
   const rows = pageRows(data.participantes, page),
     totalPages = Math.max(1, Math.ceil(data.participantes.length / PAGE_SIZE))
   const start = data.participantes.length ? (page - 1) * PAGE_SIZE + 1 : 0,
     end = Math.min(page * PAGE_SIZE, data.participantes.length)
   return (
-    <UserLayout>
+    <Layout>
       <main className="w-full min-w-0 space-y-6 px-4 py-6 sm:px-6 lg:px-8">
         <ContestContextHeader
           contest={{
@@ -287,6 +294,6 @@ export default function RankingPage() {
           </Card>
         </section>
       </main>
-    </UserLayout>
+    </Layout>
   )
 }
