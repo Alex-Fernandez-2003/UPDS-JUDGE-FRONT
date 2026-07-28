@@ -158,7 +158,9 @@ export function FormField({
       {React.cloneElement(children, {
         id,
         'aria-describedby': describedBy,
-        error: Boolean(error),
+        ...(typeof children.type === 'string'
+          ? { 'aria-invalid': Boolean(error) || undefined }
+          : { error: Boolean(error) }),
       } as never)}
       {hint && <FormHint id={`${id}-hint`}>{hint}</FormHint>}
       {error && <FormError id={`${id}-error`}>{error}</FormError>}

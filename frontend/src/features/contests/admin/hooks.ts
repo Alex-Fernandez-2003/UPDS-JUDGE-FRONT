@@ -1,6 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { getConcursosAdminResumen, listConcursos } from './service'
+import {
+  getConcursosAdminResumen,
+  getEditableContest,
+  listConcursos,
+  updateContest,
+} from './service'
 import type { ListConcursosParams } from './types'
 
 export const concursosKeys = {
@@ -16,6 +21,8 @@ export const concursosKeys = {
       params.tamanoPagina,
     ] as const,
   adminSummary: () => ['concursos', 'admin-summary'] as const,
+  editable: (contestCode: string) =>
+    ['concursos', 'editable', contestCode] as const,
 }
 
 export function useConcursosList(params: ListConcursosParams) {
@@ -23,6 +30,28 @@ export function useConcursosList(params: ListConcursosParams) {
     queryKey: concursosKeys.adminList(params),
     queryFn: () => listConcursos(params),
     placeholderData: (previous) => previous,
+  })
+}
+
+export function useEditableContest(contestCode: string | undefined) {
+  return useQuery({
+    queryKey: concursosKeys.editable(contestCode ?? ''),
+    queryFn: () => getEditableContest(contestCode!),
+    enabled: Boolean(contestCode?.trim()),
+  })
+}
+
+export function useUpdateContestMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: updateContest,
+    onSuccess: (_data, variables) =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: concursosKeys.all }),
+        queryClient.invalidateQueries({
+          queryKey: concursosKeys.editable(variables.contestCode),
+        }),
+      ]),
   })
 }
 

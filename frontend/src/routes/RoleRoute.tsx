@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router'
 import { deriveIdentity } from '@/lib/auth/identity'
 import { forbiddenRoute } from '@/lib/auth/session'
 import { routes } from './constants'

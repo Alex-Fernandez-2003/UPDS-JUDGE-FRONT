@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { AdminLayout } from './AdminLayout'
+import { UserLayout } from './UserLayout'
 import { AuthLayout } from './AuthLayout'
 
 describe('foundation layouts', () => {
@@ -19,6 +20,31 @@ describe('foundation layouts', () => {
     expect(screen.getByRole('heading', { name: 'Welcome' })).toBeInTheDocument()
     expect(screen.getAllByText('Custom brand')).toHaveLength(2)
     expect(screen.getByRole('button', { name: 'Continue' })).toBeInTheDocument()
+  })
+
+  it('keeps user navigation next to the logo with accessible larger links', () => {
+    sessionStorage.setItem(
+      'token',
+      'header.eyJuYW1lIjoiQWRhIiwicm9sZSI6IlVzdWFyaW8ifQ.signature',
+    )
+    render(
+      <MemoryRouter initialEntries={['/student/concursos']}>
+        <UserLayout>
+          <h1>User content</h1>
+        </UserLayout>
+      </MemoryRouter>,
+    )
+    const navigation = screen.getByRole('navigation', {
+      name: 'Navegación de usuario',
+    })
+    expect(
+      screen.getByAltText('UPDS Judge').parentElement?.parentElement,
+    ).toContainElement(navigation)
+    const contests = screen.getByRole('link', { name: 'Concursos' })
+    expect(contests).toHaveClass('min-h-10', 'px-4', 'focus-visible:outline-2')
+    expect(contests).toHaveAttribute('aria-current', 'page')
+    expect(contests).toHaveClass('transition-colors')
+    sessionStorage.removeItem('token')
   })
 
   it('renders the administrative shell and accessible module search', () => {

@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router'
 import LoginForm from '@/features/auth/Components/LoginForm'
 import type { LoginResponse } from '@/features/auth/authTypes'
 import AuthTemplate from '@/features/auth/templates/AuthTemplate'

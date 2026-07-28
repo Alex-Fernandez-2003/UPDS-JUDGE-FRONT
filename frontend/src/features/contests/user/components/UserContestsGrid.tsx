@@ -5,9 +5,13 @@ import { ContestCard } from './ContestCard'
 export function UserContestsGrid({
   rows,
   loading,
+  problemsPath,
+  submissionsPath,
 }: {
   rows: ConcursoListItem[]
   loading?: boolean
+  problemsPath?: (contestCode: string) => string
+  submissionsPath?: (contestCode: string) => string
 }) {
   if (loading) {
     return (
@@ -30,7 +34,12 @@ export function UserContestsGrid({
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {rows.map((contest) => (
-        <ContestCard key={contest.idConcurso} contest={contest} />
+        <ContestCard
+          key={contest.idConcurso}
+          contest={contest}
+          problemsPath={problemsPath}
+          submissionsPath={submissionsPath}
+        />
       ))}
     </div>
   )

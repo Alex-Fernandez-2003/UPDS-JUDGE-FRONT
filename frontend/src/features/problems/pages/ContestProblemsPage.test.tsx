@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { render, screen, within } from '@testing-library/react'
+import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { ContestDashboard } from '../types'
 
@@ -82,23 +82,27 @@ describe('ContestProblemsPage', () => {
     ).toBeInTheDocument()
     expect(screen.getByText('Sumas')).toBeInTheDocument()
 
-    const problemsLink = screen.getByRole('link', { name: 'Problemas4' })
+    const problemsLink = screen.getByRole('link', { name: 'Problemas' })
     expect(problemsLink).toHaveAttribute(
       'href',
       '/student/contests/div4-2026/problems',
     )
     expect(problemsLink).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'Mis envíos' })).toHaveAttribute(
-      'href',
-      '/student/contests/div4-2026/submissions',
-    )
+    expect(
+      within(
+        screen.getByRole('navigation', { name: 'Navegación del concurso' }),
+      ).getByRole('link', { name: 'Mis envíos' }),
+    ).toHaveAttribute('href', '/student/contests/div4-2026/submissions')
     expect(screen.getByRole('link', { name: 'Ver PDF' })).toHaveAttribute(
       'href',
       dashboard.urlSetProblemas,
     )
     expect(screen.getAllByRole('link', { name: 'Ver PDF' })).toHaveLength(1)
 
-    expect(screen.queryByText('Ranking')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ranking' })).toHaveAttribute(
+      'href',
+      '/student/contests/div4-2026/ranking',
+    )
     expect(screen.queryByText('Marcador Congelado')).not.toBeInTheDocument()
     expect(
       screen.queryByText('Ver reglas del concurso'),

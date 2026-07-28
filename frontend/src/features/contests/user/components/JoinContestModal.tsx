@@ -45,8 +45,12 @@ export function JoinContestModal({
       return
     }
     setValidationError('')
-    await onConfirm(privateContest ? password : null)
-    setPassword('')
+    try {
+      await onConfirm(privateContest ? password : null)
+      setPassword('')
+    } catch {
+      // The mutation error is rendered through the modal's error prop.
+    }
   }
 
   return (

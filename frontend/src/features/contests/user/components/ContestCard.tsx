@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Globe, Lock } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
-import { Alert, Badge, Button, Card, ProgressBar } from '@/components/common'
+import { useNavigate } from 'react-router'
+import { Badge, Button, Card, ProgressBar } from '@/components/common'
 import {
   estadoTiempoLabel,
   estadoTiempoTone,
@@ -16,6 +16,8 @@ import { JoinContestModal } from './JoinContestModal'
 
 interface ContestCardProps {
   contest: ConcursoListItem
+  problemsPath?: (contestCode: string) => string
+  submissionsPath?: (contestCode: string) => string
 }
 
 const formatTimeRemaining = (seconds: number) =>
@@ -23,7 +25,11 @@ const formatTimeRemaining = (seconds: number) =>
     .map((value) => String(value).padStart(2, '0'))
     .join(':')
 
-export function ContestCard({ contest }: ContestCardProps) {
+export function ContestCard({
+  contest,
+  problemsPath = routes.studentContestProblems,
+  submissionsPath = routes.studentContestSubmissions,
+}: ContestCardProps) {
   const navigate = useNavigate()
   const [remaining, setRemaining] = useState(contest.segundosRestantes ?? 0)
   const [joinOpen, setJoinOpen] = useState(false)
@@ -55,9 +61,14 @@ export function ContestCard({ contest }: ContestCardProps) {
   }, [contest.duracionMinutos, contest.estadoTiempo, remaining])
 
   const onAction = () => {
-    if (action === 'JOIN_PUBLIC' || action === 'JOIN_PRIVATE') setJoinOpen(true)
+    if (
+      action === 'JOIN_PUBLIC' ||
+      action === 'JOIN_PRIVATE' ||
+      action === 'PRIVATE_FINISHED_REQUIRES_PASSWORD'
+    )
+      setJoinOpen(true)
     if (action === 'VIEW_ACTIVE' || action === 'VIEW_FINISHED')
-      navigate(routes.studentContestSubmissions(contest.codigo))
+      navigate(submissionsPath(contest.codigo))
   }
 
   const buttonLabel = {
@@ -67,12 +78,13 @@ export function ContestCard({ contest }: ContestCardProps) {
     VIEW_FINISHED: 'Ver detalles',
     ENROLLED_UPCOMING: 'Inscrito',
     REGISTRATION_CLOSED: 'Inscripciones cerradas',
-    PRIVATE_FINISHED_REQUIRES_BACKEND: 'Acceso restringido',
+    PRIVATE_FINISHED_REQUIRES_PASSWORD: 'Inscribirse',
     UNKNOWN_BLOCKED: 'No disponible',
   }[action]
   const disabled = ![
     'JOIN_PUBLIC',
     'JOIN_PRIVATE',
+    'PRIVATE_FINISHED_REQUIRES_PASSWORD',
     'VIEW_ACTIVE',
     'VIEW_FINISHED',
   ].includes(action)
@@ -145,12 +157,6 @@ export function ContestCard({ contest }: ContestCardProps) {
           </strong>
         </p>
       </div>
-      {action === 'PRIVATE_FINISHED_REQUIRES_BACKEND' && (
-        <Alert className="mt-4" tone="warning">
-          La consulta de concursos privados finalizados requiere validación del
-          backend.
-        </Alert>
-      )}
       <div className="mt-auto flex items-center gap-3 pt-5">
         <Button
           className="flex-1"
@@ -167,13 +173,17 @@ export function ContestCard({ contest }: ContestCardProps) {
       {joinOpen && (
         <JoinContestModal
           contest={contest}
-          privateContest={action === 'JOIN_PRIVATE'}
+          privateContest={
+            action === 'JOIN_PRIVATE' ||
+            action === 'PRIVATE_FINISHED_REQUIRES_PASSWORD'
+          }
           pending={join.isPending}
           error={join.error instanceof Error ? join.error.message : undefined}
           onCancel={() => setJoinOpen(false)}
           onConfirm={async (contrasena) => {
             await join.mutateAsync({ codigo: contest.codigo, contrasena })
             setJoinOpen(false)
+            navigate(problemsPath(contest.codigo))
           }}
         />
       )}

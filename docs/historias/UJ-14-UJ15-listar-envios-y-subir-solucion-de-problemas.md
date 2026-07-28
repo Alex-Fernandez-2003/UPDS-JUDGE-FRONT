@@ -650,3 +650,7 @@ El módulo desarrollado permite al usuario seleccionar un problema, elegir un le
 La arquitectura modular basada en **Features**, el uso de componentes reutilizables, la separación entre presentación, servicios y modelos, así como la integración con tecnologías como **React**, **TypeScript**, **Tailwind CSS**, **PrismJS** y **ASP.NET Core**, permiten mantener un código organizado, escalable y fácil de mantener.
 
 Con esta implementación, el sistema ofrece una experiencia fluida para el participante, garantizando un proceso de envío seguro, una evaluación confiable y una visualización clara e inmediata de los resultados obtenidos durante el concurso.
+
+## Seguimiento Sprint 2
+
+`SubmissionsPage` reemplaza su cabecera estática por el contexto reutilizable del concurso, usando el dashboard contractual para nombre, código y estado. La navegación Problemas/Mis envíos usa rutas reales sin tabs locales; formulario, tabla, paginación y responsive se conservan.

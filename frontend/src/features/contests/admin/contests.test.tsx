@@ -5,6 +5,7 @@ import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import type { PropsWithChildren } from 'react'
 import { act } from 'react'
+import { MemoryRouter } from 'react-router'
 import {
   afterAll,
   afterEach,
@@ -47,6 +48,10 @@ const sampleItem: ConcursoListItem = {
   segundosRestantes: null,
   miPuesto: null,
   miProblemasResueltos: null,
+  problemas: [
+    { inciso: 'A', titulo: 'Problema azul', colorGlobo: '#4363D8' },
+    { inciso: 'B', titulo: 'Problema amarillo', colorGlobo: '#FFE119' },
+  ],
 }
 
 const createWrapper = () => {
@@ -54,7 +59,9 @@ const createWrapper = () => {
     defaultOptions: { queries: { retry: false } },
   })
   return ({ children }: PropsWithChildren) => (
-    <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    <MemoryRouter>
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    </MemoryRouter>
   )
 }
 

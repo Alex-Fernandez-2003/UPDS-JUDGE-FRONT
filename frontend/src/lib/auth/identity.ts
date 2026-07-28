@@ -3,7 +3,7 @@ export const roleClaimKeys = [
   'roles',
   'http://schemas.microsoft.com/ws/2008/06/identity/claims/role',
 ] as const
-
+//comentando
 export const roles = {
   contestsAdmin: 'AdministradorConcursos',
   rolesAdmin: 'AdministradorRoles',
@@ -76,7 +76,7 @@ export function deriveIdentity(token?: string | null): Identity | undefined {
   const payload = decodeJwtPayload(token)
   if (!payload) return undefined
   return {
-    userId: readString(payload, ['sub', 'nameid', 'id']),
+    userId: readString(payload, ['idUsuario', 'sub', 'nameid', 'id']),
     name: readString(payload, ['name', 'unique_name', 'given_name']),
     email: readString(payload, ['email', 'emailaddress']),
     roles: normalizeRoles(payload),

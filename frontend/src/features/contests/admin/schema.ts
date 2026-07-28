@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { isBalloonColor } from '@/domain/balloon-colors'
 import {
   CONTEST_CODE_ERROR,
   CONTEST_CODE_PATTERN,
@@ -16,6 +17,77 @@ const positiveInteger = (label: string) =>
     .number({ error: `${label} es obligatorio.` })
     .int(`${label} debe ser un número entero.`)
     .positive(`${label} debe ser mayor que cero.`)
+
+export const editContestSchema = z
+  .object({
+    nombre: requiredText('El nombre'),
+    descripcion: requiredText('La descripción'),
+    fechaInicio: requiredText('La fecha de inicio'),
+    duracionMinutos: positiveInteger('La duración'),
+    contrasena: z.string(),
+    urlSetProblemas: z
+      .string()
+      .trim()
+      .url('La URL del set de problemas no es válida.'),
+    minutosCongelamiento: z
+      .number()
+      .int()
+      .min(0, 'Los minutos de congelamiento no pueden ser negativos.'),
+    codigo: z.string().trim().min(1),
+    listaProblemas: z
+      .array(
+        z.object({
+          inciso: z.string().length(1),
+          titulo: requiredText('El título del problema'),
+          tiempo: z
+            .number()
+            .positive('El tiempo límite debe ser mayor que cero.'),
+          memoria: positiveInteger('La memoria límite'),
+          colorGlobo: z
+            .string()
+            .refine(isBalloonColor, 'Seleccioná un color de globo válido.'),
+          cantidadCasosPrueba: z.number().int().nonnegative(),
+        }),
+      )
+      .min(1),
+    archivoZip: z
+      .instanceof(File)
+      .optional()
+      .refine(Boolean, 'El archivo ZIP es obligatorio.')
+      .refine(
+        (file) => !file || file.name.toLowerCase().endsWith('.zip'),
+        'El archivo debe tener extensión .zip.',
+      )
+      .refine(
+        (file) => !file || file.size <= MAX_CONTEST_ZIP_SIZE_BYTES,
+        'El ZIP no puede superar 100 MB.',
+      ),
+  })
+  .superRefine((values, context) => {
+    if (values.minutosCongelamiento >= values.duracionMinutos)
+      context.addIssue({
+        code: 'custom',
+        path: ['minutosCongelamiento'],
+        message:
+          'Los minutos de congelamiento deben ser menores a la duración del concurso.',
+      })
+    const colors = values.listaProblemas.map((problem) =>
+      problem.colorGlobo.trim().toLowerCase(),
+    )
+    if (new Set(colors).size !== colors.length)
+      context.addIssue({
+        code: 'custom',
+        path: ['listaProblemas'],
+        message: 'Los colores de globo no pueden repetirse.',
+      })
+    if (values.listaProblemas.length > 13)
+      context.addIssue({
+        code: 'custom',
+        path: ['listaProblemas'],
+        message:
+          'El concurso tiene más problemas que colores de globo únicos disponibles.',
+      })
+  })
 
 export const createContestSchema = z
   .object({

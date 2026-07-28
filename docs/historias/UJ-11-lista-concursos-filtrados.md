@@ -93,9 +93,10 @@ GET /api/Envios/mis-envios
 ```
 
 El dashboard solicita exclusivamente la primera página con
-`pagina=1` y `tamanoPagina=5`. Muestra una tabla de ID, concurso, lenguaje,
-problema, veredicto, tiempo, memoria y fecha; además calcula la metadata con
-los valores reales de la respuesta.
+`pagina=1` y `tamanoPagina=5`. Muestra una tabla de concurso, problema,
+lenguaje, veredicto, tiempo, memoria y fecha; además calcula la metadata con
+los valores reales de la respuesta. `idEnvio` permanece disponible para uso
+interno, pero no se presenta como una columna visual.
 
 La sección conserva loading, vacío, error y botón **Actualizar**. Ese botón
 vuelve a ejecutar solamente la query de envíos recientes, evita dobles
@@ -293,9 +294,10 @@ envolver sin desbordarse. Las cuatro estadísticas se presentan verticalmente,
 una tarjeta por fila.
 
 La tabla de envíos conserva datos, mappers, unidades, badges y scroll
-horizontal. Su orden visual definitivo es: `ID`, `CONCURSO`, `PROBLEMA`,
-`LENGUAJE`, `VEREDICTO`, `TIEMPO`, `MEMORIA`, `FECHA`. No se agregó Archivo ni
-una segunda fecha.
+horizontal. Su orden visual definitivo es: `CONCURSO`, `PROBLEMA`, `LENGUAJE`,
+`VEREDICTO`, `TIEMPO`, `MEMORIA`, `FECHA`. `idEnvio` permanece como
+identificador interno y no se agregó una columna equivalente, Archivo ni una
+segunda fecha.
 
 ## Routing y autenticación
 
@@ -461,4 +463,15 @@ sesión.
 
 ## Final flexible recent-submissions table
 
-`RecentSubmissionsTable` now uses a flexible full-width container and a `w-full table-fixed` table while retaining a 900px minimum width for local mobile horizontal scrolling. The responsive visual check remains a non-blocking manual evidence item.
+`RecentSubmissionsTable` uses a flexible full-width container and a
+`w-full table-fixed` table while retaining a 900px minimum width for local
+mobile horizontal scrolling. The responsive visual check remains a
+non-blocking manual evidence item.
+
+## Seguimiento Sprint 2
+
+Se agregó un acceso administrativo de solo frontend para reutilizar
+`UserContestsPage` dentro de `AdminLayout`. La ruta
+`/admin/user-access/contests` conserva `AdminSidebar` y adapta los destinos de
+detalle al namespace administrativo. No monta `UserLayout` ni duplica el
+listado, filtros o cards.

@@ -1,9 +1,11 @@
 import { endpoints, httpClient } from '@/lib/api'
-import { createContestFormData } from './mapper'
+import { createContestFormData, updateContestFormData } from './mapper'
 import type {
   ConcursosAdminResumen,
   CreateContestFormValues,
   CreateContestResponse,
+  EditableContestDto,
+  EditContestFormValues,
   ListConcursosParams,
   ListConcursosResponse,
 } from './types'
@@ -28,3 +30,18 @@ export const listConcursos = (params: ListConcursosParams) => {
 
 export const getConcursosAdminResumen = () =>
   httpClient.get<ConcursosAdminResumen>(endpoints.contests.adminSummary)
+
+export const getEditableContest = (contestCode: string) =>
+  httpClient.get<EditableContestDto>(endpoints.contests.edit(contestCode))
+
+export const updateContest = ({
+  contestCode,
+  values,
+}: {
+  contestCode: string
+  values: EditContestFormValues
+}) =>
+  httpClient.put<CreateContestResponse>(
+    endpoints.contests.update(contestCode),
+    updateContestFormData(values),
+  )

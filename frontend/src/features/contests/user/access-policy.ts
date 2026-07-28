@@ -10,7 +10,7 @@ export type ContestUserAction =
   | 'VIEW_FINISHED'
   | 'ENROLLED_UPCOMING'
   | 'REGISTRATION_CLOSED'
-  | 'PRIVATE_FINISHED_REQUIRES_BACKEND'
+  | 'PRIVATE_FINISHED_REQUIRES_PASSWORD'
   | 'UNKNOWN_BLOCKED'
 
 export type ContestDetailMode = 'participation' | 'read-only' | 'blocked'
@@ -44,7 +44,7 @@ export const getContestUserAction = ({
     return yaInscrito ? 'VIEW_ACTIVE' : 'REGISTRATION_CLOSED'
   if (state === 'finalizado') {
     if (yaInscrito || !isPrivate) return 'VIEW_FINISHED'
-    return 'PRIVATE_FINISHED_REQUIRES_BACKEND'
+    return 'PRIVATE_FINISHED_REQUIRES_PASSWORD'
   }
   return 'UNKNOWN_BLOCKED'
 }
@@ -58,11 +58,11 @@ export const getContestDetailMode = (input: AccessInput) => {
       mode: 'read-only' as const,
       reason: 'El concurso finalizó; solo podés consultar su contenido.',
     }
-  if (action === 'PRIVATE_FINISHED_REQUIRES_BACKEND')
+  if (action === 'PRIVATE_FINISHED_REQUIRES_PASSWORD')
     return {
       mode: 'blocked' as const,
       reason:
-        'Este concurso privado finalizado requiere una validación de consulta del backend.',
+        'Ingresá la contraseña para inscribirte antes de consultar este concurso privado finalizado.',
     }
   return {
     mode: 'blocked' as const,

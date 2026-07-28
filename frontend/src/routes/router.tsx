@@ -1,12 +1,18 @@
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router'
 import { Spinner } from '@/components/common'
 import { isDevelopment } from '@/config/env'
 import LoginPage from '@/features/auth/Pages/LoginPage'
 import RegisterPage from '@/features/auth/Pages/RegisterPage'
 import { CreateContestPage } from '@/features/contests/admin/CreateContestPage'
+import { EditContestPage } from '@/features/contests/admin/EditContestPage'
 import { UserDashboardPage } from '@/features/contests/user'
 import AdminContestsPage from '@/features/contests/admin/pages/AdminContestsPage'
+import {
+  AdminUserContestProblemsPage,
+  AdminUserContestsPage,
+  AdminUserContestSubmissionsPage,
+} from '@/features/contests/admin/pages/AdminUserContestsPage'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { UserLayout } from '@/layouts/UserLayout'
 import { deriveIdentity, roles } from '@/lib/auth/identity'
@@ -16,6 +22,10 @@ import { RoleRoute } from '@/routes/RoleRoute'
 import { routes } from './constants'
 import SubmissionsPage from '@/features/submissions/Pages/SubmissionsPage'
 import ContestProblemsPage from '@/features/problems/pages/ContestProblemsPage'
+import UserHistoryPage from '@/features/history/Pages/historyPage'
+import { AdminUserSubmissionsPage } from '@/features/history/Pages/AdminUserSubmissionsPage'
+import RankingPage from '@/features/ranking/RankingPage'
+import AdminRolesPage from '@/features/administration/pages/AdminsRolesPages'
 
 const UserDashboard = () => (
   <UserDashboardPage
@@ -61,6 +71,18 @@ export const createAppRouter = (development = isDevelopment) => {
       ),
     },
     {
+      path: routes.userHistory,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <UserLayout>
+              <UserHistoryPage />
+            </UserLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: '/student/contests/:contestCode/problems',
       element: (
         <ProtectedRoute>
@@ -76,6 +98,16 @@ export const createAppRouter = (development = isDevelopment) => {
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.user]}>
             <SubmissionsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/student/contests/:contestCode/ranking',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.user]}>
+            <RankingPage />
           </RoleRoute>
         </ProtectedRoute>
       ),
@@ -106,12 +138,90 @@ export const createAppRouter = (development = isDevelopment) => {
       ),
     },
     {
+      path: routes.adminUserContests,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.adminUserSubmissions,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminLayout>
+              <AdminUserSubmissionsPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/user-access/contests/:contestCode/problems',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestProblemsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/user-access/contests/:contestCode/ranking',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminLayout>
+              <RankingPage admin />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/user-access/contests/:contestCode/submissions',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={adminRoles}>
+            <AdminUserContestSubmissionsPage />
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: routes.adminRoleList,
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.rolesAdmin]}>
+            <AdminLayout>
+              <AdminRolesPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
       path: routes.newContest,
       element: (
         <ProtectedRoute>
           <RoleRoute allowedRoles={[roles.contestsAdmin]}>
             <AdminLayout>
               <CreateContestPage />
+            </AdminLayout>
+          </RoleRoute>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: '/admin/contests/:contestCode/edit',
+      element: (
+        <ProtectedRoute>
+          <RoleRoute allowedRoles={[roles.contestsAdmin]}>
+            <AdminLayout>
+              <EditContestPage />
             </AdminLayout>
           </RoleRoute>
         </ProtectedRoute>

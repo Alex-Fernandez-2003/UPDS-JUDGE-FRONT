@@ -263,11 +263,11 @@ Ninguno de los acuerdos de arquitectura o frontend de esta retrospectiva se cons
 
 ### 4. Captura de npm sin vulnerabilidades
 
-![Captura de npm.](../capturas/retrospective-npmp-audit.png)
+![Captura de npm.](../capturas/retrospective-nmp-audit.png)
 
 ---
 
-### 4. Captura de Encabezado reutilizable del concurso
+### 5. Captura de Encabezado reutilizable del concurso
 
 ![Captura de Encabezado de envíos.](../capturas/retrospective-2-header-contest.png)
 

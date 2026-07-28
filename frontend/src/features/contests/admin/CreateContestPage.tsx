@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { useForm, type Resolver } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { Alert, Button, Card } from '@/components/common'
 import { FormField, Input, PasswordInput, Textarea } from '@/components/forms'
 import { Breadcrumbs } from '@/components/navigation'

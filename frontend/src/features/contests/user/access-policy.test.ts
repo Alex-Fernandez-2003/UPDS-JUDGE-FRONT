@@ -16,7 +16,7 @@ describe('contest user access policy', () => {
     ['Activo', 'Privado', false, 'REGISTRATION_CLOSED'],
     ['Finalizado', 'Privado', true, 'VIEW_FINISHED'],
     ['Finalizado', 'Publico', false, 'VIEW_FINISHED'],
-    ['Finalizado', 'Privado', false, 'PRIVATE_FINISHED_REQUIRES_BACKEND'],
+    ['Finalizado', 'Privado', false, 'PRIVATE_FINISHED_REQUIRES_PASSWORD'],
   ])(
     'maps %s / %s / enrolled=%s',
     (estadoTiempo, modalidad, yaInscrito, expected) => {
@@ -46,7 +46,11 @@ describe('contest user access policy', () => {
       getContestDetailMode(contest('Finalizado', 'Publico', false)).mode,
     ).toBe('read-only')
     expect(
-      getContestDetailMode(contest('Finalizado', 'Privado', false)).mode,
-    ).toBe('blocked')
+      getContestDetailMode(contest('Finalizado', 'Privado', false)),
+    ).toEqual({
+      mode: 'blocked',
+      reason:
+        'Ingresá la contraseña para inscribirte antes de consultar este concurso privado finalizado.',
+    })
   })
 })
