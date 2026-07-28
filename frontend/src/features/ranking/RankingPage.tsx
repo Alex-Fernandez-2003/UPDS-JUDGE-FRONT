@@ -121,7 +121,8 @@ export default function RankingPage() {
         <Spinner label="Cargando ranking" />
       </UserLayout>
     )
-  const error = (query.error as { status?: number })?.status
+  const requestError = query.error as { status?: number; message?: string }
+  const error = requestError?.status
   if (!data)
     return (
       <UserLayout>
@@ -132,7 +133,7 @@ export default function RankingPage() {
               ? 'No tenés acceso al ranking.'
               : error === 404
                 ? 'No se encontró el concurso.'
-                : 'No se pudo cargar el ranking.'}
+                : (requestError?.message ?? 'No se pudo cargar el ranking.')}
         </Alert>
       </UserLayout>
     )
