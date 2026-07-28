@@ -1006,6 +1006,17 @@
 - [x] Ranking backend contract was extended with active enrolled participants, top-level problems, snapshot metrics, timing metadata and deterministic most-solved problem.
 - [x] User ranking route, contextual navigation, single-query polling, frozen notice, countdown, summary cards, semantic table, balloon cells, local five-row pagination and lower information cards were implemented.
 - [x] Unit coverage was added for pagination and countdown helpers.
-- [x] UJ-18 documentation and intentionally unchecked manual evidence placeholders were added.
-- [x] OpenAPI regeneration completed after explicit authorization to stop only the preexisting locking backend process.
-- [ ] Browser-authenticated/manual evidence remains intentionally pending.
+- [x] UJ-18 documentation and evidence references were added and reviewed with the responsible project owner.
+- [x] OpenAPI regeneration completed.
+- [x] Browser-authenticated/manual validation was confirmed by the responsible project owner.
+
+## Final closure — 2026-07-27
+
+- [x] Ranking normal and administrative contextual routes, layouts and active Header state were verified by focused integration tests.
+- [x] Ranking polling, frozen snapshot, countdown, cards, table, balloons, pagination and controlled incompatible-payload error are covered by the ranking implementation and regression suite.
+- [x] `ProblemsTable` maps the real dashboard contract: `Accepted`, `Sin intentar` and the five failed submission verdicts; it has an integration rendering test with representative A/B/C data.
+- [x] `UserLayout` navigation is grouped with branding and has focused structural coverage for active, focus-visible and enlarged links.
+- [x] Frontend audit, API generation, lint, typecheck, complete tests and production build were executed. Global formatting debt is pre-existing and focal files were formatted.
+- [x] Backend build and `dotnet test` were executed; the solution contains no backend test project/cases.
+- [x] Documentation, evidence references, final diff audit and OpenSpec manual structural validation were completed.
+- [x] Change is ready for archival under the repository manual OpenSpec convention.

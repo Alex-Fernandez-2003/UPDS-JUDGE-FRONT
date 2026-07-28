@@ -107,10 +107,31 @@ Se ejecutaron audit, generación OpenAPI, lint, typecheck, tests, build, dev y d
 
 ---
 
-## Limitaciones o pendientes reales
+## Fix final de estados en la tabla de problemas
 
-No existe infraestructura de tests backend en la solución: `dotnet test` restaura pero no informa casos. El endpoint usa `IActionResult`, por lo que el OpenAPI regenerado registra la operación pero no expone esquemas reutilizables; los tipos de presentación se mantienen locales y reflejan el DTO contractual.
+El `UNKNOWN` observado no provenía de intentos ni del ranking: `GET /api/Concursos/dashboard/{codigo}` expone el progreso del usuario en `problemas[].estado`. El controller entrega exactamente `Accepted`, `Sin intentar` o el último veredicto contractual (`Wrong Answer`, `Compilation Error`, `Runtime Error`, `Time Limit Exceeded` o `Memory Limit Exceeded`).
+
+`frontend/src/features/problems/problem-status.ts` normaliza únicamente esos valores y presenta `ACCEPTED`, `NOT ATTEMPTED` o `UNSOLVED`, con Badge consistente con los veredictos de envíos; valores ausentes o nuevos siguen siendo `UNKNOWN` neutral. No se infiere aceptación a partir de `intentos`.
+
+| Valor backend           | Etiqueta visible | Variante  |
+| ----------------------- | ---------------- | --------- |
+| `Accepted`              | `ACCEPTED`       | `success` |
+| `Sin intentar`          | `NOT ATTEMPTED`  | `neutral` |
+| `Wrong Answer`          | `UNSOLVED`       | `danger`  |
+| `Compilation Error`     | `UNSOLVED`       | `danger`  |
+| `Runtime Error`         | `UNSOLVED`       | `danger`  |
+| `Time Limit Exceeded`   | `UNSOLVED`       | `danger`  |
+| `Memory Limit Exceeded` | `UNSOLVED`       | `danger`  |
+| desconocido             | `UNKNOWN`        | `neutral` |
+
+## Integración administrativa
+
+El ranking también está disponible bajo `/admin/user-access/contests/:contestCode/ranking`. La ruta usa `AdminLayout`, los builders contextuales y el mismo contenido/query de ranking sin anidar `UserLayout`. El header contextual recibe Problemas, Mis envíos y Ranking; su estado activo lo determina `activeSection`.
+
+## Ajustes finales de presentación
+
+El header de `UserLayout` agrupa logo y navegación a la izquierda; los enlaces tienen área mínima de 40px, padding ampliado y foco visible. `ProblemsTable` conserva scroll horizontal y ahora aplica `font-bold` a sus celdas de datos.
 
 ## Estado final
 
-Implementación técnica completada; únicamente evidencias manuales pendientes.
+UJ-18 está cerrada: pruebas unitarias e integración cubren el contrato de estados, el payload legacy de ranking, la ruta administrativa y el layout de usuario. Las validaciones manuales y las evidencias existentes fueron confirmadas por el responsable del proyecto. El formateo global reporta deuda preexistente en 61 archivos ajenos; los archivos modificados fueron formateados focalmente.
