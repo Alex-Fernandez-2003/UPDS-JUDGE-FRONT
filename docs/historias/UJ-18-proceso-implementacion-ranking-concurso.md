@@ -93,61 +93,19 @@ Tests unitarios cubren formato de countdown y paginación. La suite global regis
 
 Se ejecutaron audit, generación OpenAPI, lint, typecheck, tests, build, dev y diff check.
 
-## Evidencias manuales pendientes
+## Evidencia
 
-### Evidencia 1 — Navegación de Ranking
+### 1. Captura del Ranking
 
-- [ ] Ranking visible en ContestContextHeader.
-- [ ] Ranking activo.
-- Ruta sugerida: `docs/evidencias/UJ-18/01-navegacion-ranking.png`
+![Captura del Ranking](../capturas/UJ-18-ranking.png)
 
-### Evidencia 2 — Ranking activo
+---
 
-- [ ] Cuatro cards.
-- [ ] Tabla.
-- [ ] Participantes y penalización.
-- Ruta sugerida: `docs/evidencias/UJ-18/02-ranking-activo.png`
+### 2. Captura de Ranking Congelado
 
-### Evidencia 3 — Globos y estados
+![Captura del Ranking Congelado](../capturas/UJ-18-ranking-congelado.png)
 
-- [ ] Aceptados con globos de distintos colores.
-- [ ] Intentos fallidos visibles.
-- [ ] No resueltos en rojo.
-- [ ] No intentados neutrales.
-- Ruta sugerida: `docs/evidencias/UJ-18/03-globos-y-celdas.png`
-
-### Evidencia 4 — Ranking congelado
-
-- [ ] Aviso visible.
-- [ ] Snapshot sin actualizaciones posteriores al corte.
-- Ruta sugerida: `docs/evidencias/UJ-18/04-ranking-congelado.png`
-
-### Evidencia 5 — Ranking final
-
-- [ ] Aviso oculto.
-- [ ] Resultados completos.
-- Ruta sugerida: `docs/evidencias/UJ-18/05-ranking-final.png`
-
-### Evidencia 6 — Temporizador
-
-- [ ] Cuenta regresiva.
-- [ ] Estado final.
-- Ruta sugerida: `docs/evidencias/UJ-18/06-temporizador.png`
-
-### Evidencia 7 — Paginación
-
-- [ ] Cinco participantes.
-- [ ] Página siguiente.
-- [ ] Última página parcial.
-- Ruta sugerida: `docs/evidencias/UJ-18/07-paginacion.png`
-
-### Evidencia 8 — Responsive
-
-- [ ] Escritorio.
-- [ ] Tablet.
-- [ ] Móvil.
-- [ ] Scroll horizontal.
-- Ruta sugerida: `docs/evidencias/UJ-18/08-responsive.png`
+---
 
 ## Limitaciones o pendientes reales
 
