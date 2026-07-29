@@ -169,31 +169,70 @@ La previsión exigía documentar variables mediante `frontend/.env.example`. Ese
 # 5. Estructura backend
 
 ```text
-UPDS.Judge.sln
-src/
-├── UPDS.Judge.Web/
-│   ├── Controllers/
-│   ├── Hubs/
-│   ├── Models/
-│   ├── Views/
-│   └── Program.cs
-├── UPDS.Judge.Application/
-│   ├── DTOs/
-│   ├── Interfaces/
-│   └── Services/
-├── UPDS.Judge.Domain/
-│   ├── Entities/
-│   ├── Enums/
-│   └── Rules/
-├── UPDS.Judge.Infrastructure/
-│   ├── Data/
-│   ├── Identity/
-│   ├── Judge0/
-│   ├── Storage/
-│   └── BackgroundServices/
-tests/
-├── UPDS.Judge.UnitTests/
-└── UPDS.Judge.IntegrationTests/
+UPDSjudgeB.sln
+.
+├── appsettings.Development.json
+├── appsettings.json
+├── Controllers
+│   ├── AuthController.cs
+│   ├── ConcursosController.cs
+│   ├── EnviosController.cs
+│   ├── ParticipanteConcursosController.cs
+│   └── RolesController.cs
+├── data
+│   └── ApplicationDbContext.cs
+├── Docs
+│   ├── rutaapi.md
+│   ├── UJ-05.md
+│   ├── UJ-06.md
+│   ├── UJ-07.md
+│   ├── UJ-08.md
+│   ├── UJ-09.md
+│   ├── UJ-10.md
+│   ├── UJ-11.md
+│   ├── UJ-12.md
+│   ├── UJ-13.md
+│   ├── UJ-14.md
+│   ├── UJ-15.md
+│   ├── UJ-16.md
+│   ├── UJ-18.md
+│   ├── UJ19.md
+│   └── UJ-20.md
+├── DTOs
+│   ├── ConcursoDto.cs
+│   ├── EnvioDto.cs
+│   ├── Judge0Dto.cs
+│   ├── Login.cs
+│   ├── ProblemaDto.cs
+│   ├── Register.cs
+│   └── RolDto.cs
+├── Migrations
+│   ├── 20260727061600_m1.cs
+│   ├── 20260727061600_m1.Designer.cs
+│   └── ApplicationDbContextModelSnapshot.cs
+├── Models
+│   ├── CasoPrueba.cs
+│   ├── Concurso.cs
+│   ├── Envio.cs
+│   ├── Lenguaje.cs
+│   ├── ParticipanteConcurso.cs
+│   ├── Problema.cs
+│   ├── Rol.cs
+│   ├── Usuario.cs
+│   └── UsuarioRol.cs
+├── Program.cs
+├── Properties
+│   └── launchSettings.json
+├── Services
+│   ├── AuthService.cs
+│   ├── EvaluacionEnvioService.cs
+│   ├── IEvaluacionEnvioService.cs
+│   ├── IJudge0Service.cs
+│   ├── Judge0Service.cs
+│   └── JwtService.cs
+├── UPDSjudgeB.csproj
+└── UPDSjudgeB.http
+
 ```
 
 `Views/` existe por la plantilla MVC, pero la UI principal se desarrolla en React con Vite.

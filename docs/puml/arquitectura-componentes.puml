@@ -6,7 +6,6 @@ package "Repositorio Frontend (arquitectura prevista)" {
   [Layouts y páginas] as Paginas
   [Componentes reutilizables] as Componentes
   [Cliente API] as ApiClient
-  [Cliente SignalR] as SignalClient
 }
 package "Repositorio Backend (previsto)" {
   [ASP.NET Core MVC / Web API] as Controllers
@@ -14,7 +13,6 @@ package "Repositorio Backend (previsto)" {
   [Acceso a datos EF Core] as EF
   [ASP.NET Core Identity] as Identity
   [Integración Judge0] as J0
-  [Hub SignalR] as Hub
   [Worker de evaluación] as Worker
 }
 database PostgreSQL as DB
@@ -23,9 +21,7 @@ SPA --> Router
 Router --> Paginas
 Paginas --> Componentes
 Paginas --> ApiClient
-Paginas ..> SignalClient : actualizaciones previstas
 ApiClient --> Controllers : HTTPS / JSON
-SignalClient --> Hub : tiempo real previsto
 Controllers --> Services
 Services --> EF
 Controllers --> Identity
@@ -34,5 +30,4 @@ Worker --> J0
 J0 --> Judge
 EF --> DB
 Identity --> DB
-Worker --> Hub
 @enduml

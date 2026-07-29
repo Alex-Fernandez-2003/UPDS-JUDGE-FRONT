@@ -40,7 +40,7 @@ Fuente editable: [`puml/diagrama-clases.puml`](puml/diagrama-clases.puml).
 
 | Clase                 | Responsabilidad                                                  |
 | --------------------- | ---------------------------------------------------------------- |
-| UsuarioIdentity       | Identidad y autenticación gestionadas por ASP.NET Core Identity. |
+| Usuario               | Identidad y autenticación gestionadas por ASP.NET Core Identity. |
 | Concurso              | Configuración temporal, privacidad, estado y congelamiento.      |
 | ParticipacionConcurso | Relación única entre usuario y concurso.                         |
 | Problema              | Inciso, título y límites aplicables dentro de un concurso.       |
@@ -48,7 +48,8 @@ Fuente editable: [`puml/diagrama-clases.puml`](puml/diagrama-clases.puml).
 | Lenguaje              | Mapeo entre lenguaje interno y `Judge0LanguageId`.               |
 | Envio                 | Código presentado, estados, veredicto y marca de upsolving.      |
 | ResultadoCaso         | Resultado técnico por caso, reservado al backend.                |
-
+| Rol                   | Rol asignado para el UPDSJUDGE                                   |
+| UsuarioRol            | Roles pertencientes a un usuario                                 |
 # 6. Diagrama de secuencia: envío y evaluación
 
 ### Diagrama de secuencia de envío
@@ -75,7 +76,6 @@ Fuente editable: [`puml/secuencia-importacion-zip.puml`](puml/secuencia-importac
 - **EF Core/PostgreSQL:** mantiene consistencia y trazabilidad.
 - **Judge0Client:** encapsula la API externa.
 - **Worker:** consulta resultados sin bloquear la solicitud HTTP.
-- **SignalR Hub:** publica cambios al usuario autorizado.
 
 # 7. Secuencia adicional: importación ZIP
 

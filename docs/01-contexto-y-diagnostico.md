@@ -20,7 +20,7 @@
 - Cristhian Joel Amador Gallardo
 - Arnold Daniel Torrez Zarate
 - Daniel Javier Aramayo Mancilla
-- Enny Anaí Lopez Saldaña Beymar
+- Enny Anaí Lopez Saldaña
 - Beymar Angelo Vasquez Acha
 - Alex Saul Fernandez Valdez
 

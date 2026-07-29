@@ -1,100 +1,112 @@
 @startuml
 hide circle
-entity "AspNetUsers" as users {
- * Id : text <<PK>>
- --
- UserName : text
- Email : text
- PasswordHash : text
+skinparam linetype ortho
+
+entity "Usuario" as Usuario {
+  * idUsuario : int <<PK>>
+  --
+  nombre : varchar
+  correo : varchar
+  contrasena : varchar
+  fechaRegistro : timestamp
+  estado : varchar
 }
-entity "AspNetRoles" as roles {
- * Id : text <<PK>>
- --
- Name : text
+
+entity "Rol" as Rol {
+  * idRol : int <<PK>>
+  --
+  nombre : varchar
 }
-entity "AspNetUserRoles" as userroles {
- * UserId : text <<PK,FK>>
- * RoleId : text <<PK,FK>>
+
+entity "UsuarioRol" as UsuarioRol {
+  * idUsuarioRol : int <<PK>>
+  --
+  idUsuario : int <<FK>>
+  idRol : int <<FK>>
 }
-entity Concursos {
- * Id : bigint <<PK>>
- --
- Nombre : varchar
- FechaInicio : timestamptz
- DuracionMinutos : int
- MinutosCongelamiento : int
- UsuarioCreadorId : text <<FK>>
+
+entity "Concurso" as Concurso {
+  * idConcurso : int <<PK>>
+  --
+  nombre : varchar
+  descripcion : text
+  fechaInicio : timestamp
+  duracionMinutos : int
+  contrasena : varchar nullable
+  urlSetProblemas : varchar
+  minutosCongelamiento : int
+  codigo : varchar
+  estado : varchar
+  idUsuarioCreador : int <<FK>>
 }
-entity ParticipantesConcursos {
- * Id : bigint <<PK>>
- --
- UsuarioId : text <<FK>>
- ConcursoId : bigint <<FK>>
- FechaIngreso : timestamptz
+
+entity "ParticipanteConcurso" as ParticipanteConcurso {
+  * idParticipanteConcurso : int <<PK>>
+  --
+  fechaIngreso : timestamp
+  estado : varchar
+  idUsuario : int <<FK>>
+  idConcurso : int <<FK>>
 }
-entity Problemas {
- * Id : bigint <<PK>>
- --
- ConcursoId : bigint <<FK>>
- Inciso : varchar(4)
- Titulo : varchar
- TiempoLimiteMs : int
- MemoriaLimiteKb : int
+
+entity "Problema" as Problema {
+  * idProblema : int <<PK>>
+  --
+  inciso : char
+  titulo : varchar
+  tiempo : float
+  memoria : int
+  colorGlobo : varchar
+  estado : varchar
+  idConcurso : int <<FK>>
 }
-entity CasosPrueba {
- * Id : bigint <<PK>>
- --
- ProblemaId : bigint <<FK>>
- EntradaPath : text
- SalidaEsperadaPath : text
- Orden : int
+
+entity "CasoPrueba" as CasoPrueba {
+  * idCasoPrueba : int <<PK>>
+  --
+  entrada : text
+  salida : text
+  estado : varchar
+  idProblema : int <<FK>>
 }
-entity Lenguajes {
- * Id : bigint <<PK>>
- --
- Judge0LanguageId : int
- Nombre : varchar
- Extension : varchar
+
+entity "Lenguaje" as Lenguaje {
+  * idLenguaje : int <<PK>>
+  --
+  idJudge0 : int
+  nombre : varchar
+  extension : varchar
+  estado : varchar
 }
-entity Envios {
- * Id : bigint <<PK>>
- --
- UsuarioId : text <<FK>>
- ProblemaId : bigint <<FK>>
- LenguajeId : bigint <<FK>>
- Estado : varchar
- Veredicto : varchar
- EsUpsolving : boolean
- FechaEnvio : timestamptz
+
+entity "Envio" as Envio {
+  * idEnvio : int <<PK>>
+  --
+  codigo : text
+  resultado : varchar
+  tiempo : float
+  memoria : int
+  token : varchar
+  upsolving : varchar
+  fechaEnvio : timestamp
+  idUsuario : int <<FK>>
+  idProblema : int <<FK>>
+  idLenguaje : int <<FK>>
 }
-entity ResultadosCasos {
- * Id : bigint <<PK>>
- --
- EnvioId : bigint <<FK>>
- CasoPruebaId : bigint <<FK>>
- Veredicto : varchar
-}
-entity AuditoriaRoles {
- * Id : bigint <<PK>>
- --
- ActorUsuarioId : text <<FK>>
- UsuarioAfectadoId : text <<FK>>
- Rol : varchar(120)
- Accion : varchar(16)
- Fecha : timestamptz
-}
-users ||--o{ userroles
-roles ||--o{ userroles
-users ||--o{ Concursos
-users ||--o{ ParticipantesConcursos
-Concursos ||--o{ ParticipantesConcursos
-Concursos ||--|{ Problemas
-Problemas ||--|{ CasosPrueba
-users ||--o{ Envios
-users ||--o{ AuditoriaRoles : actor
-users ||--o{ AuditoriaRoles : afectado
-Problemas ||--o{ Envios
-Lenguajes ||--o{ Envios
-Envios ||--o{ ResultadosCasos
-CasosPrueba ||--o{ ResultadosCasos
+
+
+Usuario ||--o{ UsuarioRol
+Rol ||--o{ UsuarioRol
+
+Usuario ||--o{ Concurso : crea
+Usuario ||--o{ ParticipanteConcurso
+Concurso ||--o{ ParticipanteConcurso
+
+Concurso ||--|{ Problema
+Problema ||--|{ CasoPrueba
+
+Usuario ||--o{ Envio
+Problema ||--o{ Envio
+Lenguaje ||--o{ Envio
+
 @enduml
