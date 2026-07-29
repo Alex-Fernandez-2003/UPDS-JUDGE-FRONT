@@ -235,6 +235,17 @@ El límite del componente será únicamente información y navegación del concu
 - [ ] El contexto reutilizable del concurso consume datos contractuales y se reutiliza en Problemas y Envíos.
 - [ ] Ranking se incorpora solo después de contar con ruta y funcionalidad reales.
 
+## Actualización posterior al Sprint 2
+
+La retrospectiva conserva correctamente el estado de sus acuerdos al momento del cierre. La auditoría del frontend actual comprobó implementaciones posteriores:
+
+- **Acceso de Usuario:** implementado en `AdminSidebar` con **Concursos** y **Mis Envíos**, bajo `AdminLayout` y sin `UserLayout` anidado.
+- **Concurso privado finalizado:** implementado mediante `PRIVATE_FINISHED_REQUIRES_PASSWORD`, `JoinContestModal` y `POST /api/ParticipanteConcursos/unirse`.
+- **Dependencias:** `package.json` y el lockfile reflejan la remediación posterior; el resultado actual se registra en el informe de auditoría y no reescribe el hallazgo histórico de seis vulnerabilidades altas.
+- **Contexto reutilizable:** `ContestContextHeader` está implementado y se reutiliza en Problemas, Mis envíos y Ranking, tanto en rutas de usuario como administrativas.
+
+Estos resultados pertenecen a changes posteriores y no alteran el valor histórico de los acuerdos originales.
+
 ## Conclusiones
 
 El Sprint 2 cierra con cuatro decisiones explícitas: habilitar un acceso de usuario desde administración sin romper la composición de layouts; implementar la regla confirmada de inscripción mediante contraseña para privados finalizados; tratar las seis vulnerabilidades altas como trabajo técnico controlado; y unificar el contexto del concurso a partir de datos reales y rutas reales.

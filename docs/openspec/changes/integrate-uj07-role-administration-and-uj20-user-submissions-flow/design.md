@@ -117,7 +117,7 @@ Hasta completar el baseline contractual, cada uno se marca:
 
 ## Estado Actual Comprobado
 
-No fue posible inspeccionar `C:\dev\UPDS-JUDGE-FRONT` ni `C:\dev\UPDSjudge` desde esta sesión.
+En la sesión original no fue posible inspeccionar los repositorios mencionados. **Actualización documental:** el frontend actual está disponible en `frontend/`; backend y juez quedan fuera de esta auditoría y se asumen correctos.
 
 Por ello:
 

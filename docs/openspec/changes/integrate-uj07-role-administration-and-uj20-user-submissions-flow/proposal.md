@@ -17,12 +17,9 @@ La estrategia obligatoria es de mínima intervención:
 4. Resolver únicamente conflictos demostrables.
 5. Agregar solo los elementos indispensables.
 
-El frontend y el backend de referencia se encuentran en rutas locales que no están disponibles en esta sesión:
+El briefing original referenciaba rutas locales de otra máquina. La ejecución vigente usa la raíz real del repositorio y `frontend/` como ruta relativa. El backend y el juez quedan fuera de esta auditoría y sus contratos se asumen correctos.
 
-- `C:\dev\UPDS-JUDGE-FRONT`
-- `C:\dev\UPDSjudge`
-
-Tampoco se proporcionaron los contenidos de los dos documentos obligatorios:
+En el briefing inicial tampoco se habían proporcionado los contenidos de los dos documentos obligatorios:
 
 - `docs/historias/UJ-07proceso-implementacion-admin-roles.md`
 - `docs/historias/UJ-20-Como-usuario,-quiero-ver-todos-mis-envíos-con-filtros-por-concurso-y-resultado-obtenido.md`

@@ -6,17 +6,19 @@
 
 Construir una base reproducible para que frontend y backend se desarrollen en paralelo con contratos, seguridad, calidad y evidencias comunes.
 
+> **Nota de vigencia (auditoría frontend 2026-07-28):** este documento conserva el plan y el resultado histórico del Sprint 0. Las frases que describen `frontend/` como ausente o pendiente pertenecen a esa etapa. El frontend actual existe y su inventario verificable se documenta en `auditorias/auditoria-documentacion-frontend-estado-actual.md`.
+
 # 2. Repositorios
 
 ## 2.1 Frontend
 
 - URL: <https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git>
-- Responsabilidad prevista: aplicación React con Vite, componentes, navegación y clientes de integración documentados. La carpeta `frontend/` no está presente en este checkout, por lo que no se verifican aún dependencias, SignalR Client, rutas ni configuración.
+- Responsabilidad prevista en Sprint 0: aplicación React con Vite, componentes, navegación y clientes de integración documentados. En aquel baseline la carpeta `frontend/` todavía no estaba presente; esa afirmación es histórica.
 
 ## 2.2 Backend
 
 - Repositorio separado.
-- URL: https://github.com/wilsonyucra413-sys/UPDSjudge
+- URL: <https://github.com/wilsonyucra413-sys/UPDSjudge>
 - Responsabilidad: ASP.NET Core MVC/Web API, Identity, EF Core, Judge0, SignalR, reglas y migraciones.
 
 # 3. Ramas
@@ -40,7 +42,7 @@ Reglas:
 
 El repositorio del frontend centraliza la documentación académica, los diagramas editables y los recursos de referencia del proyecto.
 
-La siguiente es la estructura prevista: la aplicación React se incorporará dentro de `frontend/`, mientras que los documentos y modelos permanecerán separados del código fuente. La carpeta `frontend/` está pendiente de incorporación al checkout actual; por ello este árbol no constituye evidencia de archivos, dependencias o configuración ya disponibles.
+La siguiente era la estructura prevista: la aplicación React se incorporaría dentro de `frontend/`, mientras que los documentos y modelos permanecerían separados del código fuente. El árbol conserva la propuesta de Sprint 0 y no debe interpretarse como inventario actual.
 
 ```text
 REPOSITORIO/
@@ -145,7 +147,7 @@ REPOSITORIO/
 | `docs/capturas/`           | Guarda evidencias visuales del backlog, modelo de datos, tablero y flujo de trabajo.                        |
 | `docs/images/`             | Contiene las imágenes generadas a partir de los diagramas y modelos del proyecto.                           |
 | `docs/puml/`               | Contiene los archivos PlantUML editables.                                                                   |
-| `frontend/`                | Estructura prevista para la aplicación React con Vite y TypeScript; pendiente de incorporación al checkout. |
+| `frontend/`                | Estructura prevista durante Sprint 0; actualmente existe y se audita por separado.                            |
 | `frontend/src/components/` | Ubicación propuesta para componentes visuales reutilizables.                                                |
 | `frontend/src/features/`   | Ubicación propuesta para funcionalidades por dominio.                                                       |
 | `frontend/src/lib/`        | Ubicación propuesta para clientes, utilidades e integraciones compartidas.                                  |
@@ -162,7 +164,7 @@ frontend/dist/
 frontend/.env
 ```
 
-Si el frontend requiere variables de entorno, deberán documentarse mediante un `frontend/.env.example` cuando ese archivo exista. No hay variables verificables en el checkout actual.
+La previsión exigía documentar variables mediante `frontend/.env.example`. Ese archivo existe actualmente; la configuración vigente se describe en el informe de auditoría.
 
 # 5. Estructura backend
 

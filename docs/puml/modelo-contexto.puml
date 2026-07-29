@@ -14,7 +14,7 @@ User --> Front
 ContestAdmin --> Front
 RoleAdmin --> Front
 Front --> Back : HTTPS / JSON / JWT
-Front --> Hub : conexión en tiempo real
+Front ..> Hub : integración prevista; sin cliente actual
 Back --> DB : EF Core
 Back --> Judge : evaluación de código
 Back --> Drive : almacena/consulta enlace

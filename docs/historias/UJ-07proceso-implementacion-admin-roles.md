@@ -1,5 +1,9 @@
 # UJ-07 - Proceso de implementación: Administrador de roles
 
+## Estado actual comprobado
+
+**IMPLEMENTADO.** La ruta `/admin/roles` está protegida por `ProtectedRoute` y `RoleRoute` para `AdministradorRoles`, usa `AdminLayout`, expone el acceso desde `AdminSidebar` y consume los contratos de roles asumidos correctos para esta auditoría.
+
 ## Objetivo
 
 Implementar y conectar el flujo completo para la administración de roles, permitiendo que un usuario con el rol de administrador acceda a la vista desde la navegación/sidebar del panel administrativo, gestione la asignación y remoción de roles mediante correo electrónico y visualice la lista paginada de usuarios con búsqueda en tiempo real.
@@ -18,11 +22,11 @@ Implementar y conectar el flujo completo para la administración de roles, permi
 
 3. **Refactorizar y corregir los componentes UI del módulo**
    - **`AdminRoleBadge.tsx`**: Se centralizaron los tonos de los badges usando la configuración de `format.ts`, manteniendo el botón interactivo con el icono `X` para desasignar el rol.
-   - **`AdminRoleAssignCard.tsx`**: Se transformó en un componente controlado, sincronizando sus props (`correo`, `selectedRoleId`, `onCorreoChange`, `onRoleChange`, `onAssign`) directamente con el estado de la vista padre.
+   - **`AdminRolesAssignCard.tsx`**: Se transformó en un componente controlado, sincronizando sus props (`correo`, `selectedRoleId`, `onCorreoChange`, `onRoleChange`, `onAssign`) directamente con el estado de la vista padre.
    - **`AdminRolesFiltersBar.tsx`**: Se mantuvo la barra con soporte para filtro por término de búsqueda y por selector de rol, incluyendo la acción de limpiar filtros.
    - **`AdminRolesTable.tsx`**: Se corrigió el error de _scope_ al mover la constante `columns` dentro del componente, se ajustó el handler `onRemoveRole` para enviar el `idRol` (numérico) en lugar del nombre del rol y se actualizaron los tipos a `UserRoleItem` y `RoleItem`.
 
-4. **Implementar la vista principal (`AdminRolesPage.tsx`)**
+4. **Implementar la vista principal (`AdminsRolesPages.tsx`)**
    - Se gestionaron los estados para la asignación de roles y la visualización de mensajes de feedback al usuario (`Alert`).
    - Se integró la búsqueda optimizada mediante _debounce_ junto a la paginación.
    - Se configuró la invalidación de caché con React Query para refrescar la lista de usuarios automáticamente tras asignar o remover un rol.
@@ -39,17 +43,17 @@ Implementar y conectar el flujo completo para la administración de roles, permi
 - `src/lib/api/endpoints.ts`
 - `src/routes/constants.ts`
 - `src/routes/router.tsx`
-- `src/features/roles/constants.ts`
-- `src/features/roles/format.ts`
-- `src/features/roles/types.ts`
-- `src/features/roles/mapper.ts`
-- `src/features/roles/service.ts`
-- `src/features/roles/hooks.ts`
-- `src/features/roles/components/AdminRoleBadge.tsx`
-- `src/features/roles/components/AdminRoleAssignCard.tsx`
-- `src/features/roles/components/AdminRolesFiltersBar.tsx`
-- `src/features/roles/components/AdminRolesTable.tsx`
-- `src/features/roles/pages/AdminRolesPage.tsx`
+- `src/features/administration/constans.ts`
+- `src/features/administration/format.ts`
+- `src/features/administration/types.ts`
+- `src/features/administration/mapper.ts`
+- `src/features/administration/service.ts`
+- `src/features/administration/hooks.ts`
+- `src/features/administration/components/AdminRoleBadge.tsx`
+- `src/features/administration/components/AdminRolesAssignCard.tsx`
+- `src/features/administration/components/AdminRolesFiltersBar.tsx`
+- `src/features/administration/components/AdminRolesTable.tsx`
+- `src/features/administration/pages/AdminsRolesPages.tsx`
 
 ---
 

@@ -57,18 +57,22 @@ La solución no contiene proyectos de tests backend y el chequeo global de forma
 
 ### 9.1 Versiones estables de lenguajes de programación
 
-**Propuesta para siguiente sprint.** Inventariar lenguajes, versiones, imágenes o runtimes, comandos de compilación y ejecución, extensiones aceptadas y límites. La meta es ampliar lenguajes con versiones estables compatibles con el juez, manteniendo una lista contractual sincronizada entre backend, frontend y entorno de ejecución. Se deberán validar soluciones correctas y fallidas y documentar riesgos de compatibilidad, seguridad, imágenes y tiempos de compilación.
+**Estado: PROPUESTO — NO IMPLEMENTADO — PENDIENTE DE PRIORIZACIÓN.**
+
+Inventariar lenguajes, versiones, imágenes o runtimes, comandos de compilación y ejecución, extensiones aceptadas y límites. La meta es ampliar lenguajes con versiones estables compatibles con el juez, manteniendo una lista contractual sincronizada entre backend, frontend y entorno de ejecución. Se deberán validar soluciones correctas y fallidas y documentar riesgos de compatibilidad, seguridad, imágenes y tiempos de compilación.
 
 ### 9.2 Configuración y actualización de datos personales
 
-**Propuesta para siguiente sprint.** Diseñar una pantalla de Perfil o Configuración para que el usuario autenticado consulte y actualice únicamente los datos permitidos. Antes de implementar deben definirse campos editables, confirmaciones necesarias e información inmutable. La solución deberá incluir validación, autorización, mensajes de resultado, actualización de sesión o perfil, responsive y accesibilidad; no reemplaza administración de usuarios, roles ni permisos.
+**Estado: PROPUESTO — NO IMPLEMENTADO — PENDIENTE DE PRIORIZACIÓN.**
+
+Diseñar una pantalla de Perfil o Configuración para que el usuario autenticado consulte y actualice únicamente los datos permitidos. Antes de implementar deben definirse campos editables, confirmaciones necesarias e información inmutable. La solución deberá incluir validación, autorización, mensajes de resultado, actualización de sesión o perfil, responsive y accesibilidad; no reemplaza administración de usuarios, roles ni permisos.
 
 ## 10. Prioridades sugeridas
 
 | Acción | Motivo | Prioridad sugerida | Resultado esperado | Estado |
 | --- | --- | --- | --- | --- |
-| Versiones estables de lenguajes | La compatibilidad del juez condiciona el envío de soluciones | 1 | Inventario, versiones explícitas y ejecución validada | Propuesta para siguiente sprint |
-| Configuración y actualización de datos personales | Mejora autonomía del usuario autenticado | 2 | Perfil seguro con campos permitidos definidos | Propuesta para siguiente sprint |
+| Versiones estables de lenguajes | La compatibilidad del juez condiciona el envío de soluciones | 1 | Inventario, versiones explícitas y ejecución validada | PROPUESTO — NO IMPLEMENTADO |
+| Configuración y actualización de datos personales | Mejora autonomía del usuario autenticado | 2 | Perfil seguro con campos permitidos definidos | PROPUESTO — NO IMPLEMENTADO |
 
 La prioridad es una recomendación técnica y requiere confirmación del Product Owner.
 
