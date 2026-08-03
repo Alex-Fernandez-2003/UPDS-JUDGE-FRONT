@@ -10,9 +10,9 @@ La ruta canónica conectada desde la lista de concursos es:
 /student/contests/:contestCode/submissions
 ```
 
-La pantalla reconstruye el código desde el parámetro de ruta, por lo que no depende de `location.state`. La política de acceso de la lista permite navegación solamente a concursos activos inscritos o finalizados consultables. La composición final con UJ-13 y los modos read-only/blocked dentro de esta pantalla permanece pendiente: el módulo de problemas documentado no está presente en el workspace y falta un contrato de detalle unificado.
+La pantalla reconstruye el código desde el parámetro de ruta, por lo que no depende de `location.state`. La política de acceso de la lista permite navegación solamente a concursos activos inscritos o finalizados consultables. La composición con UJ-13 está integrada mediante `ContestContextHeader` y `getContestDashboard`; el módulo `frontend/src/features/problems/` existe y comparte la navegación contextual.
 
-La implementación cubre el flujo completo que realiza un participante durante un concurso de programación. El estudiante puede seleccionar un problema, escoger un lenguaje de programación compatible, escribir o cargar su solución, enviarla al servidor para su evaluación mediante Judge0 y visualizar posteriormente el resultado obtenido dentro del historial de envíos.
+**Estado frontend comprobado: IMPLEMENTADO CON LIMITACIONES.** La implementación cubre el flujo de envío y consulta contextual que realiza un participante durante un concurso de programación. El estudiante puede seleccionar un problema, escoger un lenguaje de programación compatible, escribir o cargar su solución, enviarla al servidor para su evaluación mediante Judge0 y visualizar posteriormente el resultado obtenido dentro del historial de envíos.
 
 Las capturas del manual representan un pendiente únicamente documental y no afectan el correcto funcionamiento de la aplicación.
 
@@ -24,7 +24,7 @@ Las capturas del manual representan un pendiente únicamente documental y no afe
 
 Las historias de usuario **HU-14** y **HU-15** fueron implementadas conjuntamente debido a que forman un único flujo funcional dentro del módulo de participación del estudiante.
 
-La primera historia permite preparar y enviar una solución al sistema de evaluación, mientras que la segunda comienza inmediatamente cuando el backend procesa dicha solución y devuelve el veredicto correspondiente.
+La primera historia permite preparar y enviar una solución; la segunda se refleja cuando el contrato HTTP devuelve o expone el veredicto y el frontend vuelve a consultar el historial.
 
 Desde la perspectiva del participante ambas acciones conforman una única experiencia de usuario, por lo que comparten componentes, modelos, servicios, validaciones y comunicación con el backend.
 
@@ -116,9 +116,9 @@ La historia HU-15 inicia una vez que Judge0 finaliza el proceso de evaluación.
 
 Las funcionalidades implementadas incluyen:
 
-- Recepción del resultado generado por Judge0.
-- Actualización automática del historial de envíos.
-- Visualización inmediata del nuevo envío.
+- Consumo de la respuesta contractual del envío.
+- Nueva consulta HTTP del historial después de un envío exitoso.
+- Visualización del resultado disponible en el historial.
 - Presentación del veredicto mediante **VerdictBadge**.
 - Visualización del problema evaluado.
 - Visualización del lenguaje utilizado.
@@ -373,12 +373,13 @@ features/
     │   └── verdictBadge.tsx
     │
     ├── schemas/
-    │   └── submit-solution.schema.ts
+    │   └── sumbitSolution.ts
     │
     ├── Types/
-    │   ├── submitTypes.ts
+    │   ├── sumbitTypes.ts
     │   ├── submissionTypes.ts
-    │   └── submitService.ts
+    │   ├── submissionsService.ts
+    │   └── sumbitService.ts
 ```
 
 Esta organización mejora la mantenibilidad y facilita la reutilización de componentes.
@@ -451,7 +452,7 @@ Posteriormente la aplicación realiza una nueva consulta al endpoint de historia
 5. **Evaluación en el Backend**
    El servidor valida los permisos, envía el código fuente a **Judge0** para compilación/ejecución, persiste el registro y responde con el veredicto, tiempo de ejecución y memoria consumida.
 
-6. **Actualización de Interfaz en Tiempo Real**
+6. **Actualización de interfaz mediante nueva consulta HTTP**
    Tras la respuesta exitosa del servidor:
    - Se re-consulta el historial sin recargar la página.
    - `SubmissionsTable` muestra la nueva fila en el historial.
@@ -554,12 +555,13 @@ De esta manera todas las solicitudes realizadas al backend se encuentran protegi
 - `frontend/src/features/submissions/components/submissionsFilter.tsx`
 - `frontend/src/features/submissions/components/submissionsStats.tsx`
 - `frontend/src/features/submissions/components/verdictBadge.tsx`
-- `frontend/src/features/submissions/schemas/submit-solution.schema.ts`
-- `frontend/src/features/submissions/Types/submitTypes.ts`
+- `frontend/src/features/submissions/schemas/sumbitSolution.ts`
+- `frontend/src/features/submissions/Types/sumbitTypes.ts`
 - `frontend/src/features/submissions/Types/submissionTypes.ts`
-- `frontend/src/features/submissions/Types/submitService.ts`
+- `frontend/src/features/submissions/Types/submissionsService.ts`
+- `frontend/src/features/submissions/Types/sumbitService.ts`
 - `frontend/src/lib/api/endpoints.ts`
-- `frontend/src/lib/api/httpClient.ts`
+- `frontend/src/lib/api/http-client.ts`
 - `frontend/src/lib/auth/auth-transport.ts`
 - `frontend/src/routes/constants.ts`
 - `frontend/src/routes/router.tsx`
@@ -615,9 +617,11 @@ Durante la implementación se adoptaron diversas medidas para garantizar la segu
 - Todas las solicitudes protegidas incluyen automáticamente el token JWT mediante el `HttpClient`.
 - La validación de permisos continúa realizándose en el backend antes de ejecutar cualquier evaluación.
 
-# Integraciones pendientes
+# Estado actual y trabajo futuro
 
-Aunque el módulo se encuentra completamente funcional, existen mejoras que pueden incorporarse en futuras versiones.
+La actualización visible del historial se realiza por HTTP después del envío y mediante el botón **Actualizar**; no existe cliente SignalR ni WebSocket implementado en `frontend/src/lib/realtime/`. Por eso UJ-15 se considera implementada con la limitación de no ofrecer push en tiempo real. El contrato backend y el juez se asumen correctos para esta auditoría.
+
+Las siguientes capacidades permanecen como propuestas futuras:
 
 - Incorporar búsqueda por nombre del problema dentro del historial.
 - Mostrar el tiempo de compilación de Judge0.

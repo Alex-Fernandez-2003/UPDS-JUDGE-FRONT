@@ -13,12 +13,7 @@ Este change no constituye un briefing global del Sprint 3, no implementa Ranking
 
 La fuente principal requerida es `docs/retrospectivas/retrospectiva-sprint-2.md`, usando `docs/retrospectivas/retrospectiva-sprint-1.md` únicamente como referencia histórica de formato. El material aportado define el alcance, las restricciones y los criterios de terminado de este change. :contentReference[oaicite:0]{index=0}
 
-Los repositorios indicados se encuentran en rutas locales de Windows:
-
-- Frontend: `C:\dev\UPDS-JUDGE-FRONT`.
-- Backend de referencia: `C:\dev\UPDSjudge`.
-
-Esas rutas no están disponibles para inspección directa desde esta sesión. Por ello, nombres de rutas, componentes, roles efectivos, contratos, scripts, versiones instaladas y resultados de auditoría que no estén expresamente confirmados en el material aportado quedan marcados como `Por confirmar durante baseline`.
+Durante el briefing original se mencionaron rutas locales de otra máquina. Para cualquier lectura vigente se usa la raíz real del repositorio y `frontend/` como ruta relativa. El backend y el juez quedan fuera de esta auditoría documental y sus contratos se asumen correctos. Las restricciones históricas del briefing no sustituyen el baseline actual.
 
 ### Bloque 1: acceso funcional desde administración
 

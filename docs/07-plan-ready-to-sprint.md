@@ -7,17 +7,19 @@
 ## 1.1 Separación de repositorios
 
 - Frontend: <https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git>
-- Backend: https://github.com/wilsonyucra413-sys/UPDSjudge
+- Backend: <https://github.com/wilsonyucra413-sys/UPDSjudge>
 
 ## 1.2 Backend
 
-El backend utilizará ASP.NET Core MVC como estructura base. Al existir un frontend separado, sus controladores se orientan a API REST/JSON; la lógica se distribuye en servicios, EF Core, integraciones, workers y SignalR.
+El backend utilizará ASP.NET Core MVC como estructura base. Al existir un frontend separado, sus controladores se orientan a API REST/JSON; la lógica se distribuye en servicios, EF Core, integraciones, workers.
 
 ## 1.3 Frontend
 
-El frontend está planificado como una aplicación React con TypeScript y Vite. Esta decisión responde a la experiencia previa de la mayoría de los integrantes del equipo y permite proyectar de manera uniforme las pantallas dinámicas del sistema. La estructura prevista se incorporará dentro de `frontend/`; como esa carpeta no existe en el checkout actual, no hay evidencia local de dependencias, scripts, rutas, SignalR Client, variables de entorno ni CI configurados.
+> **Nota de vigencia (auditoría frontend 2026-07-28):** esta sección registra el estado de planificación previo al Sprint 0. En el checkout actual existe `frontend/`, implementado con React, TypeScript y Vite. El inventario vigente se encuentra en `auditorias/auditoria-documentacion-frontend-estado-actual.md`.
 
-React resulta adecuado para el alcance previsto porque la aplicación requerirá autenticación, navegación protegida, formularios, tablas interactivas, carga de archivos, contadores, actualización de envíos y clasificación. La comunicación en tiempo real mediante SignalR se mantiene como integración pendiente de verificación.
+El frontend estaba planificado como una aplicación React con TypeScript y Vite. Esta decisión respondió a la experiencia previa de la mayoría de los integrantes del equipo y permitió proyectar de manera uniforme las pantallas dinámicas del sistema. En la etapa documentada, la estructura todavía no se había incorporado dentro de `frontend/`; la ausencia indicada a continuación es histórica y no describe el checkout actual.
+
+React resulta adecuado para el alcance previsto porque la aplicación requerirá autenticación, navegación protegida, formularios, tablas interactivas, carga de archivos, contadores, actualización de envíos y clasificación.
 
 Vite se contempla como herramienta de desarrollo y construcción por su configuración ligera, rapidez durante el desarrollo y buena integración con React y TypeScript.
 
@@ -96,7 +98,6 @@ El equipo puede iniciar el Sprint 0 y las historias de identidad/frontend con mo
 | Saturación del evaluador     | Alto    | Cola, worker, reintentos y métricas.                                 |
 | Ranking incorrecto           | Alto    | Pruebas con datasets conocidos y funciones deterministas.            |
 | Desacople entre repositorios | Alto    | OpenAPI versionado, entornos de integración y mocks.                 |
-| Pérdida de eventos SignalR   | Medio   | Persistencia primero y recuperación HTTP.                            |
 | Diseños inconsistentes       | Medio   | Sistema visual y componentes reutilizables.                          |
 
 # 7. Indicadores de seguimiento del desarrollo

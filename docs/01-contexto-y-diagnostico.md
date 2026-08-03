@@ -8,9 +8,11 @@
 | Tipo                 | Proyecto académico con orientación a producto real              |
 | Proceso central      | Organización de concursos y evaluación automática de soluciones |
 | Equipo               | GPTeam                                                          |
-| Repositorio frontend | https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git     |
-| Repositorio backend  | https://github.com/wilsonyucra413-sys/UPDSjudge                 |
+| Repositorio frontend | <https://github.com/Alex-Fernandez-2003/UPDS-JUDGE-FRONT.git>     |
+| Repositorio backend  | <https://github.com/wilsonyucra413-sys/UPDSjudge>                 |
 | Estado actual        | Análisis, diseño y preparación para desarrollo                  |
+
+> **Nota de vigencia (auditoría frontend 2026-07-28):** este documento conserva el diagnóstico histórico previo a la implementación. El frontend actual sí existe bajo `frontend/` y contiene rutas, layouts, autenticación, concursos, problemas, envíos, ranking y administración de roles. Para el estado vigente, consultar `auditorias/auditoria-documentacion-frontend-estado-actual.md`.
 
 ## Integrantes
 
@@ -18,7 +20,7 @@
 - Cristhian Joel Amador Gallardo
 - Arnold Daniel Torrez Zarate
 - Daniel Javier Aramayo Mancilla
-- Enny Anaí Lopez Saldaña Beymar
+- Enny Anaí Lopez Saldaña
 - Beymar Angelo Vasquez Acha
 - Alex Saul Fernandez Valdez
 
@@ -60,6 +62,8 @@ Este proceso combina gestión académica y ejecución técnica. El frontend faci
 - Repositorio frontend definido.
 
 ## 4.2 Elementos no evidenciados todavía
+
+> Estado histórico de la etapa de diagnóstico; no describe el checkout actual del frontend.
 
 - Código de frontend o backend implementado.
 - Configuración desplegada de Judge0.

@@ -2,16 +2,17 @@
 
 ## Estado
 
-- frontend implementation functional complete
-- authenticated end-to-end pending
-- final visual refinement pending
-- manual captures pending/non-blocking
+- **Estado frontend: IMPLEMENTADO.**
+- Sesión persistida en `sessionStorage` con la clave `token`.
+- Roles visibles derivados de claims JWT por `deriveIdentity`.
+- Contrato consumido mediante `POST /api/Auth/login`; asumido correcto para esta auditoría.
+- Las tres capturas enlazadas existen.
 
-La implementación cubre el flujo funcional de autenticación desde el frontend: captura de credenciales, envío al backend, recepción del token y persistencia de la sesión. La verificación de extremo a extremo con el backend real y los roles devueltos permanece pendiente.
+La implementación cubre captura de credenciales, envío mediante el cliente HTTP compartido, recepción del token, persistencia de sesión, redirección inicial y guards.
 
 ## Change asociado
 
-`uj06-login-authentication-token-roles-frontend`
+No existe un directorio OpenSpec con el slug `uj06-login-authentication-token-roles-frontend`. La implementación actual queda trazada por `integrate-sprint-1-auth-admin-contests-minimal-frontend` y `role-aware-app-shell-sidebar-layouts-routing`, ambos activos.
 
 ## Motivo
 
@@ -102,14 +103,8 @@ La respuesta que consume la interfaz tiene la forma:
 
 ```json
 {
-  "accessToken": "<jwt>",
-  "refreshToken": "<refresh>",
-  "roles": ["ADMIN", "USER"],
-  "user": {
-    "id": "<id>",
-    "email": "usuario@correo.com",
-    "name": "Usuario"
-  }
+  "token": "<jwt>",
+  "expiraEn": "<fecha ISO 8601>"
 }
 ```
 
@@ -254,15 +249,14 @@ De esta manera, los módulos posteriores (`contests`, `problems`, `submissions`,
 | Los controles se bloquean durante la autenticación para evitar envíos duplicados. |
 | La interfaz no expone información sensible del token.                             |
 
-## Integraciones pendientes
+## Pendientes funcionales fuera del alcance de UJ-06
 
-| Pendiente                                                            |
-| -------------------------------------------------------------------- |
-| Verificar autenticación real con el backend productivo.              |
-| Confirmar la estructura definitiva del JWT y los claims de roles.    |
-| Implementar renovación automática de token si el backend la soporta. |
-| Completar capturas finales verificadas.                              |
-| Validar manualmente el comportamiento responsive de la pantalla.     |
+| Pendiente |
+| --- |
+| Renovación automática de token, solo si se prioriza y el contrato la incorpora. |
+| Recuperación de contraseña, verificación por correo y autenticación multifactor continúan fuera de alcance. |
+
+El backend, el juez y los contratos consumidos se asumieron correctos; no se registran como pendientes de esta auditoría.
 
 ## Fuera de alcance
 
@@ -276,4 +270,4 @@ De esta manera, los módulos posteriores (`contests`, `problems`, `submissions`,
 
 ## Conclusión
 
-UJ-06 cuenta con una implementación funcional de autenticación en frontend que permite a un usuario registrado iniciar sesión, obtener un token de acceso, persistir la sesión y acceder a rutas protegidas según el estado autenticado. La integración completa con el backend real y la validación definitiva de roles y claims del JWT permanecen pendientes de verificación de extremo a extremo.
+UJ-06 cuenta con una implementación funcional de autenticación en frontend que permite a un usuario registrado iniciar sesión, obtener un token de acceso, persistir la sesión y acceder a rutas protegidas según el estado autenticado. El frontend consume el token contractual, deriva identidad y roles visibles y aplica `ProtectedRoute` y `RoleRoute`. El backend se asume correcto para esta auditoría.

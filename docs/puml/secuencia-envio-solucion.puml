@@ -5,7 +5,6 @@ participant "SubmissionsController" as Controller
 participant "SubmissionService" as Service
 database "PostgreSQL" as DB
 participant "Judge0Client" as Judge
-participant "SignalR Hub" as Hub
 Participante -> Front : selecciona problema, lenguaje y archivo
 Front -> Controller : POST /api/submissions + JWT
 Controller -> Service : crearEnvio(datos, usuario)
@@ -22,8 +21,6 @@ loop hasta veredicto final
   Service -> Judge : consultar resultado
   Judge --> Service : estado/veredicto/tiempo/memoria
   Service -> DB : actualizar envío
-  Service -> Hub : publicar SubmissionUpdated
-  Hub --> Front : actualización en tiempo real
 end
 Front --> Participante : mostrar veredicto final
 @enduml

@@ -150,7 +150,7 @@ INTERNAL_ERROR
 
 # 10. Script inicial
 
-El archivo [`database/script-inicial.sql`](database/script-inicial.sql) crea el dominio PostgreSQL, índices, enums y lenguajes iniciales. Las tablas Identity quedan bajo migraciones del backend.
+La planificación histórica referenciaba `database/script-inicial.sql`, pero ese archivo no existe en el repositorio frontend actual. Se conserva como referencia textual histórica, no como enlace operativo. El backend y sus datos quedan fuera de esta auditoría y se asumen correctos.
 
 # 11. Estrategia de migraciones
 

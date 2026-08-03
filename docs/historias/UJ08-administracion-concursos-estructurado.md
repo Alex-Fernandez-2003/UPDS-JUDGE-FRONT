@@ -3,14 +3,14 @@
 
 ## Estado
 
-- frontend implementation functional complete
-- authenticated end-to-end complete
-- final visual refinement pending
-- manual captures pending/non-blocking
+- **Estado frontend: IMPLEMENTADO.**
+- Listado, filtros, resumen y paginación conectados.
+- Contratos consumidos asumidos correctos para esta auditoría.
+- Las capturas referenciadas existen.
 
 ## Change asociado
 
-`administracion-concursos`
+La implementación queda trazada por los changes activos `integrate-sprint-1-auth-admin-contests-minimal-frontend` y `fix-admin-contests-filters-summary-branding-user-layout`.
 
 ## Motivo
 
@@ -60,16 +60,15 @@ UI → Hook → Servicio → HttpClient → API → Renderizado.
 
 ## Archivos principales
 
-- [frontend/src/features/contests/types.ts](frontend/src/features/contests/types.ts)
-- [frontend/src/features/contests/service.ts](frontend/src/features/contests/service.ts)
-- [frontend/src/features/contests/hooks.ts](frontend/src/features/contests/hooks.ts)
-- [frontend/src/features/contests/ContestsAdminScreen.tsx](frontend/src/features/contests/ContestsAdminScreen.tsx)
-- [frontend/src/features/contests/components/ContestsSummaryCards.tsx](frontend/src/features/contests/components/ContestsSummaryCards.tsx)
-- [frontend/src/features/contests/components/ContestsFiltersBar.tsx](frontend/src/features/contests/components/ContestsFiltersBar.tsx)
-- [frontend/src/features/contests/components/ContestsTable.tsx](frontend/src/features/contests/components/ContestsTable.tsx)
-- [frontend/src/pages/AdminContestsPage.tsx](frontend/src/pages/AdminContestsPage.tsx)
-- [frontend/src/routes/router.tsx](frontend/src/routes/router.tsx)
-
+- `frontend/src/features/contests/admin/types.ts`
+- `frontend/src/features/contests/admin/service.ts`
+- `frontend/src/features/contests/admin/hooks.ts`
+- `frontend/src/features/contests/admin/ContestsAdminScreen.tsx`
+- `frontend/src/features/contests/admin/components/ContestsSummaryCards.tsx`
+- `frontend/src/features/contests/admin/components/ContestsFiltersBar.tsx`
+- `frontend/src/features/contests/admin/components/ContestsAdminTable.tsx`
+- `frontend/src/features/contests/admin/pages/AdminContestsPage.tsx`
+- `frontend/src/routes/router.tsx`
 
 #### Cambios realizados
 
@@ -79,19 +78,15 @@ UI → Hook → Servicio → HttpClient → API → Renderizado.
 - Se ajustó la tabla para mejorar visualmente su presentación con bordes, sombras y hover.
 - Se renombró la columna "Modalidad" como "Visibilidad" para que coincidiera con la propuesta de diseño.
 
-#### Archivos modificados
+#### Archivos actuales relacionados
 
-- [frontend/src/features/contests/components/ContestsFiltersBar.tsx](frontend/src/features/contests/components/ContestsFiltersBar.tsx)
-- [frontend/src/features/contests/ContestsAdminScreen.tsx](frontend/src/features/contests/ContestsAdminScreen.tsx)
-- [frontend/src/features/contests/types.ts](frontend/src/features/contests/types.ts)
-- [frontend/src/features/contests/service.ts](frontend/src/features/contests/service.ts)
-- [frontend/src/components/tables/index.tsx](frontend/src/components/tables/index.tsx)
-- [frontend/src/features/contests/components/ContestsTable.tsx](frontend/src/features/contests/components/ContestsTable.tsx)
-- [frontend/src/mocks/handlers/index.ts](frontend/src/mocks/handlers/index.ts)
-
-
-
-
+- `frontend/src/features/contests/admin/components/ContestsFiltersBar.tsx`
+- `frontend/src/features/contests/admin/ContestsAdminScreen.tsx`
+- `frontend/src/features/contests/admin/types.ts`
+- `frontend/src/features/contests/admin/service.ts`
+- `frontend/src/components/tables/index.tsx`
+- `frontend/src/features/contests/admin/components/ContestsAdminTable.tsx`
+- `frontend/src/mocks/handlers/index.ts`
 
 ## Evidencia sugerida
 
@@ -106,16 +101,14 @@ docs/capturas/uj08-listado-concursos.png
 - Separación entre UI y lógica.
 - Consumo de endpoints aprobados.
 
-## Integraciones pendientes
+## Estado actual
 
-- Refinamiento visual.
-
+La ruta `/admin/contests` usa `AdminLayout`, `ProtectedRoute` y `RoleRoute` para `AdministradorConcursos`. El frontend consume `Concursos/mis-creados` y `Concursos/mis-resumen`; contratos asumidos correctos para esta auditoría.
 
 ## Fuera de alcance
 
 - Creación y edición de concursos.
 - Funcionalidades no respaldadas por el backend.
-- No busca por filtro
 
 ## Conclusión
 

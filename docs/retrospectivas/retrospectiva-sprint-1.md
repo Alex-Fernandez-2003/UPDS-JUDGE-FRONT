@@ -84,7 +84,9 @@ El trabajo incremental y las pruebas focalizadas redujeron riesgo en contratos d
 
 ## Coordinación con UJ-11
 
-`uj11-partial-user-dashboard-stats-recent-submissions` sigue pendiente y debe coordinarse con el responsable principal antes de crear `features/contests/user/`. Este change prepara el boundary administrativo; no entrega componentes, endpoints, filtros ni rutas de UJ-11.
+`uj11-partial-user-dashboard-stats-recent-submissions` seguía pendiente al cierre de esta retrospectiva y debía coordinarse con el responsable principal antes de crear `features/contests/user/`. Este change preparó el boundary administrativo; no entregó componentes, endpoints, filtros ni rutas de UJ-11.
+
+> **Actualización posterior:** el frontend actual sí contiene `features/contests/user/`, el dashboard de usuario, estadísticas, envíos recientes y la ruta `/student/concursos`. Este resultado posterior no se atribuye al change retrospectivo.
 
 ## Evidencia
 

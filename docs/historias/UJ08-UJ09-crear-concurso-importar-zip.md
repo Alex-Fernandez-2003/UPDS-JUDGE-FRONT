@@ -2,12 +2,10 @@
 
 ## Estado
 
-- frontend implementation functional complete
-- authenticated end-to-end pending
-- final visual refinement pending
-- manual captures pending/non-blocking
-
-La implementación cubre el flujo funcional aislado del frontend. Los pendientes indicados no deben interpretarse como comportamiento ya confirmado en un entorno autenticado real.
+- **Estado frontend: IMPLEMENTADO.**
+- Ruta y acceso administrativo integrados.
+- Contrato multipart consumido mediante `Concursos/crear`; asumido correcto para esta auditoría.
+- Las cuatro capturas referenciadas existen.
 
 ## Change asociado
 
@@ -141,14 +139,15 @@ Los manejadores MSW cubren `POST /api/Concursos/crear` con respuestas controlada
 
 ## Archivos principales
 
-- `frontend/src/features/contests/CreateContestPage.tsx`
-- `frontend/src/features/contests/ContestProblemList.tsx`
-- `frontend/src/features/contests/CreateContestSummary.tsx`
-- `frontend/src/features/contests/schema.ts`
-- `frontend/src/features/contests/mapper.ts`
-- `frontend/src/features/contests/service.ts`
-- `frontend/src/features/contests/use-create-contest.ts`
-- `frontend/src/features/contests/types.ts`
+- `frontend/src/features/contests/admin/CreateContestPage.tsx`
+- `frontend/src/features/contests/admin/ContestProblemList.tsx`
+- `frontend/src/features/contests/admin/CreateContestSummary.tsx`
+- `frontend/src/features/contests/admin/ContestZipField.tsx`
+- `frontend/src/features/contests/admin/schema.ts`
+- `frontend/src/features/contests/admin/mapper.ts`
+- `frontend/src/features/contests/admin/service.ts`
+- `frontend/src/features/contests/admin/use-create-contest.ts`
+- `frontend/src/features/contests/admin/types.ts`
 - `frontend/src/lib/api/endpoints.ts`
 - `frontend/src/lib/api/http-client.ts`
 - `frontend/src/lib/auth/auth-transport.ts`
@@ -206,14 +205,13 @@ No se ejecutaron comandos, pruebas ni OpenSpec CLI para esta actualización docu
 - Mientras existe una mutación pendiente, se bloquean controles y acciones para evitar envíos duplicados.
 - El contenido del ZIP no se procesa ni se expone en el navegador.
 
-## Integraciones pendientes
+## Estado actual posterior
 
-- Configurar y verificar el proveedor de token/sesión para una ejecución autenticada real.
-- Validar de extremo a extremo el multipart con un ZIP real y la interpretación de sus carpetas.
-- Incorporar el acceso a la pantalla desde la barra lateral o navegación administrativa correspondiente.
-- Implementar e integrar el listado de concursos y el destino posterior a la creación.
-- Completar el refinamiento visual final y la validación manual responsive.
-- Generar capturas actuales y verificadas.
+- El proveedor Bearer se configura en `frontend/src/main.tsx` mediante `createSessionStorageAuthTransport`.
+- `AdminSidebar` expone **Crear concurso** y el router registra `/admin/contests/new` bajo `AdminLayout`.
+- El listado administrativo y el destino `/admin/contests` están integrados.
+- El frontend valida extensión y tamaño máximo de 100 MiB; no inspecciona el contenido interno del ZIP.
+- El backend y el contrato multipart se asumen correctos para esta auditoría.
 
 ## Fuera de alcance
 
@@ -225,4 +223,4 @@ No se ejecutaron comandos, pruebas ni OpenSpec CLI para esta actualización docu
 
 ## Conclusión
 
-UJ-08 y UJ-09 cuentan con una implementación funcional aislada en frontend que centraliza la creación del concurso y la carga ZIP en una solicitud multipart. La integración autenticada real, el listado y acceso de navegación, el refinamiento visual y las capturas continúan pendientes.
+UJ-08 y UJ-09 cuentan con una implementación funcional aislada en frontend que centraliza la creación del concurso y la carga ZIP en una solicitud multipart. La navegación, el listado y el transporte autenticado están integrados. El procesamiento interno del ZIP pertenece al contrato asumido correcto y queda fuera de esta auditoría frontend.

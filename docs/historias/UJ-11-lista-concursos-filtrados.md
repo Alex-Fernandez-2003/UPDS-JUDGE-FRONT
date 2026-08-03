@@ -16,12 +16,9 @@ Como usuario, quiero ver una lista de concursos filtrados por "En curso",
 
 ## Estado
 
-**Implementación integrada; validación end-to-end pendiente.**
+**IMPLEMENTADO.**
 
-La lista de concursos, el dashboard del usuario, las estadísticas rápidas y los
-envíos recientes están integrados en el código actual. Aún se requiere validar
-el flujo autenticado con backend real, la experiencia responsive y las
-evidencias manuales.
+La lista de concursos, el dashboard del usuario, las estadísticas rápidas y los envíos recientes están integrados en el código actual. Los contratos consumidos se asumen correctos para esta auditoría y las seis capturas referenciadas existen.
 
 ## Changes asociados
 
@@ -59,9 +56,7 @@ selector actual los valores contractuales son `activos`, `proximos` y
 `finalizados`; el estado de una card se muestra como `Activo`, `Proximo` o
 `Finalizado`.
 
-Los controles visuales de `Inscribirse`, `Acceder` y `Ver detalles` existen en
-la card, pero sus callbacks no realizan todavía navegación ni llamadas API.
-Por ese motivo no se documentan como inscripción o detalle funcionales.
+Los controles `Inscribirse`, `Acceder` y `Ver detalles` derivan su comportamiento desde `getContestUserAction`. La inscripción usa `JoinContestModal` y `POST /api/ParticipanteConcursos/unirse`; los accesos navegan a rutas contextuales reales.
 
 ### Estadísticas rápidas
 
@@ -342,9 +337,7 @@ piezas que admiten `className` conservan esa extensibilidad para composición:
 
 ## Pruebas y validaciones
 
-La última validación registrada para el estado integrado informó 17 archivos
-de test y 84 tests aprobados. Esta consolidación documental no vuelve a ejecutar
-comandos ni modifica pruebas.
+Durante aquella integración se registraron 17 archivos de test y 84 tests aprobados. Esa cifra es evidencia histórica del cierre y no representa el conteo permanente del proyecto.
 
 Cobertura observada en los tests existentes:
 
@@ -399,21 +392,15 @@ La navegación permitida usa la ruta canónica de envíos del concurso:
 /student/contests/:contestCode/submissions
 ```
 
-El formulario de envíos existente sigue siendo la pantalla de detalle disponible. La composición con UJ-13 continúa bloqueada porque `features/problems` no está integrado en el workspace.
+El formulario de envíos existente sigue siendo la pantalla de detalle disponible. La composición con UJ-13 está integrada: `features/problems` existe y las cards navegan a Problemas después de una inscripción exitosa.
 
-## Pendientes
+## Estado actual comprobado
 
-- Validar login, datos y acciones con backend real autenticado.
-- Realizar revisión manual desktop, tablet y móvil, incluyendo navegación,
-  accesibilidad de filtros y scroll de la tabla.
-- Incorporar evidencias manuales.
-- Implementar inscripción/acceso y navegación de detalle cuando se definan y
-  conecten los contratos correspondientes.
-- Crear una ruta de historial completo de envíos con filtros funcionales y
-  paginación interactiva, fuera del resumen de dashboard.
-- Agregar una columna Archivo solo cuando el backend la incluya en el DTO real.
-- Resolver los problemas globales preexistentes de formato y tipos que bloquean
-  `format:check`, `typecheck` y `build`.
+- El login, los datos remotos y las acciones usan contratos consumidos por el frontend y asumidos correctos.
+- La inscripción y la navegación contextual están implementadas.
+- El historial global existe en `/student/history`, con filtros por concurso y resultado y paginación server-side.
+- La columna Archivo no existe porque el DTO consumido no la aporta; no se considera pendiente funcional.
+- Los resultados actuales de lint, typecheck, tests y build se registran en el informe de auditoría.
 
 ## Resultado de la colaboración
 
@@ -425,7 +412,7 @@ sesión.
 
 ## Evidencias
 
-> Estado: Pendiente de incorporación manual.
+> Estado: evidencias existentes verificadas por ruta; no se generaron capturas nuevas en esta auditoría.
 
 ### 1. Dashboard integrado del usuario
 

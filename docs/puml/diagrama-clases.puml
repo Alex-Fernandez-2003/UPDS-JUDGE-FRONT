@@ -1,83 +1,112 @@
 @startuml
 hide circle
 skinparam classAttributeIconSize 0
+
+class Usuario {
+    +int idUsuario
+    +string nombre
+    +string correo
+    +string contrasena
+    +DateTime fechaRegistro
+    +string estado
+}
+
+class Rol {
+    +int idRol
+    +string nombre
+}
+
+class UsuarioRol {
+    +int idUsuarioRol
+    +int idUsuario
+    +int idRol
+}
+
 class Concurso {
-  +Id: long
-  +Nombre: string
-  +Descripcion: string
-  +FechaInicio: DateTimeOffset
-  +DuracionMinutos: int
-  +ContrasenaHash: string?
-  +UrlSetProblemas: string?
-  +MinutosCongelamiento: int
-  +Estado: EstadoConcurso
-  +UsuarioCreadorId: string
+    +int idConcurso
+    +string nombre
+    +string descripcion
+    +DateTime fechaInicio
+    +int duracionMinutos
+    +string contrasena
+    +string urlSetProblemas
+    +int minutosCongelamiento
+    +string codigo
+    +string estado
+    +int idUsuarioCreador
 }
+
 class Problema {
-  +Id: long
-  +ConcursoId: long
-  +Inciso: string
-  +Titulo: string
-  +TiempoLimiteMs: int
-  +MemoriaLimiteKb: int
-  +Estado: EstadoProblema
+    +int idProblema
+    +char inciso
+    +string titulo
+    +float tiempo
+    +int memoria
+    +string colorGlobo
+    +string estado
+    +int idConcurso
 }
+
 class CasoPrueba {
-  +Id: long
-  +ProblemaId: long
-  +EntradaPath: string
-  +SalidaEsperadaPath: string
-  +Orden: int
-  +Estado: bool
+    +int idCasoPrueba
+    +string entrada
+    +string salida
+    +string estado
+    +int idProblema
 }
+
 class Lenguaje {
-  +Id: long
-  +Judge0LanguageId: int
-  +Nombre: string
-  +Extension: string
-  +Estado: bool
+    +int idLenguaje
+    +int idJudge0
+    +string nombre
+    +string extension
+    +string estado
 }
-class ParticipacionConcurso {
-  +Id: long
-  +UsuarioId: string
-  +ConcursoId: long
-  +FechaIngreso: DateTimeOffset
-  +Estado: EstadoParticipacion
-}
+
 class Envio {
-  +Id: long
-  +UsuarioId: string
-  +ProblemaId: long
-  +LenguajeId: long
-  +CodigoPath: string
-  +Estado: EstadoEnvio
-  +Veredicto: Veredicto?
-  +TiempoMs: int?
-  +MemoriaKb: int?
-  +Judge0Token: string?
-  +EsUpsolving: bool
-  +FechaEnvio: DateTimeOffset
+    +int idEnvio
+    +string codigo
+    +string resultado
+    +float tiempo
+    +int memoria
+    +string token
+    +string upsolving
+    +DateTime fechaEnvio
+    +int idUsuario
+    +int idProblema
+    +int idLenguaje
 }
-class ResultadoCaso {
-  +Id: long
-  +EnvioId: long
-  +CasoPruebaId: long
-  +Veredicto: Veredicto
-  +TiempoMs: int?
-  +MemoriaKb: int?
+
+class ParticipanteConcurso {
+    +int idParticipanteConcurso
+    +DateTime fechaIngreso
+    +string estado
+    +int idUsuario
+    +int idConcurso
 }
-class UsuarioIdentity {
-  +Id: string
-  +UserName: string
-  +Email: string
-}
-UsuarioIdentity "1" -- "0..*" Concurso : crea
-UsuarioIdentity "1" -- "0..*" ParticipacionConcurso
-Concurso "1" *-- "1..*" Problema
-Concurso "1" *-- "0..*" ParticipacionConcurso
-Problema "1" *-- "1..*" CasoPrueba
-UsuarioIdentity "1" -- "0..*" Envio
-Problema "1" -- "0..*" Envio
-Lenguaje "1" -- "0..*" Envio
-Envio "1" *-- "0..*" ResultadoCaso
+
+'=========================
+' Relaciones
+'=========================
+
+Usuario "1" -- "0..*" Concurso : crea
+
+Concurso "1" -- "1..*" Problema : contiene
+
+Problema "1" -- "1..*" CasoPrueba : posee
+
+Usuario "1" -- "0..*" Envio : realiza
+
+Problema "1" -- "0..*" Envio : recibe
+
+Lenguaje "1" -- "0..*" Envio : utilizado
+
+Usuario "1" -- "0..*" ParticipanteConcurso
+
+Concurso "1" -- "0..*" ParticipanteConcurso
+
+Usuario "1" -- "0..*" UsuarioRol
+
+Rol "1" -- "0..*" UsuarioRol
+
 @enduml

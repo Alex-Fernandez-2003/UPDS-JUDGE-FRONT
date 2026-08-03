@@ -2,9 +2,9 @@
 
 ## Estado
 
-- frontend implementation functional complete
-- Google Drive PDF integration complete
-- manual captures pending/non-blocking
+- **Estado frontend: IMPLEMENTADO.**
+- Acceso externo al PDF implementado cuando `urlSetProblemas` está disponible.
+- La captura referenciada existe.
 
 La implementación cubre el flujo funcional de visualización del set de problemas desde el frontend: listado de incisos con su estado individual y acceso directo al PDF del enunciado alojado en Google Drive mediante un enlace externo.
 
@@ -34,8 +34,8 @@ El flujo implementado incluye:
 
 - El usuario visualiza el listado completo de incisos (A, B, C...) del set de problemas del concurso.
 - Cada inciso muestra su título, memoria, tiempo y cantidad de intentos.
-- Cada inciso muestra su estado (`Aceptado`, `Respuesta incorrecta`, `Sin intentar`, `TLE`) con codificación de color.
-- El estado "Aceptado" se distingue visualmente con un ícono de verificación.
+- Cada inciso normaliza el contrato visible como `ACCEPTED`, `UNSOLVED`, `NOT ATTEMPTED` o `UNKNOWN` mediante `problem-status.ts`.
+- `ACCEPTED` se distingue con tono de éxito; `UNSOLVED` usa peligro y los estados neutral/desconocido no se presentan como aceptación.
 - Se muestra un mensaje de vacío cuando el concurso todavía no tiene problemas cargados.
 - Existe un botón "Ver PDF" visible en el panel de problemas.
 - El botón abre el PDF real del set de problemas alojado en Google Drive, en una pestaña nueva.
@@ -120,7 +120,7 @@ Esta documentación describe el contrato que consume el frontend; no confirma de
 La carga del concurso se realiza mediante:
 
 ```http
-GET /api/contests/:codigo/dashboard
+GET /api/Concursos/dashboard/{codigo}
 ```
 
 ## Flujo frontend
@@ -216,7 +216,7 @@ De esta manera, la vista no reimplementa estilos propios y hereda automáticamen
 
 ## Estado de integración transversal
 
-En el workspace integrado no existe `features/problems/` pese a que esta historia documenta `ContestProblemsPage`, `ProblemsTable` y su servicio. Por ello no se recreó una segunda implementación ni se compuso una ruta de problemas sin contrato verificable. La ruta de participación disponible es `/student/contests/:contestCode/submissions`; la composición de incisos y PDF queda pendiente de integrar los archivos reales de UJ-13 y confirmar el endpoint de dashboard.
+`frontend/src/features/problems/` existe y está conectado al router en `/student/contests/:contestCode/problems` y `/admin/user-access/contests/:contestCode/problems`. `ContestProblemsPage`, `ProblemsTable`, `problem-status.ts` y `getContestDashboard` consumen el contrato actual. El backend se asume correcto para esta auditoría.
 
 ## Integraciones pendientes
 
@@ -225,7 +225,7 @@ En el workspace integrado no existe `features/problems/` pese a que esta histori
 | Validar manualmente el comportamiento responsive del panel de incisos.                                                        |
 | Confirmar si el tono `warning` es el definitivo para el estado `TLE`, o si corresponde un tono adicional.                     |
 | Definir comportamiento esperado si `urlSetProblemas` apunta a un recurso privado de Drive sin permisos públicos configurados. |
-| Completar capturas finales verificadas.                                                                                       |
+| La captura existente fue verificada por ruta; no se generó evidencia adicional.                                               |
 
 ## Fuera de alcance
 

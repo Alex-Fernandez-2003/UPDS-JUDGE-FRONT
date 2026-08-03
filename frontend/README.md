@@ -8,11 +8,14 @@ Leé la [Guía de arquitectura y desarrollo del frontend](./docs/guia-arquitectu
 
 ## Quick start
 
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
+Run the frontend from this directory with either supported package manager:
+
+| Action  | npm           | pnpm 11.18.0                     |
+| ------- | ------------- | -------------------------------- |
+| Install | `npm ci`      | `pnpm install --frozen-lockfile` |
+| Develop | `npm run dev` | `pnpm run dev`                   |
+
+Create `.env.local` from `.env.example` without committing secrets. See the root [package manager guide](../README.md#gestores-de-paquetes-soportados) for lockfile maintenance and the rule against sharing one `node_modules` between npm and pnpm.
 
 Development and preview use **<http://localhost:8085>** with strict port handling. The development catalog is available at `/dev/ui`; it is not registered in production.
 
@@ -42,11 +45,9 @@ Use `@/` for imports across top-level areas. Functional icons use Lucide; `Brand
 
 ## OpenAPI contract block
 
-`npm run api:types` loads `OPENAPI_SCHEMA_URL` from the local Node environment (including `.env.local`) and generates `src/types/api.generated.ts`. The local schema is `http://localhost:5185/swagger/v1/swagger.json`.
+`npm run api:types` or `pnpm run api:types` loads `OPENAPI_SCHEMA_URL` from the local Node environment (including `.env.local`) and generates `src/types/api.generated.ts`. The local schema is `http://localhost:5185/swagger/v1/swagger.json`.
 
-```bash
-npm run api:types
-```
+Run this maintenance command only when the approved contract changes. It was not executed while adding pnpm support.
 
 The generated file is the source of truth for contract DTOs. The confirmed auth routes are `POST /api/Auth/login` and `POST /api/Auth/register`; the endpoint registry stores them relative to `/api` as `Auth/login` and `Auth/register` to avoid a duplicate prefix. Both declare only a 200 response in the current schema. Error normalization supports generic Problem Details and a generic `mensaje` body as transport resilience, not as documented auth error statuses.
 
@@ -54,16 +55,18 @@ The OpenAPI document declares a global HTTP Bearer/JWT scheme. Supply a token on
 
 ## Commands
 
-| Command                           | Purpose                                     |
-| --------------------------------- | ------------------------------------------- |
-| `npm run dev`                     | Start strict development server on 8085     |
-| `npm run build`                   | Typecheck and build production assets       |
-| `npm run preview`                 | Preview build on strict port 8085           |
-| `npm run lint`                    | Run direct-fetch policy and code checks     |
-| `npm run typecheck`               | Run TypeScript project checks               |
-| `npm run format` / `format:check` | Apply or verify Prettier formatting         |
-| `npm run test` / `test:run`       | Run Vitest and React Testing Library        |
-| `npm run api:types`               | Generate types from a confirmed OpenAPI URL |
+Every script can be invoked as `npm run <script>` or `pnpm run <script>`:
+
+| Script                    | Purpose                                     |
+| ------------------------- | ------------------------------------------- |
+| `dev`                     | Start strict development server on 8085     |
+| `build`                   | Typecheck and build production assets       |
+| `preview`                 | Preview build on strict port 8085           |
+| `lint`                    | Run direct-fetch policy and code checks     |
+| `typecheck`               | Run TypeScript project checks               |
+| `format` / `format:check` | Apply or verify Prettier formatting         |
+| `test` / `test:run`       | Run Vitest and React Testing Library        |
+| `api:types`               | Generate types from a confirmed OpenAPI URL |
 
 ## Contribution rules
 

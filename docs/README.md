@@ -14,8 +14,16 @@ Esta carpeta contiene la documentación académica y técnica preparada a partir
 8. [Sprint 0](08-sprint-0-fabrica-software.md)
 9. [Informe final LaTeX](informe-final.tex)
 10. [Retrospectiva Sprint 1](retrospectivas/retrospectiva-sprint-1.md)
+11. [Retrospectiva Sprint 2](retrospectivas/retrospectiva-sprint-2.md)
+12. [Retrospectiva Sprint 3](retrospectivas/retrospectiva-sprint-3.md)
+13. [Auditoría del estado actual del frontend](auditorias/auditoria-documentacion-frontend-estado-actual.md)
 
 ## Carpetas
 
-- `images/`: diagramas renderizados y evidencias.
-- `puml/`: fuentes editables de diagramas.
+- `historias/`: historias de usuario y su trazabilidad de implementación.
+- `openspec/changes/`: changes activos; `archive/` conserva changes históricos.
+- `retrospectivas/`: resultados, aprendizajes y propuestas por sprint.
+- `auditorias/`: informes transversales de estado comprobado.
+- `capturas/`: evidencias manuales; fuera del alcance de regeneración documental.
+- `images/`: PNG generados o recursos visuales; fuera del alcance de regeneración documental.
+- `puml/`: fuentes textuales editables de diagramas.

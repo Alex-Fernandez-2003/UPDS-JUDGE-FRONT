@@ -2,16 +2,15 @@
 
 ## Estado
 
-- frontend implementation functional complete
-- authenticated end-to-end pending
-- final visual refinement pending
-- manual captures pending/non-blocking
+- **Estado frontend: IMPLEMENTADO.**
+- Contrato consumido mediante `POST /api/Auth/register`; asumido correcto para esta auditoría.
+- Las cuatro capturas referenciadas existen.
 
-La implementación cubre el flujo funcional de registro desde el frontend: captura de datos, validación de formulario, envío al backend y confirmación de creación de cuenta. La verificación de extremo a extremo con el backend real permanece pendiente.
+La implementación cubre el flujo funcional de registro desde el frontend: captura de datos, validación de formulario, envío mediante el cliente HTTP compartido y confirmación de creación de cuenta.
 
 ## Change asociado
 
-`uj05-register-user-account-frontend`
+No existe un directorio OpenSpec con el slug `uj05-register-user-account-frontend`. La implementación actual queda trazada por `integrate-sprint-1-auth-admin-contests-minimal-frontend`, que permanece activo.
 
 ## Motivo
 
@@ -233,13 +232,12 @@ Comportamiento esperado:
 - Los controles se bloquean durante el envío para evitar registros duplicados.
 - La interfaz no expone información sensible del backend.
 
-## Integraciones pendientes
+## Pendientes funcionales fuera del alcance de UJ-05
 
-- Verificar creación real de usuarios con el backend productivo.
-- Confirmar validaciones definitivas del servidor.
-- Implementar verificación de correo electrónico si el backend la soporta.
-- Completar capturas finales verificadas.
-- Validar manualmente el comportamiento responsive de la pantalla.
+- Verificación de correo electrónico, solo si se prioriza como nueva capacidad.
+- Recuperación de contraseña y autenticación multifactor continúan fuera de alcance.
+
+El backend y su contrato se asumieron correctos; no se registran como pendiente de esta auditoría.
 
 ## Fuera de alcance
 
@@ -251,4 +249,4 @@ Comportamiento esperado:
 
 ## Conclusión
 
-UJ-05 cuenta con una implementación funcional de registro en frontend que permite a un usuario nuevo crear una cuenta mediante nombre, correo y contraseña. El flujo incluye validación de formulario, comunicación con el backend mediante la infraestructura compartida de API y manejo de estados de éxito y error. La integración completa con el backend real y las validaciones definitivas del servidor permanecen pendientes de verificación de extremo a extremo.
+UJ-05 cuenta con una implementación funcional de registro en frontend que permite a un usuario nuevo crear una cuenta mediante nombre, correo y contraseña. El flujo incluye validación de formulario, comunicación con el backend mediante la infraestructura compartida de API y manejo de estados de éxito y error. El frontend consume el contrato de registro mediante la infraestructura compartida; el backend se asume correcto para esta auditoría.

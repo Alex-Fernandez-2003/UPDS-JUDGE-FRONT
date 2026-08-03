@@ -2,17 +2,17 @@
 
 ## Estado
 
-- Frontend implementation functional complete
-- Backend integration in progress
-- Dynamic filters implementation in progress
-- Responsive visual refinement pending
-- Manual captures pending / non-blocking
+- **Estado frontend: IMPLEMENTADO.**
+- Ruta global de usuario: `/student/history`.
+- Ruta administrativa de Acceso de Usuario: `/admin/user-access/submissions`.
+- Filtros por concurso y resultado, limpieza, actualización y paginación server-side integrados.
+- Las dos capturas referenciadas existen.
 
-La implementación cubre el flujo principal para que un estudiante pueda consultar el historial de todas sus soluciones enviadas durante los concursos. El módulo consume el endpoint protegido del backend, soporta paginación del lado del servidor y presenta la información en una tabla reutilizable con filtros y navegación entre páginas. Actualmente se encuentra en proceso la integración completa de los filtros dinámicos utilizando los datos reales del backend.
+La implementación permite consultar el historial global mediante contenido reutilizado bajo `UserLayout` o `AdminLayout`. El contrato consumido se asume correcto para esta auditoría.
 
 ## Change asociado
 
-**uj20-user-submissions-history-frontend**
+**`integrate-uj07-role-administration-and-uj20-user-submissions-flow`** (change activo).
 
 ## Motivo
 
@@ -40,7 +40,7 @@ El flujo implementado incluye:
 - Renderizado mediante un componente independiente (`RecentSubmissionsTable`).
 - Paginación reutilizable mediante el componente `Pagination`.
 - Actualización manual del historial mediante el botón **Actualizar**.
-- Preparación para filtros dinámicos de concurso, inciso y veredicto.
+- Filtros funcionales por código de concurso y resultado; el contrato también admite `inciso`, aunque la pantalla global actual no expone ese control.
 
 # Criterios cumplidos
 
@@ -173,10 +173,10 @@ Toda la navegación es gestionada mediante **React Router**, permitiendo una exp
 - `frontend/src/features/history/Pages/historyPage.tsx`
 - `frontend/src/features/history/Types/historyService.ts`
 - `frontend/src/features/history/Types/historyTypes.ts`
-- `frontend/src/features/contest/user/RecentSubmissionsTable.tsx`
-- `frontend/src/components/tables/DataTable.tsx`
+- `frontend/src/features/contests/user/RecentSubmissionsTable.tsx`
+- `frontend/src/components/tables/index.tsx`
 - `frontend/src/lib/api/endpoints.ts`
-- `frontend/src/lib/api/httpClient.ts`
+- `frontend/src/lib/api/http-client.ts`
 - `frontend/src/routes/router.tsx`
 
 ## Evidencia
@@ -210,13 +210,12 @@ Los filtros enviados al servidor se encuentran tipados mediante TypeScript, redu
 
 La paginación limita la cantidad de registros obtenidos por petición, evitando cargas excesivas sobre el servidor y mejorando el rendimiento de la interfaz.
 
-# Integraciones pendientes
+# Estado actual y posibles extensiones
 
-- Implementar filtros avanzados combinando concurso, inciso y veredicto en una única búsqueda.
-- Agregar actualización automática del historial después de realizar un nuevo envío sin necesidad de refrescar la página.
-- Incorporar ordenamiento por fecha, tiempo de ejecución y consumo de memoria.
-- Completar las capturas definitivas para el manual de usuario.
-- Validar completamente el funcionamiento con el backend en ambiente de producción.
+- Los filtros de concurso y resultado pueden combinarse y reinician la página a 1.
+- La actualización manual está implementada; el flujo contextual vuelve a consultar después de crear un envío.
+- El ordenamiento adicional y el filtro visual por inciso no están implementados y requieren una decisión funcional futura.
+- El backend y el contrato de envíos se asumen correctos para esta auditoría.
 
 # Fuera de alcance
 
@@ -252,8 +251,7 @@ la tabla existente. UJ-20 no se expone en `Acceso de Usuario` administrativo:
 el spec no aporta evidencia para ese contexto.
 
 Las pruebas verifican serialización de filtros y query key. Lint, typecheck,
-suite y build fueron ejecutados. No existen capturas UJ-20 nuevas en
-`docs/capturas/`; la validación visual manual permanece pendiente.
+suite y build fueron ejecutados. Las capturas `UJ-20-historial-envios.png` y `UJ-20-veredictos.png` existen en `docs/capturas/`; esta auditoría no creó ni modificó evidencias.
 
 ## Integración en Acceso de Usuario administrativo
 
