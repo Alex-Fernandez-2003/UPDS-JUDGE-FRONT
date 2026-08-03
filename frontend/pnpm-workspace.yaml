@@ -1,2 +1,6 @@
+overrides:
+  '@redocly/openapi-core>js-yaml': 4.3.0
+  '@redocly/openapi-core>minimatch': 10.2.5
+
 allowBuilds:
   msw: true

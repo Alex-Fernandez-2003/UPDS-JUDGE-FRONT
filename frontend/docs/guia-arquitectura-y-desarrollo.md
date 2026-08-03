@@ -4,16 +4,13 @@ Esta guía explica la fundación de frontend de Sprint 1 para quienes se incorpo
 
 ## Ruta rápida
 
-1. Desde `frontend/`, instalá dependencias y copiá el entorno de ejemplo.
-2. Ejecutá `npm run dev` y abrí <http://localhost:8085>.
-3. En desarrollo, recorré `/dev/ui` para reconocer componentes, tokens y layouts.
-4. Antes de proponer un cambio, verificá las reglas de contribución y ejecutá las validaciones de esta guía.
+1. Desde `frontend/`, elegí npm o pnpm 11.18.0 e instalá de forma reproducible con `npm ci` o `pnpm install --frozen-lockfile`.
+2. Creá `.env.local` a partir de `.env.example` sin versionar secretos.
+3. Ejecutá `npm run dev` o `pnpm run dev` y abrí <http://localhost:8085>.
+4. En desarrollo, recorré `/dev/ui` para reconocer componentes, tokens y layouts.
+5. Antes de proponer un cambio, verificá las reglas de contribución y ejecutá las validaciones de esta guía.
 
-```bash
-npm install
-cp .env.example .env.local
-npm run dev
-```
+La política canónica de lockfiles, cambio de gestor y mantenimiento está en [Gestores de paquetes soportados](../../README.md#gestores-de-paquetes-soportados). No compartas un mismo `node_modules` entre npm y pnpm.
 
 ## Alcance actual
 
@@ -151,7 +148,7 @@ La interfaz debe decidir cómo mostrar el error, pero no duplicar el parsing de 
 
 ### Tipos OpenAPI
 
-`npm run api:types` ejecuta `scripts/generate-api-types.mjs` y requiere `OPENAPI_SCHEMA_URL`. El resultado es `src/types/api.generated.ts`.
+`npm run api:types` o `pnpm run api:types` ejecuta `scripts/generate-api-types.mjs` y requiere `OPENAPI_SCHEMA_URL`. El resultado es `src/types/api.generated.ts`; este comando de mantenimiento solo debe ejecutarse ante un cambio contractual aprobado.
 
 - OpenAPI es la única fuente de verdad contractual.
 - No edites `api.generated.ts` a mano.
@@ -269,26 +266,24 @@ La suite cubre validación de entorno, `HttpClient`, handlers MSW, componentes, 
 
 Para un nuevo cambio, agregá pruebas de comportamiento y accesibilidad junto al área modificada. Evitá snapshots extensos y dependencias del backend.
 
-```bash
-npm run test:run
-```
+Ejecutá la suite una vez con `npm run test:run` o `pnpm run test:run`.
 
 ## Scripts disponibles
 
-Ejecutá estos comandos desde `frontend/`.
+Ejecutá cada script desde `frontend/` como `npm run <script>` o `pnpm run <script>`.
 
-| Comando                | Propósito                                       |
-| ---------------------- | ----------------------------------------------- |
-| `npm run dev`          | Inicia Vite en 8085                             |
-| `npm run build`        | Ejecuta typecheck y build de producción         |
-| `npm run preview`      | Previsualiza el build en 8085                   |
-| `npm run lint`         | Ejecuta checks y la política de `fetch` directo |
-| `npm run typecheck`    | Verifica proyectos TypeScript                   |
-| `npm run format`       | Aplica Prettier                                 |
-| `npm run format:check` | Verifica Prettier sin escribir                  |
-| `npm run test`         | Inicia Vitest en modo interactivo               |
-| `npm run test:run`     | Ejecuta Vitest una vez                          |
-| `npm run api:types`    | Genera tipos a partir de `OPENAPI_SCHEMA_URL`   |
+| Script         | Propósito                                       |
+| -------------- | ----------------------------------------------- |
+| `dev`          | Inicia Vite en 8085                             |
+| `build`        | Ejecuta typecheck y build de producción         |
+| `preview`      | Previsualiza el build en 8085                   |
+| `lint`         | Ejecuta checks y la política de `fetch` directo |
+| `typecheck`    | Verifica proyectos TypeScript                   |
+| `format`       | Aplica Prettier                                 |
+| `format:check` | Verifica Prettier sin escribir                  |
+| `test`         | Inicia Vitest en modo interactivo               |
+| `test:run`     | Ejecuta Vitest una vez                          |
+| `api:types`    | Genera tipos a partir de `OPENAPI_SCHEMA_URL`   |
 
 ## Convenciones y prohibiciones
 
@@ -524,20 +519,20 @@ No hay pruebas de feature de login hoy. Para una implementación futura, separá
 - [ ] Los componentes reutilizan tokens y primitivas existentes cuando aplica.
 - [ ] Las fixtures y mocks no están embebidos en componentes.
 - [ ] Se agregaron pruebas de comportamiento relevantes.
-- [ ] Se ejecutaron `format:check`, `lint`, `typecheck`, `test:run` y `build` desde `frontend/`.
+- [ ] Se ejecutaron `format:check`, `lint`, `typecheck`, `test:run` y `build` desde `frontend/` con el gestor elegido.
 - [ ] Si cambiaron contratos aprobados, se evaluó `npm run api:types` y no se editó el archivo generado a mano.
 
 ## Resolución de problemas
 
-| Situación                        | Verificación y acción                                                                                                   |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Vite no inicia                   | Confirmá que el puerto 8085 esté disponible: `strictPort` no selecciona otro puerto.                                    |
-| Error de entorno al arrancar     | Revisá `.env.local` contra `.env.example`; los valores públicos se validan al inicio.                                   |
-| No aparecen mocks                | Usá desarrollo y `VITE_ENABLE_MOCKS=true`; fuera de esas condiciones no se inician.                                     |
-| Import `@/` no resuelve          | Verificá que el import apunte bajo `src/` y que no sea una ruta relativa innecesaria.                                   |
-| Error de tipo contractual        | Revisá OpenAPI y regenerá con `npm run api:types` cuando el contrato aprobado y `OPENAPI_SCHEMA_URL` estén disponibles. |
-| Se requiere una ruta de producto | Confirmá primero su aprobación; las rutas actuales están reservadas.                                                    |
-| El formato falla                 | Ejecutá `npm run format` y revisá que el cambio respete Prettier.                                                       |
+| Situación                        | Verificación y acción                                                                                                                          |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Vite no inicia                   | Confirmá que el puerto 8085 esté disponible: `strictPort` no selecciona otro puerto.                                                           |
+| Error de entorno al arrancar     | Revisá `.env.local` contra `.env.example`; los valores públicos se validan al inicio.                                                          |
+| No aparecen mocks                | Usá desarrollo y `VITE_ENABLE_MOCKS=true`; fuera de esas condiciones no se inician.                                                            |
+| Import `@/` no resuelve          | Verificá que el import apunte bajo `src/` y que no sea una ruta relativa innecesaria.                                                          |
+| Error de tipo contractual        | Revisá OpenAPI y regenerá con `npm run api:types` o `pnpm run api:types` cuando el contrato aprobado y `OPENAPI_SCHEMA_URL` estén disponibles. |
+| Se requiere una ruta de producto | Confirmá primero su aprobación; las rutas actuales están reservadas.                                                                           |
+| El formato falla                 | Ejecutá `npm run format` o `pnpm run format` y revisá que el cambio respete Prettier.                                                          |
 
 ## Estado actual
 
