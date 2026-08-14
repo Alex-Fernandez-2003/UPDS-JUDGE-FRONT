@@ -1,4 +1,4 @@
-import { RotateCw } from 'lucide-react'
+import { RotateCw, Send } from 'lucide-react'
 import { Button, Card } from '@/components/common'
 import { DataTable } from '@/components/tables'
 import { Pagination } from '@/components/navigation'
@@ -18,6 +18,7 @@ interface Props {
   onProblemChange: (inciso: string) => void
   onPageChange: (page: number) => void
   onRefresh: () => void
+  onSubmitSolution: () => void
 }
 
 const columns = [
@@ -107,6 +108,7 @@ export function SubmissionsTable({
   onProblemChange,
   onPageChange,
   onRefresh,
+  onSubmitSolution,
 }: Props) {
   // Generamos simplemente: [{ inciso: 'A', titulo: 'Problema A' }, { inciso: 'B', titulo: 'Problema B' }, ...]
   const generatedProblems = Array.from({ length: problemCount }, (_, i) => {
@@ -145,6 +147,14 @@ export function SubmissionsTable({
             onClick={onRefresh}
           >
             Actualizar
+          </Button>
+
+          <Button
+            size="sm"
+            leftIcon={<Send className="size-4" aria-hidden="true" />}
+            onClick={onSubmitSolution}
+          >
+            Enviar solución
           </Button>
         </div>
       </div>

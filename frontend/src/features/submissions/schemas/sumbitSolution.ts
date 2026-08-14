@@ -1,4 +1,7 @@
-// sumbitSolution.ts
+import {
+  MAX_SOURCE_FILE_SIZE_BYTES,
+  getLanguageConfig,
+} from '../languageConfig'
 
 export interface ValidationResult {
   isValid: boolean
@@ -11,14 +14,24 @@ export interface SubmitFormValidationInput {
   mode: 'upload' | 'paste'
   file?: File
   sourceCode?: string
-  // Eliminamos 'confirmedHonesty'
 }
 
-// Mapeo de idLenguaje a extensiones permitidas (1: C++, 2: Python, 3: C#)
-const EXTENSIONS_BY_LANGUAGE_ID: Record<number, string[]> = {
-  1: ['.cpp', '.cc', '.cxx', '.c'],
-  2: ['.py'],
-  3: ['.cs'],
+export function validateSourceFile(file: File, languageId: number) {
+  const language = getLanguageConfig(languageId)
+  if (!language) return 'Debes seleccionar un lenguaje de programación.'
+
+  const fileName = file.name.toLowerCase()
+  if (
+    !language.allowedExtensions.some((extension) =>
+      fileName.endsWith(extension),
+    )
+  )
+    return `El archivo no corresponde al lenguaje seleccionado (${language.allowedExtensions.join(', ')}).`
+
+  if (file.size > MAX_SOURCE_FILE_SIZE_BYTES)
+    return 'El archivo supera el límite de 2 MiB.'
+
+  return undefined
 }
 
 export function validateSubmitSolution(
@@ -26,40 +39,22 @@ export function validateSubmitSolution(
 ): ValidationResult {
   const errors: Record<string, string> = {}
 
-  // 1. Validar selección de problema (inciso)
-  if (!input.incisoProblema || !input.incisoProblema.trim()) {
+  if (!input.incisoProblema.trim())
     errors.incisoProblema = 'Debes seleccionar un problema.'
-  }
 
-  // 2. Validar selección de lenguaje
-  if (!input.idLenguaje) {
+  if (!getLanguageConfig(input.idLenguaje))
     errors.idLenguaje = 'Debes seleccionar un lenguaje de programación.'
-  }
 
-  // 3. Validar según el modo seleccionado (subir archivo o pegar código)
   if (input.mode === 'upload') {
-    if (!input.file || !(input.file instanceof File)) {
+    if (!input.file || !(input.file instanceof File))
       errors.file = 'Debes seleccionar un archivo fuente.'
-    } else {
-      // Validar extensión del archivo según el idLenguaje
-      const fileName = input.file.name.toLowerCase()
-      const allowed = EXTENSIONS_BY_LANGUAGE_ID[input.idLenguaje] || []
-
-      const isValidExtension = allowed.some((ext) => fileName.endsWith(ext))
-
-      if (!isValidExtension) {
-        errors.file = `El archivo no corresponde al lenguaje seleccionado (${allowed.join(', ')}).`
-      }
+    else {
+      const fileError = validateSourceFile(input.file, input.idLenguaje)
+      if (fileError) errors.file = fileError
     }
-  } else {
-    // Modo pegar código
-    if (!input.sourceCode || !input.sourceCode.trim()) {
-      errors.sourceCode = 'Debes ingresar el código fuente de tu solución.'
-    }
+  } else if (!input.sourceCode?.trim()) {
+    errors.sourceCode = 'Debes ingresar el código fuente de tu solución.'
   }
 
-  return {
-    isValid: Object.keys(errors).length === 0,
-    errors,
-  }
+  return { isValid: Object.keys(errors).length === 0, errors }
 }

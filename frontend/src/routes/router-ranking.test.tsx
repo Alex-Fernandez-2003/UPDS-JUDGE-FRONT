@@ -149,8 +149,63 @@ describe('ranking routes', () => {
     for (const name of ['Ana Ranking', 'Bruno Ranking', 'Carla Ranking'])
       expect(screen.getByText(name)).toBeInTheDocument()
     expect(screen.getByText('125 min')).toBeInTheDocument()
+    expect(screen.getByTestId('ranking-trophy-image')).toBeInTheDocument()
+    expect(screen.getByText('Participantes')).toBeInTheDocument()
+    expect(screen.getByText('No disponible')).toBeInTheDocument()
+    expect(screen.getByText('3 inscritos')).toBeInTheDocument()
+    expect(screen.getByText('Problema más resuelto')).toBeInTheDocument()
+    expect(screen.getAllByText('A')).toHaveLength(2)
+    expect(screen.getByText('3 aceptaciones')).toBeInTheDocument()
+    expect(screen.getByText('Total de envíos')).toBeInTheDocument()
     expect(screen.getByText('11')).toBeInTheDocument()
-    expect(screen.getByText('A · 3')).toBeInTheDocument()
+    expect(
+      screen.getByText('Aceptados globales no disponibles'),
+    ).toBeInTheDocument()
+    expect(screen.getByText('Duración: 2 h')).toBeInTheDocument()
+    const durationCard = screen.getByRole('article', { name: 'Duración' })
+    expect(within(durationCard).getByText('Duración')).toBeInTheDocument()
+    expect(within(durationCard).getByText('2 h')).toBeInTheDocument()
+    expect(
+      screen.getByRole('columnheader', { name: 'Resueltos y penalización' }),
+    ).toBeInTheDocument()
+    for (const problem of ranking.problemas) {
+      expect(
+        screen.getByTestId(`ranking-problem-globe-${problem.inciso}`),
+      ).toHaveAttribute('data-balloon-color', problem.colorGlobo)
+    }
+    for (const position of [1, 2, 3]) {
+      const medal = screen.getByTestId(`ranking-medal-${position}`)
+      expect(medal).toBeInTheDocument()
+      expect(medal.closest('td')).toHaveAttribute(
+        'aria-label',
+        `Puesto ${position}`,
+      )
+    }
+    expect(screen.getAllByText('-1').length).toBeGreaterThan(0)
+    expect(screen.getAllByLabelText('No intentado').length).toBeGreaterThan(0)
+    expect(screen.queryByText('Leyenda de celdas')).not.toBeInTheDocument()
+    const references = screen.getByRole('region', {
+      name: 'Referencias del ranking',
+    })
+    expect(
+      within(references)
+        .getAllByRole('article')
+        .map((card) => card.getAttribute('aria-label')),
+    ).toEqual([
+      'Problema resuelto',
+      'Intentos fallidos',
+      'No intentado',
+      'Sistema de penalización',
+      'Participantes',
+    ])
+    expect(screen.getByTestId('ranking-balloons-legend')).toHaveAttribute(
+      'src',
+      expect.stringContaining('ranking-balloons-legend.png'),
+    )
+    expect(screen.getByText('Sistema de penalización')).toBeInTheDocument()
+    expect(
+      screen.getAllByText('Mostrando 1–3 de 3 participantes'),
+    ).toHaveLength(1)
     expect(screen.getByText('Página 1 de 1')).toBeInTheDocument()
     expect(screen.getAllByLabelText(/Aceptado en/).length).toBeGreaterThan(0)
   })

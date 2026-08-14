@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Calendar, Check, Clock, RotateCcw, Users } from 'lucide-react'
+import { RotateCcw, type LucideIcon } from 'lucide-react'
 import { useParams } from 'react-router'
-import { Alert, Card, Divider, Spinner } from '@/components/common'
+import { Alert, Card, Spinner } from '@/components/common'
 import {
   ContestContextHeader,
   type ContestContextNavigationItem,
@@ -11,6 +11,14 @@ import { routes } from '@/routes/constants'
 import { ProblemsTable } from '../components/ProblemsTable'
 import { getContestDashboard } from '../service'
 import type { ContestDashboard } from '../types'
+
+type SummaryCard = {
+  label: string
+  value: string
+  icon: string | LucideIcon
+  valueClassName: string
+  iconClassName: string
+}
 
 const contestDateFormatter = new Intl.DateTimeFormat('es-BO', {
   day: '2-digit',
@@ -69,21 +77,41 @@ export function ContestProblemsContent({
   if (error) return <Alert tone="danger">{error}</Alert>
   if (!dashboard) return <Spinner label="Cargando concurso" />
 
-  const infoItems = [
+  const summaryCards: SummaryCard[] = [
     {
       label: 'Fecha fin',
       value: formatContestDate(dashboard.fechaFin),
-      icon: Calendar,
+      icon: '🗓️',
+      valueClassName: 'text-base',
+      iconClassName: 'bg-blue-50 text-blue-700',
     },
     {
       label: 'Hora fin',
       value: formatContestTime(dashboard.fechaFin),
-      icon: Clock,
+      icon: '⏰',
+      valueClassName: 'text-2xl',
+      iconClassName: 'bg-violet-50 text-violet-700',
     },
     {
       label: 'Participantes actuales',
       value: String(dashboard.cantidadParticipantes),
-      icon: Users,
+      icon: '👥',
+      valueClassName: 'text-2xl',
+      iconClassName: 'bg-amber-50 text-amber-700',
+    },
+    {
+      label: 'Problemas resueltos',
+      value: `${dashboard.problemasResueltos} / ${dashboard.totalProblemas}`,
+      icon: '✅',
+      valueClassName: 'text-2xl',
+      iconClassName: 'bg-emerald-50 text-emerald-700',
+    },
+    {
+      label: 'Intentos totales',
+      value: String(dashboard.intentosTotales),
+      icon: RotateCcw,
+      valueClassName: 'text-2xl',
+      iconClassName: 'bg-rose-50 text-rose-700',
     },
   ]
 
@@ -99,58 +127,52 @@ export function ContestProblemsContent({
         activeSection="problems"
         navigationItems={navigationItems}
       />
-      <Card id="contest-header">
-        <Divider className="mb-6" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {infoItems.map(({ label, value, icon: Icon }) => (
-            <div key={label} className="flex items-center gap-3">
-              <Icon
-                className="size-4 text-[var(--text-secondary)]"
-                aria-hidden="true"
-              />
-              <div>
-                <div className="text-[11px] uppercase tracking-wide text-[var(--text-secondary)]">
-                  {label}
+      <section
+        id="contest-header"
+        data-testid="problems-summary-grid"
+        className="grid grid-cols-1 gap-3 bg-transparent sm:grid-cols-2 lg:grid-cols-5"
+      >
+        {summaryCards.map(
+          ({ label, value, icon: Icon, valueClassName, iconClassName }) => (
+            <Card
+              key={label}
+              data-testid="problems-summary-surface"
+              className="p-0"
+            >
+              <article
+                data-testid="problems-summary-card"
+                aria-label={label}
+                className="flex min-w-0 items-center gap-3 p-3"
+              >
+                <span
+                  data-testid="problems-summary-icon"
+                  className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${iconClassName}`}
+                >
+                  {typeof Icon === 'string' ? (
+                    <span className="text-xl" aria-hidden="true">
+                      {Icon}
+                    </span>
+                  ) : (
+                    <Icon className="size-4" aria-hidden="true" />
+                  )}
+                </span>
+
+                <div className="min-w-0">
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
+                    {label}
+                  </div>
+
+                  <div
+                    className={`mt-0.5 truncate font-black ${valueClassName}`}
+                  >
+                    {value}
+                  </div>
                 </div>
-                <div className="text-sm font-bold">{value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2" id="quick-metrics">
-        <Card className="flex items-center gap-4">
-          <Check
-            className="size-5 shrink-0 text-[var(--primary)]"
-            aria-hidden="true"
-          />
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-              Problemas resueltos
-            </div>
-            <div className="mt-0.5 text-2xl font-black">
-              {dashboard.problemasResueltos}{' '}
-              <span className="text-lg font-medium text-[var(--text-secondary)]">
-                / {dashboard.totalProblemas}
-              </span>
-            </div>
-          </div>
-        </Card>
-        <Card className="flex items-center gap-4">
-          <RotateCcw
-            className="size-5 shrink-0 text-[var(--text-secondary)]"
-            aria-hidden="true"
-          />
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)]">
-              Intentos totales
-            </div>
-            <div className="mt-0.5 text-2xl font-black">
-              {dashboard.intentosTotales}
-            </div>
-          </div>
-        </Card>
-      </div>
+              </article>
+            </Card>
+          ),
+        )}
+      </section>
       <section id="problems-panel" className="w-full min-w-0">
         <ProblemsTable
           problems={dashboard.problemas}

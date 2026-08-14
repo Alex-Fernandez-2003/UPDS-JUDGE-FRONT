@@ -71,12 +71,34 @@ describe('ContestProblemsPage', () => {
       screen.getByRole('navigation', { name: 'Navegación de usuario' }),
     ).toBeInTheDocument()
     expect(screen.getByText('EN CURSO')).toBeInTheDocument()
+    expect(screen.getByTestId('ranking-trophy-image')).toHaveAttribute(
+      'src',
+      expect.stringContaining('ranking-trophy.png'),
+    )
+    expect(screen.getByText(/Fecha de finalización:/)).toHaveTextContent(/2026/)
+    expect(screen.getByText('Duración: No disponible')).toBeInTheDocument()
+    expect(screen.getByText(/Tiempo restante:/)).toBeInTheDocument()
+    expect(screen.getByText(/Finaliza:/)).toHaveTextContent(/2026/)
     expect(screen.getAllByText(dashboard.codigo)).not.toHaveLength(0)
     expect(screen.getByText('16 de agosto de 2026')).toBeInTheDocument()
     expect(screen.getByText('12')).toBeInTheDocument()
     expect(screen.getAllByText('2')).not.toHaveLength(0)
-    expect(screen.getByText('/ 4')).toBeInTheDocument()
     expect(screen.getByText('7')).toBeInTheDocument()
+    expect(
+      screen.getByRole('article', { name: 'Fecha fin' }),
+    ).toHaveTextContent('16 de agosto de 2026')
+    expect(screen.getByRole('article', { name: 'Hora fin' })).toHaveTextContent(
+      '12:10',
+    )
+    expect(
+      screen.getByRole('article', { name: 'Participantes actuales' }),
+    ).toHaveTextContent('12')
+    expect(
+      screen.getByRole('article', { name: 'Problemas resueltos' }),
+    ).toHaveTextContent('2 / 4')
+    expect(
+      screen.getByRole('article', { name: 'Intentos totales' }),
+    ).toHaveTextContent('7')
     expect(
       screen.getByRole('heading', { name: 'Set de Problemas' }),
     ).toBeInTheDocument()
@@ -113,6 +135,44 @@ describe('ContestProblemsPage', () => {
     expect(screen.queryByText('Tabla de Posiciones')).not.toBeInTheDocument()
     expect(
       screen.queryByText('Concurso Oficial • UPDS'),
+    ).not.toBeInTheDocument()
+    const summaryGrid = screen.getByTestId('problems-summary-grid')
+    expect(summaryGrid).toHaveClass('bg-transparent', 'lg:grid-cols-5')
+    expect(summaryGrid).not.toHaveClass(
+      'border',
+      'rounded-lg',
+      'bg-[var(--surface)]',
+      'shadow-[var(--shadow-sm)]',
+    )
+    expect(screen.getAllByTestId('problems-summary-surface')).toHaveLength(5)
+    expect(screen.getAllByTestId('problems-summary-card')).toHaveLength(5)
+    const summaryIcons = screen.getAllByTestId('problems-summary-icon')
+    expect(summaryIcons).toHaveLength(5)
+    const treatments = [
+      'bg-blue-50',
+      'bg-violet-50',
+      'bg-amber-50',
+      'bg-emerald-50',
+      'bg-rose-50',
+    ]
+    summaryIcons.forEach((icon, index) => {
+      expect(icon).toHaveClass('size-10', 'rounded-lg', treatments[index])
+      expect(icon).not.toHaveClass('rounded-full')
+    })
+
+    const dateCard = screen.getByRole('article', { name: 'Fecha fin' })
+    const dateEmoji = within(dateCard).getByText('🗓️')
+    expect(dateEmoji).toHaveAttribute('aria-hidden', 'true')
+    expect(dateCard.querySelector('svg')).toBeNull()
+
+    const attemptsCard = screen.getByRole('article', {
+      name: 'Intentos totales',
+    })
+    const lucideIcon = attemptsCard.querySelector('svg')
+    expect(lucideIcon).not.toBeNull()
+    expect(lucideIcon).toHaveAttribute('aria-hidden', 'true')
+    expect(
+      within(attemptsCard).queryByText('RotateCcw'),
     ).not.toBeInTheDocument()
   })
 

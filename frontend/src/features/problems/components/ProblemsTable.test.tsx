@@ -44,14 +44,31 @@ describe('ProblemsTable', () => {
     expect(
       screen.getByRole('columnheader', { name: 'ESTADO' }),
     ).toBeInTheDocument()
+    const headerIcon = screen.getByTestId('problems-header-icon')
+    expect(headerIcon).toHaveClass('text-blue-700')
+    expect(headerIcon.tagName).toBe('SPAN')
+    expect(headerIcon).toHaveAttribute('aria-hidden', 'true')
+    expect(headerIcon.closest('span')?.querySelector('p')).toBeNull()
     expect(screen.getByText('ACCEPTED')).toHaveClass('bg-green-100')
+    expect(screen.getByText('ACCEPTED')).toHaveClass('rounded-full')
     expect(screen.getByText('UNSOLVED')).toHaveClass('bg-red-100')
     expect(screen.getByText('NOT ATTEMPTED')).toHaveClass('bg-slate-100')
     expect(screen.queryByText('UNKNOWN')).not.toBeInTheDocument()
+    const tagChips = screen.getAllByTestId('problem-tag-chip')
+    expect(tagChips).toHaveLength(3)
+    expect(tagChips[0]).toHaveTextContent('A')
+    expect(tagChips[0]).toHaveClass(
+      'rounded-md',
+      'bg-indigo-50',
+      'px-2',
+      'py-1',
+      'text-indigo-700',
+    )
     expect(screen.getAllByText('1')).not.toHaveLength(0)
     expect(screen.getAllByText('3')).not.toHaveLength(0)
     expect(screen.getAllByText('0')).not.toHaveLength(0)
 
+    expect(screen.getByRole('table')).toHaveClass('border-separate')
     for (const row of screen.getAllByRole('row').slice(1)) {
       for (const cell of within(row).getAllByRole('cell')) {
         expect(cell).toHaveClass('font-bold')

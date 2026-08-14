@@ -9,7 +9,7 @@ import { UserLayout } from '@/layouts/UserLayout'
 import { getContestDashboard } from '@/features/problems/service'
 import type { ContestDashboard } from '@/features/problems/types'
 import { routes } from '@/routes/constants'
-import { SubmitForm } from '../components/submitForm'
+import { SubmitSolutionModal } from '../components/SubmitSolutionModal'
 import { SubmissionsTable } from '../components/submissionsTable'
 import { submissionsService } from '../Types/submissionsService'
 import type { SubmissionItem } from '../Types/submissionTypes'
@@ -31,7 +31,7 @@ export function ContestSubmissionsContent({
   const [totalPages, setTotalPages] = useState(1)
   const [problemFilter, setProblemFilter] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -83,18 +83,8 @@ export function ContestSubmissionsContent({
   }, [fetchSubmissions])
 
   const handleSubmitSolution = async (payload: CrearEnvioDto) => {
-    setIsSubmitting(true)
-    setError(null)
-    try {
-      await submissionsService.createSubmission(payload)
-      setProblemFilter('')
-      setCurrentPage(1)
-      await fetchSubmissions()
-    } catch {
-      setError('Ocurrió un error al enviar la solución. Por favor reintenta.')
-    } finally {
-      setIsSubmitting(false)
-    }
+    await submissionsService.createSubmission(payload)
+    await fetchSubmissions()
   }
 
   const problems = useMemo(
@@ -123,31 +113,33 @@ export function ContestSubmissionsContent({
         />
       )}
       {error && <Alert tone="danger">{error}</Alert>}
-      <div className="grid w-full min-w-0 gap-6 xl:grid-cols-[minmax(20rem,0.7fr)_minmax(0,1.3fr)] xl:items-start">
-        <SubmitForm
-          contestCode={contestCode}
-          problems={problems}
-          onSubmit={handleSubmitSolution}
-          isSubmitting={isSubmitting}
+      <div className="min-w-0">
+        <SubmissionsTable
+          submissions={submissions}
+          total={totalSubmissions}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          selectedProblem={problemFilter}
+          problemCount={dashboard?.totalProblemas ?? 0}
+          loading={isLoading}
+          onProblemChange={(inciso) => {
+            setProblemFilter(inciso)
+            setCurrentPage(1)
+          }}
+          onPageChange={setCurrentPage}
+          onRefresh={fetchSubmissions}
+          onSubmitSolution={() => setIsSubmitModalOpen(true)}
         />
-        <div className="min-w-0">
-          <SubmissionsTable
-            submissions={submissions}
-            total={totalSubmissions}
-            currentPage={currentPage}
-            totalPages={totalPages}
-            selectedProblem={problemFilter}
-            problemCount={dashboard?.totalProblemas ?? 0}
-            loading={isLoading}
-            onProblemChange={(inciso) => {
-              setProblemFilter(inciso)
-              setCurrentPage(1)
-            }}
-            onPageChange={setCurrentPage}
-            onRefresh={fetchSubmissions}
-          />
-        </div>
       </div>
+      {isSubmitModalOpen && dashboard && (
+        <SubmitSolutionModal
+          contest={{ code: dashboard.codigo, name: dashboard.nombre }}
+          problems={problems}
+          initialProblem={problemFilter}
+          onSubmit={handleSubmitSolution}
+          onClose={() => setIsSubmitModalOpen(false)}
+        />
+      )}
     </div>
   )
 }

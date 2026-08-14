@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
 import { AdminLayout } from '@/layouts/AdminLayout'
@@ -98,9 +98,18 @@ describe('administrative contextual ranking', () => {
       error: null,
     })
     const view = renderAdminRanking()
-    expect(screen.getByRole('row', { name: 'Tu posición: Ada' })).toHaveClass(
-      'bg-[var(--surface-muted)]',
-    )
+    const currentRow = screen.getByRole('row', { name: 'Tu posición: Ada' })
+    expect(currentRow).toHaveClass('group', 'bg-[var(--surface-muted)]')
+    for (const stickyCell of within(currentRow)
+      .getAllByRole('cell')
+      .slice(0, 3)) {
+      expect(stickyCell).toHaveClass(
+        'sticky',
+        'max-sm:static',
+        'bg-[var(--surface-muted)]',
+        'group-hover:bg-slate-200/70',
+      )
+    }
     view.rerender(
       <MemoryRouter
         initialEntries={['/admin/user-access/contests/demo/ranking']}

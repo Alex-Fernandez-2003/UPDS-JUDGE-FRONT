@@ -3,14 +3,13 @@ import { clampPage, formatRemaining, PAGE_SIZE, pageRows } from './utils'
 
 describe('ranking pagination', () => {
   const rows = Array.from({ length: 11 }, (_, index) => index + 1)
-  it('uses five rows and preserves contractual order', () => {
+
+  it('keeps page size stable and clamps invalid pages', () => {
     expect(PAGE_SIZE).toBe(5)
-    expect(pageRows(rows, 2)).toEqual([6, 7, 8, 9, 10])
+    expect(pageRows(rows, 1)).toEqual([1, 2, 3, 4, 5])
     expect(pageRows(rows, 3)).toEqual([11])
-  })
-  it('clamps invalid pages', () => {
-    expect(clampPage(9, 6)).toBe(2)
-    expect(clampPage(0, 0)).toBe(1)
+    expect(clampPage(0, rows.length)).toBe(1)
+    expect(clampPage(9, rows.length)).toBe(3)
   })
 })
 

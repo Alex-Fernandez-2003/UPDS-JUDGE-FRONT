@@ -41,9 +41,22 @@ describe('foundation layouts', () => {
       screen.getByAltText('UPDS Judge').parentElement?.parentElement,
     ).toContainElement(navigation)
     const contests = screen.getByRole('link', { name: 'Concursos' })
-    expect(contests).toHaveClass('min-h-10', 'px-4', 'focus-visible:outline-2')
+    expect(contests).toHaveClass(
+      'min-h-10',
+      'px-4',
+      'text-base',
+      'focus-visible:outline-2',
+    )
     expect(contests).toHaveAttribute('aria-current', 'page')
     expect(contests).toHaveClass('transition-colors')
+    expect(screen.getByRole('link', { name: 'Inicio' })).toContainElement(
+      screen.getByTestId('nav-icon-home'),
+    )
+    expect(contests).toContainElement(screen.getByTestId('nav-icon-contests'))
+    expect(screen.getByRole('link', { name: 'Mis envíos' })).toContainElement(
+      screen.getByTestId('nav-icon-submissions'),
+    )
+    expect(screen.getAllByText('Ada')).toHaveLength(1)
     sessionStorage.removeItem('token')
   })
 
