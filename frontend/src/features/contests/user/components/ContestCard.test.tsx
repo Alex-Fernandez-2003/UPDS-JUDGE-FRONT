@@ -185,7 +185,7 @@ describe('ContestCard private finished enrollment', () => {
     await user.click(screen.getByRole('button', { name: 'Ver detalles' }))
 
     expect(screen.getByTestId('current-path')).toHaveTextContent(
-      '/student/contests/private-final/submissions',
+      '/student/contests/private-final/problems',
     )
     expect(join).not.toHaveBeenCalled()
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()

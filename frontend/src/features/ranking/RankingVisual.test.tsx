@@ -78,7 +78,7 @@ describe('RankingPage visual composition', () => {
     expect(
       screen.getByRole('heading', { name: 'Ranking Demo' }),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Fecha de inicio:/)).toHaveTextContent(/2036/)
+    expect(screen.getAllByText(/1 ene de 2036/)).toHaveLength(2)
     expect(screen.getByText('Duración: 2 h')).toBeInTheDocument()
     expect(screen.getByText(/Tiempo restante:/)).toBeInTheDocument()
     expect(screen.getByText(/Finaliza:/)).toHaveTextContent(/2036/)

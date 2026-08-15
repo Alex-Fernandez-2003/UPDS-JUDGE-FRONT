@@ -1,6 +1,9 @@
 import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { http, HttpResponse } from 'msw'
+import { setupServer } from 'msw/node'
 import type { ContestDashboard } from '../types'
 
 const { getContestDashboardMock } = vi.hoisted(() => ({
@@ -12,6 +15,12 @@ vi.mock('../service', () => ({
 }))
 
 import ContestProblemsPage from './ContestProblemsPage'
+
+const server = setupServer()
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }))
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
 
 const dashboard: ContestDashboard = {
   codigo: 'div4-2026',
@@ -38,23 +47,43 @@ const dashboard: ContestDashboard = {
   ],
 }
 
-const renderPage = (contestCode = dashboard.codigo) =>
-  render(
-    <MemoryRouter
-      initialEntries={[`/student/contests/${contestCode}/problems`]}
-    >
-      <Routes>
-        <Route
-          path="/student/contests/:contestCode/problems"
-          element={<ContestProblemsPage />}
-        />
-      </Routes>
-    </MemoryRouter>,
+const metadataResponse = {
+  codigo: 'div4-2026',
+  nombre: 'Concurso de Programación',
+  estadoTiempo: 'Activo',
+  fechaInicio: '2026-08-16T14:10:51.413Z',
+  fechaFin: '2026-08-16T16:10:51.413Z',
+  duracionMinutos: 120,
+}
+
+function renderPage(contestCode = dashboard.codigo) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  })
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter
+        initialEntries={[`/student/contests/${contestCode}/problems`]}
+      >
+        <Routes>
+          <Route
+            path="/student/contests/:contestCode/problems"
+            element={<ContestProblemsPage />}
+          />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
+}
 
 describe('ContestProblemsPage', () => {
   beforeEach(() => {
     getContestDashboardMock.mockResolvedValue(dashboard)
+    server.use(
+      http.get('/api/Concursos/:contestCode/ranking', () =>
+        HttpResponse.json(metadataResponse),
+      ),
+    )
   })
 
   afterEach(() => {
@@ -75,8 +104,10 @@ describe('ContestProblemsPage', () => {
       'src',
       expect.stringContaining('ranking-trophy.png'),
     )
-    expect(screen.getByText(/Fecha de finalización:/)).toHaveTextContent(/2026/)
-    expect(screen.getByText('Duración: No disponible')).toBeInTheDocument()
+    // Wait for metadata to load (duration appears)
+    await screen.findByText('Duración: 2 h')
+    // Now check the date/time which should be loaded (start date in header)
+    expect(screen.getAllByText(/ago de 2026/)).toHaveLength(2)
     expect(screen.getByText(/Tiempo restante:/)).toBeInTheDocument()
     expect(screen.getByText(/Finaliza:/)).toHaveTextContent(/2026/)
     expect(screen.getAllByText(dashboard.codigo)).not.toHaveLength(0)

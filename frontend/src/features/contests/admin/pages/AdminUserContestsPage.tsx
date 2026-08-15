@@ -28,7 +28,6 @@ export function AdminUserContestsPage() {
     <AdminLayout>
       <UserContestsPage
         problemsPath={routes.adminUserContestProblems}
-        submissionsPath={routes.adminUserContestSubmissions}
         homePath={routes.adminUserContests}
       />
     </AdminLayout>

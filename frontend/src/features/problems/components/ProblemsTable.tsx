@@ -58,7 +58,7 @@ export function ProblemsTable({
             headerCell:
               'border-slate-200/80 px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-500',
             row: 'border-b border-slate-100/80 transition-colors hover:bg-slate-50/60 last:border-b-0',
-            cell: 'border-slate-100/80 px-5 py-4 align-middle font-bold text-slate-700',
+            cell: 'border-slate-100/80 px-5 py-4 align-middle text-slate-700',
             emptyCell: 'px-6 py-12 text-center',
           }}
           columns={[

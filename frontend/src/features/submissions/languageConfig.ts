@@ -14,8 +14,7 @@ export const LANGUAGE_CONFIGS: readonly SubmissionLanguageConfig[] = [
     id: 1,
     label: 'C++ 17',
     prismLanguage: 'cpp',
-    template:
-      '#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    return 0;\n}',
+    template: '',
     allowedExtensions: ['.cpp', '.py', '.cs'],
     preferredExtension: '.cpp',
   },
@@ -23,8 +22,7 @@ export const LANGUAGE_CONFIGS: readonly SubmissionLanguageConfig[] = [
     id: 2,
     label: 'Python 3',
     prismLanguage: 'python',
-    template:
-      'def solve():\n    pass\n\nif __name__ == "__main__":\n    solve()',
+    template: '',
     allowedExtensions: ['.py'],
     preferredExtension: '.py',
   },
@@ -32,8 +30,7 @@ export const LANGUAGE_CONFIGS: readonly SubmissionLanguageConfig[] = [
     id: 3,
     label: 'C#',
     prismLanguage: 'csharp',
-    template:
-      'using System;\n\nclass Program {\n    static void Main() {\n    }\n}',
+    template: '',
     allowedExtensions: ['.cs'],
     preferredExtension: '.cs',
   },

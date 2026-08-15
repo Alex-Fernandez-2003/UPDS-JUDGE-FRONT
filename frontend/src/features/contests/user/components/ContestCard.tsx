@@ -17,7 +17,6 @@ import { JoinContestModal } from './JoinContestModal'
 interface ContestCardProps {
   contest: ConcursoListItem
   problemsPath?: (contestCode: string) => string
-  submissionsPath?: (contestCode: string) => string
 }
 
 const formatTimeRemaining = (seconds: number) =>
@@ -28,7 +27,6 @@ const formatTimeRemaining = (seconds: number) =>
 export function ContestCard({
   contest,
   problemsPath = routes.studentContestProblems,
-  submissionsPath = routes.studentContestSubmissions,
 }: ContestCardProps) {
   const navigate = useNavigate()
   const [remaining, setRemaining] = useState(contest.segundosRestantes ?? 0)
@@ -68,7 +66,7 @@ export function ContestCard({
     )
       setJoinOpen(true)
     if (action === 'VIEW_ACTIVE' || action === 'VIEW_FINISHED')
-      navigate(submissionsPath(contest.codigo))
+      navigate(problemsPath(contest.codigo))
   }
 
   const buttonLabel = {

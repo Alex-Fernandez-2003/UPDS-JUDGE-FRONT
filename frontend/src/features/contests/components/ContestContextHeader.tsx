@@ -45,8 +45,9 @@ const statusLabels: Record<EstadoTiempoConcurso, string> = {
   Finalizado: 'FINALIZADO',
 }
 
-const contestDateFormatter = new Intl.DateTimeFormat('es-BO', {
+const contestDateTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   dateStyle: 'medium',
+  timeStyle: 'short',
 })
 
 const contestEndFormatter = new Intl.DateTimeFormat('es-BO', {
@@ -94,27 +95,21 @@ export function ContestContextHeader({
 }: ContestContextHeaderProps) {
   const status = isContestStatus(contest.status)
     ? {
-      label: statusLabels[contest.status],
-      tone: estadoTiempoTone[contest.status],
-    }
+        label: statusLabels[contest.status],
+        tone: estadoTiempoTone[contest.status],
+      }
     : {
-      label: contest.status || '—',
-      tone: 'neutral' as const,
-    }
+        label: contest.status || '—',
+        tone: 'neutral' as const,
+      }
 
   const start = toValidContestDate(contest.startsAt)
   const end = toValidContestDate(contest.endsAt)
 
-  const dateLabel = start
-    ? 'Fecha de inicio'
+  const dateTimeValue = start
+    ? contestDateTimeFormatter.format(start)
     : end
-      ? 'Fecha de finalización'
-      : 'Fecha'
-
-  const dateValue = start
-    ? contestDateFormatter.format(start)
-    : end
-      ? contestDateFormatter.format(end)
+      ? contestDateTimeFormatter.format(end)
       : 'No disponible'
 
   const durationValue = formatContestDuration(
@@ -151,15 +146,15 @@ export function ContestContextHeader({
               {contest.name}
             </h1>
 
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-[var(--text-secondary)]">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-[var(--text-secondary)]">
               <span className="flex items-center gap-2">
                 <Calendar className="size-4" aria-hidden="true" />
-                {dateLabel}: {dateValue}
+                <span>{dateTimeValue}</span>
               </span>
 
               <span className="flex items-center gap-2">
                 <Clock className="size-4" aria-hidden="true" />
-                Duración: {durationValue}
+                <span>Duración: {durationValue}</span>
               </span>
             </div>
           </div>

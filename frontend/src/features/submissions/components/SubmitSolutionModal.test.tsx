@@ -368,4 +368,68 @@ describe('SubmitSolutionModal', () => {
     )
     expect(screen.getByRole('combobox', { name: 'Problema' })).toHaveValue('A')
   })
+
+  it('starts the editor empty for every language without any template', async () => {
+    const user = userEvent.setup()
+    render(<ModalHarness />)
+    await openModal(user)
+
+    const editor = screen.getByRole('textbox', {
+      name: 'Código fuente',
+    }) as HTMLTextAreaElement
+    expect(editor).toHaveValue('')
+    const editorContent = editor.value
+    expect(editorContent).not.toContain('#include')
+    expect(editorContent).not.toContain('int main')
+    expect(editorContent).not.toContain('def solve')
+    expect(editorContent).not.toContain('using System')
+  })
+
+  it('keeps the editor empty when switching languages', async () => {
+    const user = userEvent.setup()
+    render(<ModalHarness />)
+    await openModal(user)
+
+    const editor = screen.getByRole('textbox', { name: 'Código fuente' })
+    expect(editor).toHaveValue('')
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Lenguaje' }),
+      '2',
+    )
+    expect(editor).toHaveValue('')
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Lenguaje' }),
+      '3',
+    )
+    expect(editor).toHaveValue('')
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Lenguaje' }),
+      '1',
+    )
+    expect(editor).toHaveValue('')
+  })
+
+  it('prevents submission when source code is empty', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+    render(<ModalHarness onSubmit={onSubmit} />)
+    await openModal(user)
+
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: 'Problema' }),
+      'A',
+    )
+    await user.click(screen.getByRole('button', { name: /^Enviar solución$/ }))
+
+    expect(
+      await screen.findByText(
+        'Debes ingresar el código fuente de tu solución.',
+      ),
+    ).toBeInTheDocument()
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+  })
 })

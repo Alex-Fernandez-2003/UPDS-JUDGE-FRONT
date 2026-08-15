@@ -1,14 +1,15 @@
-import { httpClient } from '@/lib/api/http-client' // Ajusta a la ruta de tu cliente
-import type { 
-  GetMySubmissionsResponse, 
-  GetMySubmissionsFilters 
+import { httpClient } from '@/lib/api/http-client'
+import type {
+  GetMySubmissionsResponse,
+  GetMySubmissionsFilters,
+  CreateSubmissionResponse,
 } from './submissionTypes'
-import type { CrearEnvioDto } from './sumbitTypes' // Ajusta la ruta a tu archivo de tipos
+import type { CrearEnvioDto } from './sumbitTypes'
 
 export const submissionsService = {
   getMySubmissions: async (
     concursoCodigo: string,
-    filters: GetMySubmissionsFilters = {}
+    filters: GetMySubmissionsFilters = {},
   ): Promise<GetMySubmissionsResponse> => {
     const queryParams = new URLSearchParams()
 
@@ -29,7 +30,7 @@ export const submissionsService = {
     }
 
     const response = await httpClient.get<GetMySubmissionsResponse>(
-      `/envios/mis-envios?${queryParams.toString()}`
+      `/envios/mis-envios?${queryParams.toString()}`,
     )
 
     return response
@@ -37,9 +38,17 @@ export const submissionsService = {
 
   /**
    * Crea un nuevo envío de solución
+   * Timeout moderado (30s) como protección contra cola del juez;
+   * el POST retorna inmediatamente con 200 OK (cuerpo vacío según contrato OpenAPI).
    */
-  createSubmission: async (payload: CrearEnvioDto): Promise<void> => {
-    // Si tu API retorna el objeto creado, puedes cambiar `Promise<void>` por el tipo de respuesta adecuado
-    await httpClient.post('/envios', payload)
+  createSubmission: async (
+    payload: CrearEnvioDto,
+  ): Promise<CreateSubmissionResponse | undefined> => {
+    const response = await httpClient.post<CreateSubmissionResponse>(
+      '/envios',
+      payload,
+      { timeoutMs: 30000 },
+    )
+    return response ?? undefined
   },
 }

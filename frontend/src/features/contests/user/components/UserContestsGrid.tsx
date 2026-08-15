@@ -6,12 +6,10 @@ export function UserContestsGrid({
   rows,
   loading,
   problemsPath,
-  submissionsPath,
 }: {
   rows: ConcursoListItem[]
   loading?: boolean
   problemsPath?: (contestCode: string) => string
-  submissionsPath?: (contestCode: string) => string
 }) {
   if (loading) {
     return (
@@ -38,7 +36,6 @@ export function UserContestsGrid({
           key={contest.idConcurso}
           contest={contest}
           problemsPath={problemsPath}
-          submissionsPath={submissionsPath}
         />
       ))}
     </div>

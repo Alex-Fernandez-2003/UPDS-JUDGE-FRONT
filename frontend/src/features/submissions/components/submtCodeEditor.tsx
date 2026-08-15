@@ -6,12 +6,16 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-csharp'
 import {
   createElement,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type CSSProperties,
+  type Dispatch,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
+  type SetStateAction,
 } from 'react'
 import type { SubmissionLanguageConfig } from '../languageConfig'
 import { sourceFilenameForLanguage } from '../languageConfig'
@@ -89,6 +93,130 @@ function syncVisualLayers(
   }
 }
 
+type EditorSelection = {
+  start: number
+  end: number
+  direction: 'forward' | 'backward' | 'none'
+}
+
+type PendingSelection = EditorSelection & {
+  scrollLeft: number
+  scrollTop: number
+  restoreFocus: boolean
+}
+
+const INDENTATION = '    '
+
+function selectedLineStarts(value: string, start: number, end: number) {
+  const firstLineStart = value.lastIndexOf('\n', start - 1) + 1
+  const starts = [firstLineStart]
+  let newline = value.indexOf('\n', firstLineStart)
+
+  while (newline !== -1 && newline + 1 < end) {
+    starts.push(newline + 1)
+    newline = value.indexOf('\n', newline + 1)
+  }
+
+  return starts
+}
+
+function indentSelection(
+  value: string,
+  selection: EditorSelection,
+): { value: string; selection: EditorSelection } {
+  const { start, end, direction } = selection
+  if (start === end || !value.slice(start, end).includes('\n')) {
+    return {
+      value: `${value.slice(0, start)}${INDENTATION}${value.slice(end)}`,
+      selection: {
+        start: start + INDENTATION.length,
+        end: start + INDENTATION.length,
+        direction,
+      },
+    }
+  }
+
+  const lineStarts = selectedLineStarts(value, start, end)
+  let nextValue = value
+  for (const lineStart of [...lineStarts].reverse()) {
+    nextValue = `${nextValue.slice(0, lineStart)}${INDENTATION}${nextValue.slice(lineStart)}`
+  }
+
+  return {
+    value: nextValue,
+    selection: {
+      start: start + INDENTATION.length,
+      end: end + lineStarts.length * INDENTATION.length,
+      direction,
+    },
+  }
+}
+
+function outdentSelection(
+  value: string,
+  selection: EditorSelection,
+): { value: string; selection: EditorSelection } {
+  const removals = selectedLineStarts(value, selection.start, selection.end)
+    .map((start) => {
+      if (value[start] === '\t') return { start, length: 1 }
+      return {
+        start,
+        length:
+          value.slice(start, start + INDENTATION.length).match(/^ */)?.[0]
+            .length ?? 0,
+      }
+    })
+    .filter(({ length }) => length > 0)
+
+  let nextValue = value
+  for (const removal of [...removals].reverse()) {
+    nextValue = `${nextValue.slice(0, removal.start)}${nextValue.slice(removal.start + removal.length)}`
+  }
+
+  const mapPosition = (position: number) => {
+    let removedBefore = 0
+    for (const removal of removals) {
+      if (position <= removal.start) return position - removedBefore
+      if (position <= removal.start + removal.length) {
+        return removal.start - removedBefore
+      }
+      removedBefore += removal.length
+    }
+    return position - removedBefore
+  }
+
+  return {
+    value: nextValue,
+    selection: {
+      start: mapPosition(selection.start),
+      end: mapPosition(selection.end),
+      direction: selection.direction,
+    },
+  }
+}
+
+function handleEditorKeyDown(
+  event: ReactKeyboardEvent<HTMLTextAreaElement>,
+  tabNavigationEnabled: boolean,
+  setTabNavigationEnabled: Dispatch<SetStateAction<boolean>>,
+  editIndentation: (textarea: HTMLTextAreaElement, outdent: boolean) => void,
+) {
+  if (
+    event.ctrlKey &&
+    !event.altKey &&
+    !event.metaKey &&
+    event.key.toLowerCase() === 'm'
+  ) {
+    event.preventDefault()
+    setTabNavigationEnabled((enabled) => !enabled)
+    return
+  }
+  if (event.key !== 'Tab' || tabNavigationEnabled) return
+
+  event.preventDefault()
+  editIndentation(event.currentTarget, event.shiftKey)
+}
+
 export function CodeEditor({
   value,
   language,
@@ -96,9 +224,13 @@ export function CodeEditor({
   errorId,
 }: CodeEditorProps) {
   const [expanded, setExpanded] = useState(false)
+  const [tabNavigationEnabled, setTabNavigationEnabled] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const codeTrackRef = useRef<HTMLElement>(null)
   const gutterRef = useRef<HTMLDivElement>(null)
+  const pendingSelectionRef = useRef<PendingSelection | null>(null)
+  const helpId = useId()
+  const statusId = useId()
   const lineNumbers = useMemo(
     () =>
       Array.from({ length: value.split('\n').length }, (_, index) => index + 1),
@@ -119,8 +251,47 @@ export function CodeEditor({
     syncVisualLayers(textarea, codeTrackRef.current, gutterRef.current)
 
   useLayoutEffect(() => {
-    if (textareaRef.current) syncScroll(textareaRef.current)
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    const pendingSelection = pendingSelectionRef.current
+    if (pendingSelection) {
+      textarea.setSelectionRange(
+        pendingSelection.start,
+        pendingSelection.end,
+        pendingSelection.direction,
+      )
+      textarea.scrollLeft = pendingSelection.scrollLeft
+      textarea.scrollTop = pendingSelection.scrollTop
+      if (pendingSelection.restoreFocus) textarea.focus({ preventScroll: true })
+      pendingSelectionRef.current = null
+    }
+    syncScroll(textarea)
   }, [expanded, value])
+
+  const editIndentation = (textarea: HTMLTextAreaElement, outdent: boolean) => {
+    const selection: EditorSelection = {
+      start: textarea.selectionStart,
+      end: textarea.selectionEnd,
+      direction: textarea.selectionDirection,
+    }
+    const edit = outdent
+      ? outdentSelection(value, selection)
+      : indentSelection(value, selection)
+
+    if (edit.value === value) {
+      pendingSelectionRef.current = null
+      return
+    }
+
+    pendingSelectionRef.current = {
+      ...edit.selection,
+      scrollLeft: textarea.scrollLeft,
+      scrollTop: textarea.scrollTop,
+      restoreFocus: document.activeElement === textarea,
+    }
+    onChange(edit.value)
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-700 bg-[#151827] text-slate-100 shadow-inner focus-within:ring-2 focus-within:ring-blue-400">
@@ -197,7 +368,10 @@ export function CodeEditor({
           ref={textareaRef}
           value={value}
           aria-label="Código fuente"
-          aria-describedby={errorId}
+          aria-describedby={[helpId, statusId, errorId]
+            .filter(Boolean)
+            .join(' ')}
+          aria-keyshortcuts="Control+M"
           aria-invalid={Boolean(errorId) || undefined}
           spellCheck={false}
           autoCapitalize="off"
@@ -206,11 +380,36 @@ export function CodeEditor({
           wrap="off"
           data-testid="code-editor-scroll"
           data-expanded={String(expanded)}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={(event) => {
+            pendingSelectionRef.current = null
+            onChange(event.target.value)
+          }}
+          onKeyDown={(event) =>
+            handleEditorKeyDown(
+              event,
+              tabNavigationEnabled,
+              setTabNavigationEnabled,
+              editIndentation,
+            )
+          }
           onScroll={(event) => syncScroll(event.currentTarget)}
           style={EDITOR_GEOMETRY_STYLE}
           className="absolute inset-0 z-10 m-0 size-full cursor-text resize-none overflow-auto bg-transparent text-transparent caret-white outline-none selection:bg-blue-400/40"
         />
+        <span id={helpId} className="sr-only">
+          Tab indenta el código. Presioná Ctrl+M para alternar la navegación con
+          Tab.
+        </span>
+        <span
+          id={statusId}
+          role="status"
+          aria-live="polite"
+          className="sr-only"
+        >
+          {tabNavigationEnabled
+            ? 'Navegación con Tab activada.'
+            : 'Indentación con Tab activada.'}
+        </span>
       </div>
     </div>
   )

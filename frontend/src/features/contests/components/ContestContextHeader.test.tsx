@@ -61,7 +61,7 @@ describe('ContestContextHeader', () => {
     expect(
       screen.getByRole('heading', { name: 'Concurso Demo' }),
     ).toBeInTheDocument()
-    expect(screen.getByText(/Fecha de inicio:/)).toHaveTextContent(/2026/)
+    expect(screen.getAllByText(/1 ene de 2026/)).toHaveLength(2)
     expect(screen.getByText('Duración: 1 h 30 min')).toBeInTheDocument()
     expect(screen.getByText('Tiempo restante: 01:00:00')).toBeInTheDocument()
     expect(screen.getByText(/Finaliza:/)).toHaveTextContent(/2026/)
@@ -86,7 +86,7 @@ describe('ContestContextHeader', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText(/Fecha de finalización:/)).toHaveTextContent(/2026/)
+    expect(screen.getAllByText(/1 ene de 2026/)).toHaveLength(2)
     expect(screen.getByText('Duración: No disponible')).toBeInTheDocument()
     expect(screen.queryByText(/Tiempo restante:/)).not.toBeInTheDocument()
     expect(screen.getByText(/Finaliza:/)).toHaveTextContent(/2026/)
@@ -107,7 +107,7 @@ describe('ContestContextHeader', () => {
       </MemoryRouter>,
     )
 
-    expect(screen.getByText('Fecha: No disponible')).toBeInTheDocument()
+    expect(screen.getByText('No disponible')).toBeInTheDocument()
     expect(screen.getByText('Duración: No disponible')).toBeInTheDocument()
     expect(screen.getByText('Finaliza: No disponible')).toBeInTheDocument()
   })

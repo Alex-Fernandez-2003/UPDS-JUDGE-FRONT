@@ -11,6 +11,7 @@ import { routes } from '@/routes/constants'
 import { ProblemsTable } from '../components/ProblemsTable'
 import { getContestDashboard } from '../service'
 import type { ContestDashboard } from '../types'
+import { useContestMetadata } from '@/features/contests/metadata-hooks'
 
 type SummaryCard = {
   label: string
@@ -29,6 +30,7 @@ const contestDateFormatter = new Intl.DateTimeFormat('es-BO', {
 const contestTimeFormatter = new Intl.DateTimeFormat('es-BO', {
   hour: '2-digit',
   minute: '2-digit',
+  hour12: true,
 })
 
 const formatContestDate = (iso: string) => {
@@ -36,9 +38,13 @@ const formatContestDate = (iso: string) => {
   return Number.isNaN(date.getTime()) ? '—' : contestDateFormatter.format(date)
 }
 
+
 const formatContestTime = (iso: string) => {
   const date = new Date(iso)
-  return Number.isNaN(date.getTime()) ? '—' : contestTimeFormatter.format(date)
+
+  return Number.isNaN(date.getTime())
+    ? '—'
+    : contestTimeFormatter.format(date)
 }
 
 export function ContestProblemsContent({
@@ -50,6 +56,7 @@ export function ContestProblemsContent({
 }) {
   const [dashboard, setDashboard] = useState<ContestDashboard | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const metadataQuery = useContestMetadata(contestCode)
 
   useEffect(() => {
     if (!contestCode) {
@@ -122,10 +129,12 @@ export function ContestProblemsContent({
           code: dashboard.codigo,
           name: dashboard.nombre,
           status: dashboard.estadoTiempo,
+          startsAt: metadataQuery.data?.fechaInicio ?? null,
           endsAt: dashboard.fechaFin,
         }}
         activeSection="problems"
         navigationItems={navigationItems}
+        durationMinutes={metadataQuery.data?.duracionMinutos ?? null}
       />
       <section
         id="contest-header"

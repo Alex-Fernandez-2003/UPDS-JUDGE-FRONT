@@ -23,11 +23,9 @@ const initialFilters: UserContestFiltersValue = {
 
 export default function UserContestsPage({
   problemsPath,
-  submissionsPath,
   homePath = routes.studentHome,
 }: {
   problemsPath?: (contestCode: string) => string
-  submissionsPath?: (contestCode: string) => string
   homePath?: string
 }) {
   const [filters, setFilters] = useState(initialFilters)
@@ -106,7 +104,6 @@ export default function UserContestsPage({
           rows={data?.concursos ?? []}
           loading={isLoading || isFetching}
           problemsPath={problemsPath}
-          submissionsPath={submissionsPath}
         />
 
         <div className="mt-6 flex flex-col items-center justify-between gap-3 md:flex-row">

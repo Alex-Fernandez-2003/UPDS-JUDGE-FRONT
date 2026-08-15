@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { Alert, Spinner } from '@/components/common'
 import {
@@ -12,10 +12,21 @@ import { routes } from '@/routes/constants'
 import { SubmitSolutionModal } from '../components/SubmitSolutionModal'
 import { SubmissionsTable } from '../components/submissionsTable'
 import { submissionsService } from '../Types/submissionsService'
-import type { SubmissionItem } from '../Types/submissionTypes'
+import type { SubmissionItem, RunningStatus } from '../Types/submissionTypes'
 import type { CrearEnvioDto } from '../Types/sumbitTypes'
+import { useContestMetadata } from '@/features/contests/metadata-hooks'
 
 const PAGE_SIZE = 5
+
+const RUNTIME_STATUSES: ReadonlySet<string> = new Set<RunningStatus>([
+  'En Cola',
+  'Procesando',
+  'Evaluando',
+])
+
+const POLL_INTERVAL_MS = 5_000
+const POLL_GRACE_POLLS = 3
+const POLL_MAX_POLLS = 12
 
 export function ContestSubmissionsContent({
   contestCode,
@@ -33,6 +44,12 @@ export function ContestSubmissionsContent({
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [pollingActive, setPollingActive] = useState(false)
+  const pollCountRef = useRef(0)
+  const metadataQuery = useContestMetadata(contestCode)
+  const [pendingSubmissionId, setPendingSubmissionId] = useState<number | null>(
+    null,
+  )
 
   useEffect(() => {
     if (!contestCode) return
@@ -82,8 +99,49 @@ export function ContestSubmissionsContent({
     void fetchSubmissions()
   }, [fetchSubmissions])
 
+  // Poll history after a POST so the UI shows EN PROGRESO and
+  // transitions to a final verdict without requiring manual refresh.
+  // Polling starts even if the first GET after POST hasn't returned
+  // the running row yet, and continues until a running submission is
+  // resolved or the max poll count is reached.
+  // The POLL_GRACE_POLLS restriction only applies to the initial load,
+  // not to submissions that were posted via handleSubmitSolution.
+  useEffect(() => {
+    const hasRunning = submissions.some((item) =>
+      RUNTIME_STATUSES.has(item.veredicto),
+    )
+
+    // NEW: Check if there's a pending submission (posted but not yet reconciled)
+    const pendingUnresolved =
+      pendingSubmissionId != null &&
+      !submissions.some((item) => item.idEnvio === pendingSubmissionId)
+
+    const shouldStop =
+      !pollingActive ||
+      (hasRunning || pendingUnresolved
+        ? false
+        : !hasRunning && pollCountRef.current >= POLL_GRACE_POLLS) ||
+      pollCountRef.current >= POLL_MAX_POLLS
+
+    if (shouldStop) {
+      setPollingActive(false)
+      return
+    }
+
+    const interval = window.setInterval(() => {
+      pollCountRef.current++
+      void fetchSubmissions()
+    }, POLL_INTERVAL_MS)
+    return () => window.clearInterval(interval)
+  }, [submissions, pollingActive, fetchSubmissions, pendingSubmissionId])
+
   const handleSubmitSolution = async (payload: CrearEnvioDto) => {
-    await submissionsService.createSubmission(payload)
+    const created = await submissionsService.createSubmission(payload)
+    if (created?.idEnvio !== undefined) {
+      setPendingSubmissionId(created.idEnvio)
+    }
+    pollCountRef.current = 0
+    setPollingActive(true)
     await fetchSubmissions()
   }
 
@@ -93,6 +151,23 @@ export function ContestSubmissionsContent({
       [],
     [dashboard],
   )
+
+  // Build pending row data when a submission was posted but not yet reconciled
+  const pendingRow: SubmissionItem | null =
+    pendingSubmissionId != null &&
+    !submissions.some((item) => item.idEnvio === pendingSubmissionId)
+      ? {
+          idEnvio: pendingSubmissionId,
+          concursoCodigo: '',
+          problemaTitulo: '',
+          inciso: '',
+          lenguaje: '',
+          veredicto: 'En Cola' as const,
+          consumoTiempo: 0,
+          consumoMemoria: 0,
+          fechaEnvio: new Date().toISOString(),
+        }
+      : null
 
   if (!contestCode)
     return <Alert tone="danger">El código del concurso es obligatorio.</Alert>
@@ -106,10 +181,12 @@ export function ContestSubmissionsContent({
             code: dashboard.codigo,
             name: dashboard.nombre,
             status: dashboard.estadoTiempo,
+            startsAt: metadataQuery.data?.fechaInicio ?? null,
             endsAt: dashboard.fechaFin,
           }}
           activeSection="submissions"
           navigationItems={navigationItems}
+          durationMinutes={metadataQuery.data?.duracionMinutos ?? null}
         />
       )}
       {error && <Alert tone="danger">{error}</Alert>}
@@ -131,6 +208,24 @@ export function ContestSubmissionsContent({
           onSubmitSolution={() => setIsSubmitModalOpen(true)}
         />
       </div>
+      {pendingRow && (
+        <SubmissionsTable
+          submissions={[...submissions, pendingRow]}
+          total={totalSubmissions + 1}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          selectedProblem={problemFilter}
+          problemCount={dashboard?.totalProblemas ?? 0}
+          loading={isLoading}
+          onProblemChange={(inciso) => {
+            setProblemFilter(inciso)
+            setCurrentPage(1)
+          }}
+          onPageChange={setCurrentPage}
+          onRefresh={fetchSubmissions}
+          onSubmitSolution={() => setIsSubmitModalOpen(true)}
+        />
+      )}
       {isSubmitModalOpen && dashboard && (
         <SubmitSolutionModal
           contest={{ code: dashboard.codigo, name: dashboard.nombre }}

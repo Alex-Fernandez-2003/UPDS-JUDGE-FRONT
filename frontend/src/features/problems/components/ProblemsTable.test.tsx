@@ -71,7 +71,7 @@ describe('ProblemsTable', () => {
     expect(screen.getByRole('table')).toHaveClass('border-separate')
     for (const row of screen.getAllByRole('row').slice(1)) {
       for (const cell of within(row).getAllByRole('cell')) {
-        expect(cell).toHaveClass('font-bold')
+        expect(cell).not.toHaveClass('font-bold')
       }
     }
   })

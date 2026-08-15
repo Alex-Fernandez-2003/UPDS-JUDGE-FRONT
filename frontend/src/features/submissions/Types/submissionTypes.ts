@@ -16,13 +16,17 @@ export type Verdict =
   | 'Time Limit Exceeded'
   | 'Memory Limit Exceeded'
 
+export type RunningStatus = 'En Cola' | 'Procesando' | 'Evaluando'
+
+export type SubmissionVerdict = Verdict | RunningStatus
+
 export interface SubmissionItem {
   idEnvio: number
   concursoCodigo: string
   problemaTitulo: string
   inciso: string
   lenguaje: string
-  veredicto: Verdict
+  veredicto: SubmissionVerdict
   consumoTiempo: number
   consumoMemoria: number
   fechaEnvio: string
